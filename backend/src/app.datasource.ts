@@ -18,8 +18,9 @@ const AppDataSource = new DataSource({
   // 資料にはないが追加
   // NOTE: 実際にどんなSQLが発行されたか見える
   logging: true,
-  entities: ['src/entities/*.ts'],
-  migrations: ['src/migrations/*.ts'],
+  // NOTE: 現在実行中のファイルが存在するディレクトリの絶対パス+{コンパイル後はjsなので受け付けるように}
+  entities: [__dirname + '/entities/*.{ts,js}'],
+  migrations: [__dirname + '/migrations/*.{ts,js}'],
 });
 
 export default AppDataSource;
