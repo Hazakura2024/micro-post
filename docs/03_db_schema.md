@@ -16,8 +16,7 @@
 |:---|:---|:---|
 |id|number|Primary key|
 |user_id|number||
-|name|varchar||
-|email|varchar||
+|content|varchar||
 |created_at|timestamp||
 |updated_at|timestamp||
 
