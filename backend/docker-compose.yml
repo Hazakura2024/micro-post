@@ -1,0 +1,23 @@
+version: '3.8'
+
+# NOTE: ここから「動かすサービス（コンテナ）」のリストを書く
+services:
+  # NOTE: サービスの名前。好きな名前でOKだが、データベースなので db や postgres とすることが多い
+  db:
+    # NOTE: どのソフトフェアを使うか指定。公式のPostgreSQLイメージを使う:バージョン15を使う-Alpine版(超軽量なLinuxがベース)を使う
+    image: postgres:15-alpine
+    # NOTE: "ホスト側(PC)のポート:コンテナ側のポート"
+    ports:
+      - "5432:5432"
+    # NOTE: コンテナ起動時に渡す環境変数。PostgreSQLが初期設定を勝手にやってくれる。
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    # NOTE: データの「永続化（保存場所）」の設定。これがないと、コンテナを削除した瞬間にデータが全部消える。
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+# NOTE: 「このファイル全体で postgres_data という名前の保管領域を使うよ」という宣言。上の services の中で使ったボリューム名は、最後にここでリストアップして「登録」しておく必要があります。これを書かないとエラー。
+volumes:
+  postgres_data:
