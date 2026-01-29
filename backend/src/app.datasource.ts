@@ -18,7 +18,7 @@ const AppDataSource = new DataSource({
   // 資料にはないが追加
   // NOTE: 実際にどんなSQLが発行されたか見える
   logging: true,
-  entities: ['src/entities/*.ts"'],
+  entities: ['src/entities/*.ts'],
   migrations: ['src/migrations/*.ts'],
 });
 
