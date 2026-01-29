@@ -5,8 +5,8 @@
 |カラム名|型|備考|
 |:---|:---|:---|
 |id|number|Primary key|
-|hash|varchar|パスワードのハッシュ|
 |name|varchar||
+|hash|varchar|パスワードのハッシュ|
 |email|varchar||
 |created_at|varchar||
 |updated_at|varchar||
