@@ -1,6 +1,8 @@
 import { DataSource } from 'typeorm';
+import * as dotenv from 'dotenv';
 
-require('dotenv').config();
+// 資料ではrequireを使っていたがESlintに怒られるのでimportに変更
+dotenv.config();
 
 const AppDataSource = new DataSource({
   type: 'postgres',
