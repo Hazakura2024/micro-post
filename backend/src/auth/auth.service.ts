@@ -20,6 +20,8 @@ export class AuthService {
     if (!password) {
       throw new UnauthorizedException();
     }
+
+    //NOTE: パスワードから該当のユーザを検索する処理
     // crypto.は削除
     const hash = createHash('md5').update(password).digest('hex');
     const user = await this.userRepository.findOne({
@@ -32,5 +34,40 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException();
     }
+
+    // NOTE: authtableへのレコードの挿入
+
+    const ret = {
+      token: '',
+      user_id: user.id,
+    };
+
+    // NOTE: 認証レコード作成
+    const expire = new Date();
+    expire.setDate(expire.getDate() + 1);
+
+    const auth = await this.authRepository.findOne({
+      where: {
+        user_id: Equal(user.id),
+      },
+    });
+
+    if (auth) {
+      // 更新
+      auth.expire_at = expire;
+      await this.authRepository.save(auth);
+      ret.token = auth.token;
+    } else {
+      // 挿入
+      const token = crypto.randomUUID();
+      const record = {
+        user_id: user.id,
+        token: token,
+        expire_at: expire.toISOString(),
+      };
+      await this.authRepository.save(record);
+      ret.token = token;
+    }
+    return ret;
   }
 }
