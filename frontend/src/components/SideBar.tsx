@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const SideBar = () => {
+const SideBar = () => {
   return (
     <div>SideBar</div>
   )
