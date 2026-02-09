@@ -18,6 +18,16 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGAGMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGAGMIN_PASSWORD}
+    depends_on:
+      - db
+
 # NOTE: 「このファイル全体で postgres_data という名前の保管領域を使うよ」という宣言。上の services の中で使ったボリューム名は、最後にここでリストアップして「登録」しておく必要があります。これを書かないとエラー。
 volumes:
   postgres_data:

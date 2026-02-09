@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -14,6 +14,7 @@ export class UserController {
     this.userService.createUser(name, email, password);
   }
 
+  @Get(':id')
   async getUser(@Param('id') id: number, @Query('token') token: string) {
     return await this.userService.getUser(token, id);
   }
