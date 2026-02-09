@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { createHash } from 'crypto';
 import { Auth } from 'src/entities/auth';
 import { User } from 'src/entities/user.entity';
 import { Equal, MoreThan, Repository } from 'typeorm';
@@ -16,6 +17,17 @@ export class UserService {
     @InjectRepository(Auth)
     private authRepository: Repository<Auth>,
   ) {}
+
+  // NOTE: createUserを作成
+  createUser(name: string, email: string, password: string) {
+    const hash = createHash('md5').update(password).digest('hex');
+    const record = {
+      name: name,
+      email: email,
+      hash: hash,
+    };
+    this.userRepository.save(record);
+  }
 
   //NOTE: ユーザー取得
   async getUser(token: string, id: number) {
