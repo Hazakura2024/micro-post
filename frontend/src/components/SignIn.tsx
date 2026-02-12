@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import signIn from '../api/Auth'
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../probviders/useProvider';
 
 const SignIn = () => {
 
@@ -8,6 +9,7 @@ const SignIn = () => {
   
   const [userId, setUserId] = useState('');
   const [pass, setPass] = useState('');
+  const { setUserInfo } = useContext(UserContext)
 
   const onSignClick = async () => {
     const ret = await signIn(userId, pass);

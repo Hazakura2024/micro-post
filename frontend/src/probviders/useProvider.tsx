@@ -1,8 +1,8 @@
-import { createContext, Dispatch, SetStateAction, useState } from "react";
+import { createContext, Dispatch, SetStateAction, useMemo, useState } from "react";
 import { UserInfo } from "../types/User";
 
 // データの共有バケツの実体
-export const userContext = createContext(
+export const UserContext = createContext(
     // contextの型定義
 
     // asは型強制
@@ -23,9 +23,13 @@ export const UserProvider = (props: any) => {
     const { children } = props;
     const [userInfo, setUserInfo] = useState({id: 0, token: "" })
     // value 属性に渡したオブジェクトが、中に入っている全コンポーネントからアクセス可能に。
+
+    // NOTE: レンダリングへの影響を考慮し、メモ化する
+    const value = useMemo(() => ({ userInfo, setUserInfo }), [userInfo])
+
     return (
-        <userContext.Provider value={{ userInfo, setUserInfo }}>
+        <UserContext.Provider value={value}>
             {children}
-        </userContext.Provider>
+        </UserContext.Provider>
     )
 }
