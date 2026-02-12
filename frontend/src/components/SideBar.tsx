@@ -1,8 +1,15 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { UserContext } from '../probviders/useProvider'
 
 const SideBar = () => {
 
   const [msg, setMsg] = useState('')
+  const { userInfo } = useContext(UserContext);
+  const onSendClick = () => {
+    console.log("onSendClick");
+    console.log(userInfo);
+  };
+
   return (
     <div>
       <div>hoge</div>
@@ -11,7 +18,7 @@ const SideBar = () => {
         <textarea rows ={4} value={msg} onChange={(e) => setMsg(e.target.value)}></textarea>
       </div>
       <div>
-        <button>送信</button>
+        <button onClick={onSendClick}>送信</button>
       </div>
     </div>
   )

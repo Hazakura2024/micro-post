@@ -15,6 +15,10 @@ const SignIn = () => {
     const ret = await signIn(userId, pass);
     console.log(ret);
     if (ret && ret?.token) {
+      setUserInfo({
+        id : ret.user_id,
+        token: ret.token,
+      })
       navigate('/main')
     }
   }
