@@ -1,11 +1,12 @@
 import React from 'react'
 import Layout from '../components/Layout'
+import { PostListProvider } from '../probviders/PostListProvider'
 
 const Main = () => {
   return (
-    <div>
+    <PostListProvider>
         <Layout></Layout>
-    </div>
+    </PostListProvider>
   )
 }
 

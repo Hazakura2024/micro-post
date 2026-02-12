@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { UserContext } from '../probviders/useProvider'
+import { UserContext } from '../probviders/UserProvider'
 import { createPost } from '../api/Post';
 
 
