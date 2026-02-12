@@ -1,15 +1,20 @@
 import React, { useState } from 'react'
 import signIn from '../api/Auth'
+import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
+
+  const navigate = useNavigate();
   
   const [userId, setUserId] = useState('');
   const [pass, setPass] = useState('');
 
-  const onSignClick = () => {
-    console.log('onSignClick');
-    signIn(userId, pass);
-    
+  const onSignClick = async () => {
+    const ret = await signIn(userId, pass);
+    console.log(ret);
+    if (ret && ret?.token) {
+      navigate('/main')
+    }
   }
 
   return (
