@@ -1,13 +1,23 @@
 import React, { useContext, useState } from 'react'
 import { UserContext } from '../probviders/useProvider'
+import { createPost } from '../api/Post';
+
 
 const SideBar = () => {
 
   const [msg, setMsg] = useState('')
   const { userInfo } = useContext(UserContext);
   const onSendClick = () => {
-    console.log("onSendClick");
-    console.log(userInfo);
+    try {
+      createPost(userInfo.token, msg);
+
+      // ここに到達するということは、成功したということ
+      setMsg("");
+
+    } catch (error) {
+      console.log("通信に失敗しました", error);
+      alert("通信に失敗しました！");
+    }
   };
 
   return (
