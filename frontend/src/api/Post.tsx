@@ -9,8 +9,8 @@ const Post = () => {
   )
 }
 
-const getList = async() => {
-    const url =`http://localhost:3000/post?token={token}`;
+const getList = async(token: string) => {
+    const url =`http://localhost:3000/post?token=${token}`;
     const res = await axios.get(url)
     return res;
 }
