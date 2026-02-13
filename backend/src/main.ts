@@ -5,11 +5,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // NOTE: CORS（Cross-Origin Resource Sharing:違うオリジンからのアクセス）を有効にする
-  app.enableCors(/*{
-    origin: 'http://localhost:3001/',
+  app.enableCors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3001',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
-  }*/);
+  });
 
   await app.listen(process.env.PORT ?? 3000);
 }
