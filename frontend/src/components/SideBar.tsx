@@ -27,7 +27,7 @@ const SideBar = () => {
 
   return (
     <div>
-      <div>ユーザーID:{userInfo.id}</div>
+      <div>新規投稿</div>
       <div></div>
       <div>
         <textarea rows ={4} value={msg} onChange={(e) => setMsg(e.target.value)}></textarea>
