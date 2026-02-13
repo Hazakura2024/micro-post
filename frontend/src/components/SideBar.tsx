@@ -33,7 +33,7 @@ const SideBar = () => {
         <SSideBarTextArea rows ={4} value={msg} onChange={(e) => setMsg(e.target.value)}></SSideBarTextArea>
       </SSideBarRow>
       <SSideBarRow>
-        <SSideBarButton onClick={onSendClick}>送信</SSideBarButton>
+        <SSideBarButton disabled={msg === ''? true : false} onClick={onSendClick}>送信</SSideBarButton>
       </SSideBarRow>
     </SSideBar>
   )
@@ -58,7 +58,7 @@ const SSideBarTextArea = styled.textarea`
 `
 
 const SSideBarButton = styled.button`
-  background-color: #00a3af;
+  background-color: ${props => props.disabled? "#8491c3" : "#00a3af"};
   border-color: #eeeeee;
   padding: 4px;
   border-radius: 8px;
