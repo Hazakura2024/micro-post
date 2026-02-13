@@ -24,8 +24,9 @@ describe('UserController', () => {
 
   // テスト本体
   it('should be defined', async () => {
+    const spy = jest.spyOn(service, 'getUser');
     const controller = new UserController(service); // テスト対象のコントローラ作成
     await controller.getUser(1, 'xxx-xxx-xxx-xxx'); // getUser関数の呼び出し
-    expect(service.getUser).toHaveBeenCalledTimes(1); // 呼び出し回数の確認
+    expect(spy).toHaveBeenCalledTimes(1); // 呼び出し回数の確認
   });
 });
