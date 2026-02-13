@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import { UserContext } from '../probviders/UserProvider'
 import { createPost } from '../api/Post';
 import { PostListContext } from '../probviders/PostListProvider';
+import styled from 'styled-components';
 
 
 const SideBar = () => {
@@ -26,17 +27,40 @@ const SideBar = () => {
   };
 
   return (
-    <div>
-      <div>新規投稿</div>
-      <div></div>
-      <div>
-        <textarea rows ={4} value={msg} onChange={(e) => setMsg(e.target.value)}></textarea>
-      </div>
-      <div>
-        <button onClick={onSendClick}>送信</button>
-      </div>
-    </div>
+    <SSideBar>
+      <SSideBarRow>新規投稿</SSideBarRow>
+      <SSideBarRow>
+        <SSideBarTextArea rows ={4} value={msg} onChange={(e) => setMsg(e.target.value)}></SSideBarTextArea>
+      </SSideBarRow>
+      <SSideBarRow>
+        <SSideBarButton onClick={onSendClick}>送信</SSideBarButton>
+      </SSideBarRow>
+    </SSideBar>
   )
 }
 
 export default SideBar
+
+const SSideBar = styled.div`
+  padding: 8px;
+`
+
+const SSideBarRow = styled.div`
+  margin-top: 4px;
+  margin-bottom: 4px;
+  text-align: left;
+`
+
+const SSideBarTextArea = styled.textarea`
+  border-radius: 4px;
+  width: 95%;
+  box-shadow: inset 0 2px 4px #CCCCCC;
+`
+
+const SSideBarButton = styled.button`
+  background-color: #222222;
+  padding: 4px;
+  border-radius: 8px;
+  color: #FAFAFA;
+  width: 100%;
+`
