@@ -19,9 +19,11 @@ const PostList = () => {
 
   return (
     <SPostList>
+      <SHeader>
+        <div>投稿一覧 </div>
+        <SSideBarButton onClick={onClickReload}>更新</SSideBarButton>
+      </SHeader>
 
-      <span>PostList </span>
-      <button onClick={onClickReload}>更新</button>
 
 
       {postList.map((p) => (
@@ -36,8 +38,29 @@ const PostList = () => {
 export default PostList
 
 const SPostList = styled.div`
-  paddig-left: 10px;
+  padding-left: 10px;
   margin-top: 16px;
   height: 100%;
   overflow-y: scroll;
+  overflow-x: hidden; 
+`
+
+const SHeader = styled.div`
+    width: 100%;
+    height: 32px;
+    display: flex;
+    flex-direction: row;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 8px;
+`
+
+const SSideBarButton = styled.button`
+  background-color: #00a3af;
+  border-color: #eeeeee;
+  padding: 4px;
+  margin: 16px;
+  border-radius: 8px;
+  color: #FAFAFA;
+  width: 96px;
 `

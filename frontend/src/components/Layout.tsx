@@ -25,7 +25,7 @@ const Layout = () => {
 const SHeader = styled.div`
     width: 100%;
     height: 32px;
-    box-shadow: 0px 4px 4px #AAAAAA;
+    box-shadow: 0px 4px 4px #DDDDDD;
 `
 const SBody = styled.div`
     width: 100%;

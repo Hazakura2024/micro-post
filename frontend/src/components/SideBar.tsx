@@ -58,7 +58,8 @@ const SSideBarTextArea = styled.textarea`
 `
 
 const SSideBarButton = styled.button`
-  background-color: #222222;
+  background-color: #00a3af;
+  border-color: #eeeeee;
   padding: 4px;
   border-radius: 8px;
   color: #FAFAFA;

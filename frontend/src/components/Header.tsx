@@ -42,7 +42,7 @@ const Header = () => {
 export default Header
 
 const SHeader = styled.div`
-  background-color: #222222;
+  background-color: #00a3af;
   display: flex;
   flex-direction: row;
   align-items: center;
