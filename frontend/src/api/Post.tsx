@@ -16,3 +16,4 @@ export const getList = async (token: string) => {
     const res = await axios.get(url)
     return res.data;
 }
+

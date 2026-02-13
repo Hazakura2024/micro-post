@@ -5,10 +5,8 @@ import { PostType } from '../types/Post'
 const Post = ({ post }: { post: PostType }) => {
 
   const getDateString = (dateObj :Date) => {
-    return dateObj.toLocaleString('ja-JP');
+    return dateObj.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo'});
   }
-
-  console.log("Post.tsxでは",post.user_name)
   return (
     <div>
         <div>{getDateString(post.created_at)}</div>
