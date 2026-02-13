@@ -7,28 +7,8 @@ import { createDeflate } from 'zlib'
 import Post from './Post'
 
 const PostList = () => {
-  const { postList, setPostList } = useContext(PostListContext)
+  const { postList, setPostList, getPostList } = useContext(PostListContext)
   const { userInfo } = useContext(UserContext)
-
-
-  const getPostList = async () => {
-    const posts = await getList(userInfo.token);
-    console.log(posts)
-
-    if (posts) {
-      const formattedPosts = posts.map((p: any) => (
-        {
-          id: p.id,
-          user_name: p.user_name,
-          content: p.content,
-          created_at: new Date(p.created_at),
-        }
-      )
-      )
-      setPostList(formattedPosts)
-    }
-
-  }
 
   useEffect(() => {
     getPostList();
