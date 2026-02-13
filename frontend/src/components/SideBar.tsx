@@ -58,10 +58,14 @@ const SSideBarTextArea = styled.textarea`
 `
 
 const SSideBarButton = styled.button`
-  background-color: ${props => props.disabled? "#8491c3" : "#00a3af"};
+  background-color: #00a3af;
   border-color: #eeeeee;
   padding: 4px;
   border-radius: 8px;
   color: #FAFAFA;
   width: 100%;
+  &:disabled {
+    background-color: #8491c3;
+    cursor: not-allowed;
+  }
 `
