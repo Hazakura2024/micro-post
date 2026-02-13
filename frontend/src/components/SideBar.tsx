@@ -53,7 +53,7 @@ const SSideBarRow = styled.div`
 
 const SSideBarTextArea = styled.textarea`
   border-radius: 4px;
-  width: 95%;
+  width: 96%;
   box-shadow: inset 0 2px 4px #CCCCCC;
 `
 
