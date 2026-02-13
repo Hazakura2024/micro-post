@@ -27,8 +27,8 @@ const SideBar = () => {
 
   return (
     <div>
-      <div>hoge</div>
-      <div>hoge@example.com</div>
+      <div>ユーザーID:{userInfo.id}</div>
+      <div></div>
       <div>
         <textarea rows ={4} value={msg} onChange={(e) => setMsg(e.target.value)}></textarea>
       </div>
