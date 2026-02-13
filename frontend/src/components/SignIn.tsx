@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import signIn from '../api/Auth'
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../probviders/UserProvider';
+import styled from 'styled-components';
 
 const SignIn = () => {
 
@@ -24,20 +25,67 @@ const SignIn = () => {
   }
 
   return (
-    <div>
-      <div>
-        <label htmlFor="id">ID</label>
-        <input id='id' value={userId} type="text" onChange={(evt) => setUserId(evt.target.value)}/>
-      </div>
-      <div>
-        <label htmlFor="password">Password</label>
-        <input id='password' value={pass} type="text" onChange={(evt) => setPass(evt.target.value)}/>
-      </div>
-      <div>
-        <button type='button' onClick={onSignClick}>Login</button>
-      </div>
-    </div>
+    <SSignInFrame>
+      <SSignInRow>
+        <SSignInLabel>
+          <label htmlFor="id">ID</label>
+        </SSignInLabel>
+        <SSignInInput>
+          <input id='id' value={userId} type="text" onChange={(evt) => setUserId(evt.target.value)}/>
+        </SSignInInput>
+      </SSignInRow>
+      <SSignInRow>
+        <SSignInLabel>
+          <label htmlFor="password">Password</label>
+        </SSignInLabel>
+        <SSignInInput>
+          <input id='password' value={pass} type="text" onChange={(evt) => setPass(evt.target.value)}/>
+        </SSignInInput>
+      </SSignInRow>
+      <SSignInRow>
+        <SSignInButton type='button' onClick={onSignClick}>Login</SSignInButton>
+      </SSignInRow>
+    </SSignInFrame>
   )
 }
 
 export default SignIn
+
+const SSignInFrame = styled.div`
+  background-color: #f8f8f8;
+  max-width: 600px;
+  margin: 80px auto;
+  padding-top: 20px;
+  padding-bottom: 8px;
+  border-radius: 8px;
+  box-shadow: 0 8px 8px #aaaaaa;
+`;
+
+const SSignInRow = styled.div`
+  display: block;
+  text-align: center;
+  margin-top: 4px;
+  margin-bottom: 4px;  
+`
+
+const SSignInLabel = styled.span`
+  display: inline-block;
+  width: 25%;
+  vertical-align: top;
+  text-align: right;
+  margin-right: 4px;
+`
+
+const SSignInInput = styled.span`
+  dispaly: inline-block;
+  width: auto;
+  vertical-align: top;
+  margin-left: 4px;
+`
+
+const SSignInButton = styled.button`
+  background-color: #444444;
+  color: #f0f0f0;
+  padding: 4px 16px;
+  border-radius: 8px;
+`

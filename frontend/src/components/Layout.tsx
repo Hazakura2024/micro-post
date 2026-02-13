@@ -25,23 +25,21 @@ const Layout = () => {
 const SHeader = styled.div`
     width: 100%;
     height: 32px;
-    border: 2px solid red;
+    box-shadow: 0px 4px 4px #DDDDDD;
 `
 const SBody = styled.div`
     width: 100%;
     height: calc(100vh - 32px);
-    border: 2px solid green;
     display: flex;
     flex-direction: row;
 `
 const SSideBar = styled.div`
-    border: 2px solid blue;
+    border-right: 1px solid #222222;
     width: 30%;
     height: 100%;
 `
 
 const SContents = styled.div`
-    border: 2px solid #ff00ff;
     width: 100%;
     height: 100%;
 `
