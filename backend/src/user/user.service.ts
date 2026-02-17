@@ -26,7 +26,7 @@ export class UserService {
       email: email,
       hash: hash,
     };
-    this.userRepository.save(record);
+    return this.userRepository.save(record);
   }
 
   //NOTE: ユーザー取得
