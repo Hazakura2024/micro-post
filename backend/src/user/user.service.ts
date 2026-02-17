@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -16,10 +17,28 @@ export class UserService {
     private userRepository: Repository<User>,
     @InjectRepository(Auth)
     private authRepository: Repository<Auth>,
-  ) {}
+  ) { }
 
   // NOTE: createUserを作成
-  createUser(name: string, email: string, password: string) {
+  async createUser(name: string, email: string, password: string) {
+
+    // NOTE: メールアドレスの重複チェック
+    const existingUserByEmail = await this.userRepository.findOne({
+      where: { email: Equal(email) },
+    });
+    if (existingUserByEmail) {
+      throw new ConflictException('このメールアドレスは登録されています。');
+    }
+
+    // NOTE: ユーザー名の重複チェック
+    const existingUserByName = await this.userRepository.findOne({
+      where: { name: Equal(name) },
+    });
+    if (existingUserByName) {
+      throw new ConflictException('このユーザー名は使用されています。');
+    }
+
+    // NOTE: ユーザー作成
     const hash = createHash('md5').update(password).digest('hex');
     const record = {
       name: name,
