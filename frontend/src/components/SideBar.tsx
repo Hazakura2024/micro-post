@@ -20,7 +20,7 @@ const SideBar = () => {
       getPostList()
       // createPost 成功 → setMsg → getPostList の順番が保証されている
 
-    } catch (error) {
+    } catch (error : unknown) {
       console.log("通信に失敗しました", error);
       alert("通信に失敗しました！");
     }
