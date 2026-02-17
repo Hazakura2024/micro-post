@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
-import { UserContext } from '../probviders/UserProvider'
+import { UserContext } from '../providers/UserProvider'
 import { createPost } from '../api/Post';
-import { PostListContext } from '../probviders/PostListProvider';
+import { PostListContext } from '../providers/PostListProvider';
 import styled from 'styled-components';
 
 
@@ -20,7 +20,7 @@ const SideBar = () => {
       getPostList()
       // createPost 成功 → setMsg → getPostList の順番が保証されている
 
-    } catch (error) {
+    } catch (error : unknown) {
       console.log("通信に失敗しました", error);
       alert("通信に失敗しました！");
     }

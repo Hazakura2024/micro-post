@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useMemo, useState, createContext, useContext } from "react";
+import React, { Dispatch, SetStateAction, useMemo, useState, createContext, useContext } from "react";
 import { PostType } from "../types/Post";
 import { getList } from "../api/Post";
 import { UserContext, UserProvider } from "./UserProvider";
@@ -11,8 +11,7 @@ export const PostListContext = createContext(
     }
 );
 
-export const PostListProvider = (props: any) => {
-    const { children } = props;
+export const PostListProvider = ({ children } : { children: React.ReactNode }) => {
     const [postList, setPostList] = useState<PostType[]>([]);
 
     const { userInfo } = useContext(UserContext)
@@ -22,7 +21,7 @@ export const PostListProvider = (props: any) => {
         console.log(posts)
 
         if (posts) {
-            const formattedPosts = posts.map((p: any) => (
+            const formattedPosts = posts.map((p: PostType) => (
                 {
                     id: p.id,
                     user_name: p.user_name,

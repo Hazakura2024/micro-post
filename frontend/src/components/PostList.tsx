@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
-import { PostListContext } from '../probviders/PostListProvider'
-import { UserContext } from '../probviders/UserProvider'
+import { PostListContext } from '../providers/PostListProvider'
+import { UserContext } from '../providers/UserProvider'
 import Post from './Post'
 import styled from 'styled-components'
 

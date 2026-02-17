@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { UserContext } from '../probviders/UserProvider'
+import { UserContext } from '../providers/UserProvider'
 import { useNavigate } from 'react-router-dom'
 import { getUser } from '../api/User'
 import styled from 'styled-components'
@@ -23,7 +23,7 @@ const Header = () => {
   useEffect(() => {
     try {
       getMyUser();
-    } catch (error) {
+    } catch (error : unknown) {
       console.log("ユーザー情報が取得できませんでした。")
     }
   }, [])

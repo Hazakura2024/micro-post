@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import signIn from '../api/Auth'
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../probviders/UserProvider';
+import { UserContext } from '../providers/UserProvider';
 import styled from 'styled-components';
 
 const SignIn = () => {
