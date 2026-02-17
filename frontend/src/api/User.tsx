@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { Axios, AxiosError } from "axios";
 import { UserResponse } from "../types/User";
 
 export const getUser = async (id: number, token: string): Promise<UserResponse> => {
@@ -24,6 +24,18 @@ export const createUser = async (name: string, email: string, password: string):
         });
         return res.data;
     } catch (error: unknown) {
-        throw error;
+        // NOTE: 1.ネットワークエラー（サーバー到達負荷の場合）
+        if (error instanceof AxiosError && !error.response) {
+            throw new Error('ネットワークに接続できません');
+        }
+
+        // NOTE: 2.HTTPエラー
+        if (error instanceof AxiosError && error.response) {
+            throw error;
+        }
+
+        // NOTE: その他の予期しないエラー
+        throw new Error("予期しないエラーが発生")
+
     }
 }

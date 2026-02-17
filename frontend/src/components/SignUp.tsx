@@ -31,14 +31,14 @@ const SignUp = () => {
                 navigate("/main");
             }
         } catch (error: unknown) {
-            if (error instanceof AxiosError) {
-                const msg = error.response?.data?.message || "登録に失敗しました。";
-                setErrorMessage(msg);
-                toast.error(msg);
-            } else {
-                setErrorMessage('不明なエラーが発生しました')
-                toast.error('不明なエラーが発生しました');
+            let msg = "登録に失敗しました。";
+            if (error instanceof AxiosError && error.response?.data?.message) {
+                msg = error.response.data.message;
+            } else if (error instanceof AxiosError) {
+                msg = error.message;
             }
+            setErrorMessage(msg)
+            toast.error(msg)
         }
     };
 
