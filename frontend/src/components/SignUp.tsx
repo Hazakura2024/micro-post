@@ -32,7 +32,9 @@ const SignUp = () => {
         } catch (error: unknown) {
             if (error instanceof AxiosError) {
                 const msg = error.response?.data?.message;
-                setErrorMessage(msg || "登録に失敗遭いました。");
+                setErrorMessage(msg || "登録に失敗しました。");
+            } else {
+                setErrorMessage('不明なエラーが発生しました')
             }
         }
     };

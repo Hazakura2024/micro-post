@@ -24,8 +24,7 @@ const SignIn = () => {
         navigate("/main");
       }
     } catch (error: unknown) {
-      const msg =
-        error instanceof Error ? error.message : "ログインに失敗しました";
+      const msg = error instanceof Error ? error.message : "ログインに失敗しました";
       setErrorMessage(msg);
     }
   };
