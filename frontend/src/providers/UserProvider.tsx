@@ -18,9 +18,9 @@ export const UserContext = createContext(
 
 // Providerコンポーネント:アプリ全体を包み込むための部品。
 // propsはany となっているが、Provider の中身（children）が入ってくる。
-export const UserProvider = (props: any) => {
+export const UserProvider = ({ children } : { children: React.ReactNode }) => {
     // children（子コンポーネントたち）を取り出す。
-    const { children } = props;
+
     const [userInfo, setUserInfo] = useState({id: 0, token: "" })
     // value 属性に渡したオブジェクトが、中に入っている全コンポーネントからアクセス可能に。
 
