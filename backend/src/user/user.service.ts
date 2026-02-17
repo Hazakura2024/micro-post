@@ -45,7 +45,14 @@ export class UserService {
       email: email,
       hash: hash,
     };
-    return this.userRepository.save(record);
+    const savedUser = await this.userRepository.save(record);
+
+    return {
+      id: savedUser.id,
+      name: savedUser.name,
+      email: savedUser.email,
+      createdAt: savedUser.created_at,
+    };
   }
 
   //NOTE: ユーザー取得
@@ -72,6 +79,11 @@ export class UserService {
     if (!user) {
       throw new NotFoundException();
     }
-    return user;
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      createdAt: user.created_at,
+    };
   }
 }
