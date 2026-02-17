@@ -125,7 +125,7 @@ const SSignUpLabel = styled.span`
 `;
 
 const SSignUpInput = styled.span`
-  dispaly: inline-block;
+  display: inline-block;
   width: auto;
   vertical-align: top;
   margin-left: 4px;

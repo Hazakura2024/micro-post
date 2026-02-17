@@ -102,7 +102,7 @@ const SSignInLabel = styled.span`
 `;
 
 const SSignInInput = styled.span`
-  dispaly: inline-block;
+  display: inline-block;
   width: auto;
   vertical-align: top;
   margin-left: 4px;
