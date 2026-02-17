@@ -3,6 +3,8 @@ import signIn from "../api/Auth";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../providers/UserProvider";
 import styled from "styled-components";
+import { createUser } from "../api/User";
+import { AxiosError } from "axios";
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -16,6 +18,9 @@ const SignUp = () => {
     const onSignClick = async () => {
         try {
             setErrorMessage("");
+
+            await createUser(userId, mail, pass);
+
             const ret = await signIn(userId, pass);
             if (ret?.token) {
                 setUserInfo({
@@ -25,16 +30,17 @@ const SignUp = () => {
                 navigate("/main");
             }
         } catch (error: unknown) {
-            const msg =
-                error instanceof Error ? error.message : "ログインに失敗しました";
-            setErrorMessage(msg);
+            if (error instanceof AxiosError) {
+                const msg = error.response?.data?.message;
+                setErrorMessage(msg || "登録に失敗遭いました。");
+            }
         }
     };
 
     return (
         <SSignUpFrame>
             <SSignUpRow>
-                <h3>登録</h3>
+                <h3>新規登録</h3>
             </SSignUpRow>
             <SSignUpRow>
                 <SSignUpLabel>
@@ -77,12 +83,12 @@ const SignUp = () => {
             </SSignUpRow>
             <SSignUpRow>
                 {errorMessage && (
-                    <SErrorMessage>ログインできませんでした</SErrorMessage>
+                    <SErrorMessage>{errorMessage}</SErrorMessage>
                 )}
             </SSignUpRow>
             <SSignUpRow>
                 <SSignUpButton type="button" onClick={onSignClick}>
-                    Login
+                    SignUp
                 </SSignUpButton>
             </SSignUpRow>
         </SSignUpFrame>

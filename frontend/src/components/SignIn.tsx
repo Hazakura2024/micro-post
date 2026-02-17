@@ -33,6 +33,9 @@ const SignIn = () => {
   return (
     <SSignInFrame>
       <SSignInRow>
+        <h3>ログイン</h3>
+      </SSignInRow>
+      <SSignInRow>
         <SSignInLabel>
           <label htmlFor="id">ID</label>
         </SSignInLabel>

@@ -10,12 +10,16 @@ export const getUser = async (id: number, token: string): Promise<UserResponse> 
 };
 
 export const createUser = async (name: string, email: string, password: string): Promise<UserResponse> => {
-    const API_URL = process.env.REACT_APP_API_URL;
-    const url = `${API_URL}/user`
-    const res = await axios.post<UserResponse>(url, {
-        "name": name,
-        "email": email,
-        "password": password
-    });
-    return res.data;
+    try {
+        const API_URL = process.env.REACT_APP_API_URL;
+        const url = `${API_URL}/user`
+        const res = await axios.post<UserResponse>(url, {
+            "name": name,
+            "email": email,
+            "password": password
+        });
+        return res.data;
+    } catch (error: unknown) {
+        throw error;
+    }
 }
