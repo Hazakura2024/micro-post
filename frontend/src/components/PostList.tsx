@@ -1,12 +1,12 @@
-import React, { useContext, useEffect } from 'react'
-import { PostListContext } from '../providers/PostListProvider'
-import { UserContext } from '../providers/UserProvider'
-import Post from './Post'
-import styled from 'styled-components'
+import React, { useContext, useEffect } from "react";
+import { PostListContext } from "../providers/PostListProvider";
+import { UserContext } from "../providers/UserProvider";
+import Post from "./Post";
+import styled from "styled-components";
 
 const PostList = () => {
-  const { postList, setPostList, getPostList } = useContext(PostListContext)
-  const { userInfo } = useContext(UserContext)
+  const { postList, setPostList, getPostList } = useContext(PostListContext);
+  const { userInfo } = useContext(UserContext);
 
   useEffect(() => {
     getPostList();
@@ -16,7 +16,6 @@ const PostList = () => {
     getPostList();
   };
 
-
   return (
     <SPostList>
       <SHeader>
@@ -24,36 +23,33 @@ const PostList = () => {
         <SSideBarButton onClick={onClickReload}>更新</SSideBarButton>
       </SHeader>
 
-
-
       {postList.map((p) => (
         <Post key={p.id} post={p} />
         // <div key={p.id}>{p.content}</div>
       ))}
     </SPostList>
-  )
-}
+  );
+};
 
-
-export default PostList
+export default PostList;
 
 const SPostList = styled.div`
   padding-left: 10px;
   margin-top: 16px;
   height: 100%;
   overflow-y: scroll;
-  overflow-x: hidden; 
-`
+  overflow-x: hidden;
+`;
 
 const SHeader = styled.div`
-    width: 100%;
-    height: 32px;
-    display: flex;
-    flex-direction: row;
-    flex-direction: row;
-    align-items: center;
-    padding-left: 8px;
-`
+  width: 100%;
+  height: 32px;
+  display: flex;
+  flex-direction: row;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 8px;
+`;
 
 const SSideBarButton = styled.button`
   background-color: #00a3af;
@@ -61,6 +57,6 @@ const SSideBarButton = styled.button`
   padding: 4px;
   margin: 16px;
   border-radius: 8px;
-  color: #FAFAFA;
+  color: #fafafa;
   width: 96px;
-`
+`;

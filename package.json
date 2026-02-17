@@ -3,5 +3,13 @@
     "axios": "^1.13.5",
     "react-router-dom": "^7.13.0",
     "styled-components": "^6.3.9"
+  },
+  "devDependencies": {
+    "prettier": "^3.8.1"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
   }
 }
