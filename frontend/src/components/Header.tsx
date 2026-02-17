@@ -32,7 +32,7 @@ const Header = () => {
     <SHeader>
       <SLogo>MicroPost</SLogo>
       <SRgightItem>
-        <SName>{userName}</SName>
+        <SName>{userName}さん</SName>
         <SLogout onClick={onClickLogout}>ログアウト</SLogout>
       </SRgightItem>
     </SHeader>

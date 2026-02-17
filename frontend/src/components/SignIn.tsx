@@ -24,14 +24,16 @@ const SignIn = () => {
         navigate("/main");
       }
     } catch (error: unknown) {
-      const msg =
-        error instanceof Error ? error.message : "ログインに失敗しました";
+      const msg = error instanceof Error ? error.message : "ログインに失敗しました";
       setErrorMessage(msg);
     }
   };
 
   return (
     <SSignInFrame>
+      <SSignInRow>
+        <h3>ログイン</h3>
+      </SSignInRow>
       <SSignInRow>
         <SSignInLabel>
           <label htmlFor="id">ID</label>
