@@ -5,6 +5,7 @@ import { UserContext } from "../providers/UserProvider";
 import styled from "styled-components";
 import { createUser } from "../api/User";
 import { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -31,10 +32,12 @@ const SignUp = () => {
             }
         } catch (error: unknown) {
             if (error instanceof AxiosError) {
-                const msg = error.response?.data?.message;
-                setErrorMessage(msg || "登録に失敗しました。");
+                const msg = error.response?.data?.message || "登録に失敗しました。";
+                setErrorMessage(msg);
+                toast.error(msg);
             } else {
                 setErrorMessage('不明なエラーが発生しました')
+                toast.error('不明なエラーが発生しました');
             }
         }
     };
