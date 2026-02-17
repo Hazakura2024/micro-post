@@ -1,12 +1,12 @@
-import React from 'react'
-import SignInLayout from '../components/SignInLayout'
+import React from "react";
+import SignInLayout from "../components/SignInLayout";
 
 const SignIn = () => {
   return (
     <div>
-        <SignInLayout></SignInLayout>
+      <SignInLayout></SignInLayout>
     </div>
-  )
-}
+  );
+};
 
-export default SignIn
+export default SignIn;

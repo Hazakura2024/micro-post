@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { AuthResponse } from '../types/Auth';
+import axios from "axios";
+import { AuthResponse } from "../types/Auth";
 
 const signIn = async (userId: string, pass: string): Promise<AuthResponse> => {
   try {
@@ -7,9 +7,9 @@ const signIn = async (userId: string, pass: string): Promise<AuthResponse> => {
     const url = `${API_URL}/auth?user_id=${userId}&password=${pass}`;
     const res = await axios.get<AuthResponse>(url);
     return res.data;
-  } catch (error : unknown) {
+  } catch (error: unknown) {
     throw new Error(`認証失敗: ${error}`);
   }
-}
+};
 
 export default signIn;

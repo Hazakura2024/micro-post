@@ -24,7 +24,10 @@
     "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "prettier --write src/**/*.{ts,tsx,jsx}",
+    "format:check": "prettier --check src/**/*.{ts,tsx,jsx}"
+
   },
   "eslintConfig": {
     "extends": [
@@ -45,6 +48,7 @@
     ]
   },
   "devDependencies": {
-    "cross-env": "^10.1.0"
+    "cross-env": "^10.1.0",
+    "prettier": "^3.8.1"
   }
 }

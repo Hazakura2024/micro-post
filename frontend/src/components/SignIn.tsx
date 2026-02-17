@@ -1,34 +1,34 @@
-import React, { useContext, useState } from 'react'
-import signIn from '../api/Auth'
-import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../providers/UserProvider';
-import styled from 'styled-components';
+import React, { useContext, useState } from "react";
+import signIn from "../api/Auth";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../providers/UserProvider";
+import styled from "styled-components";
 
 const SignIn = () => {
-
   const navigate = useNavigate();
 
-  const [userId, setUserId] = useState('');
-  const [pass, setPass] = useState('');
-  const { setUserInfo } = useContext(UserContext)
-  const [errorMessage ,setErrorMessage] = useState("");
+  const [userId, setUserId] = useState("");
+  const [pass, setPass] = useState("");
+  const { setUserInfo } = useContext(UserContext);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const onSignClick = async () => {
     try {
-      setErrorMessage("")
+      setErrorMessage("");
       const ret = await signIn(userId, pass);
       if (ret?.token) {
         setUserInfo({
           id: ret.user_id,
           token: ret.token,
-        })
-        navigate('/main')
+        });
+        navigate("/main");
       }
-    } catch (error : unknown) {
-      const msg = error instanceof Error ? error.message : 'ログインに失敗しました'
+    } catch (error: unknown) {
+      const msg =
+        error instanceof Error ? error.message : "ログインに失敗しました";
       setErrorMessage(msg);
-    } 
-  }
+    }
+  };
 
   return (
     <SSignInFrame>
@@ -37,7 +37,12 @@ const SignIn = () => {
           <label htmlFor="id">ID</label>
         </SSignInLabel>
         <SSignInInput>
-          <input id='id' value={userId} type="text" onChange={(evt) => setUserId(evt.target.value)} />
+          <input
+            id="id"
+            value={userId}
+            type="text"
+            onChange={(evt) => setUserId(evt.target.value)}
+          />
         </SSignInInput>
       </SSignInRow>
       <SSignInRow>
@@ -45,20 +50,29 @@ const SignIn = () => {
           <label htmlFor="password">Password</label>
         </SSignInLabel>
         <SSignInInput>
-          <input id='password' value={pass} type="text" onChange={(evt) => setPass(evt.target.value)} />
+          <input
+            id="password"
+            value={pass}
+            type="text"
+            onChange={(evt) => setPass(evt.target.value)}
+          />
         </SSignInInput>
       </SSignInRow>
       <SSignInRow>
-        {errorMessage && <SErrorMessage>ログインできませんでした</SErrorMessage>}
+        {errorMessage && (
+          <SErrorMessage>ログインできませんでした</SErrorMessage>
+        )}
       </SSignInRow>
       <SSignInRow>
-        <SSignInButton type='button' onClick={onSignClick}>Login</SSignInButton>
+        <SSignInButton type="button" onClick={onSignClick}>
+          Login
+        </SSignInButton>
       </SSignInRow>
     </SSignInFrame>
-  )
-}
+  );
+};
 
-export default SignIn
+export default SignIn;
 
 const SSignInFrame = styled.div`
   background-color: #f8f8f8;
@@ -74,8 +88,8 @@ const SSignInRow = styled.div`
   display: block;
   text-align: center;
   margin-top: 4px;
-  margin-bottom: 4px;  
-`
+  margin-bottom: 4px;
+`;
 
 const SSignInLabel = styled.span`
   display: inline-block;
@@ -83,22 +97,22 @@ const SSignInLabel = styled.span`
   vertical-align: top;
   text-align: right;
   margin-right: 4px;
-`
+`;
 
 const SSignInInput = styled.span`
   dispaly: inline-block;
   width: auto;
   vertical-align: top;
   margin-left: 4px;
-`
+`;
 
 const SSignInButton = styled.button`
   background-color: #444444;
   color: #f0f0f0;
   padding: 4px 16px;
   border-radius: 8px;
-`
+`;
 
 const SErrorMessage = styled.div`
   color: red;
-`
+`;

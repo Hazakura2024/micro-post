@@ -1,12 +1,12 @@
-import React from 'react'
-import PostList from './PostList'
+import React from "react";
+import PostList from "./PostList";
 
 const Contents = () => {
   return (
     <div>
-        <PostList></PostList>
+      <PostList></PostList>
     </div>
-  )
-}
+  );
+};
 
-export default Contents
+export default Contents;
