@@ -7,21 +7,27 @@ import styled from 'styled-components';
 const SignIn = () => {
 
   const navigate = useNavigate();
-  
+
   const [userId, setUserId] = useState('');
   const [pass, setPass] = useState('');
   const { setUserInfo } = useContext(UserContext)
+  const [errorMessage ,setErrorMessage] = useState("");
 
   const onSignClick = async () => {
-    const ret = await signIn(userId, pass);
-    console.log(ret);
-    if (ret && ret?.token) {
-      setUserInfo({
-        id : ret.user_id,
-        token: ret.token,
-      })
-      navigate('/main')
-    }
+    try {
+      setErrorMessage("")
+      const ret = await signIn(userId, pass);
+      if (ret?.token) {
+        setUserInfo({
+          id: ret.user_id,
+          token: ret.token,
+        })
+        navigate('/main')
+      }
+    } catch (error : unknown) {
+      const msg = error instanceof Error ? error.message : 'ログインに失敗しました'
+      setErrorMessage(msg);
+    } 
   }
 
   return (
@@ -31,7 +37,7 @@ const SignIn = () => {
           <label htmlFor="id">ID</label>
         </SSignInLabel>
         <SSignInInput>
-          <input id='id' value={userId} type="text" onChange={(evt) => setUserId(evt.target.value)}/>
+          <input id='id' value={userId} type="text" onChange={(evt) => setUserId(evt.target.value)} />
         </SSignInInput>
       </SSignInRow>
       <SSignInRow>
@@ -39,8 +45,11 @@ const SignIn = () => {
           <label htmlFor="password">Password</label>
         </SSignInLabel>
         <SSignInInput>
-          <input id='password' value={pass} type="text" onChange={(evt) => setPass(evt.target.value)}/>
+          <input id='password' value={pass} type="text" onChange={(evt) => setPass(evt.target.value)} />
         </SSignInInput>
+      </SSignInRow>
+      <SSignInRow>
+        {errorMessage && <SErrorMessage>ログインできませんでした</SErrorMessage>}
       </SSignInRow>
       <SSignInRow>
         <SSignInButton type='button' onClick={onSignClick}>Login</SSignInButton>
@@ -88,4 +97,8 @@ const SSignInButton = styled.button`
   color: #f0f0f0;
   padding: 4px 16px;
   border-radius: 8px;
+`
+
+const SErrorMessage = styled.div`
+  color: red;
 `
