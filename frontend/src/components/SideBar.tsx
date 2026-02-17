@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
-import { UserContext } from '../probviders/UserProvider'
+import { UserContext } from '../providers/UserProvider'
 import { createPost } from '../api/Post';
-import { PostListContext } from '../probviders/PostListProvider';
+import { PostListContext } from '../providers/PostListProvider';
 import styled from 'styled-components';
 
 

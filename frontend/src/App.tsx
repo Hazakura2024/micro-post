@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import SignIn from './pages/SignIn';
 import Main from './pages/Main';
-import { UserProvider } from './probviders/UserProvider';
+import { UserProvider } from './providers/UserProvider';
 
 function App() {
   return (

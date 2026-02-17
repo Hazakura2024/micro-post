@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import Layout from '../components/Layout'
-import { PostListProvider } from '../probviders/PostListProvider'
-import { UserContext } from '../probviders/UserProvider'
+import { PostListProvider } from '../providers/PostListProvider'
+import { UserContext } from '../providers/UserProvider'
 import { Navigate } from 'react-router-dom'
 
 const Main = () => {
