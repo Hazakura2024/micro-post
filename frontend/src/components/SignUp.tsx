@@ -58,7 +58,7 @@ const SignUp = () => {
                         id="id"
                         value={mail}
                         type="text"
-                        onChange={(evt) => setUserId(evt.target.value)}
+                        onChange={(evt) => setMail(evt.target.value)}
                     />
                 </SSignUpInput>
             </SSignUpRow>

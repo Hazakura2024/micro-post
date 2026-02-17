@@ -9,6 +9,12 @@ export const getUser = async (id: number, token: string): Promise<User> => {
     return res.data;
 };
 
-export const createUser = async () => {
-
+export const createUser = async (name: string, email: string, password: string) => {
+    const API_URL = process.env.REACT_APP_API_URL;
+    const url = `${API_URL}/user`
+    await axios.post(url, {
+        "name": name,
+        "email": email,
+        "password": password
+    });
 }
