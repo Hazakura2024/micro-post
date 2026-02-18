@@ -1,6 +1,5 @@
 import axios from "axios";
 import { PostType } from "../types/Post";
-import { handleAxiosError } from "../utils/axiosErrorHandler";
 
 export const createPost = async (token: string, msg: string): Promise<void> => {
   try {

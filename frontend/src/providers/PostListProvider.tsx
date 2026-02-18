@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { PostType } from "../types/Post";
 import { getList } from "../api/Post";
-import { UserContext, UserProvider } from "./UserProvider";
+import { UserContext } from "./UserProvider";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { toast } from "react-toastify";
 

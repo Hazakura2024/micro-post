@@ -1,6 +1,5 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { UserResponse } from "../types/User";
-import { handleAxiosError } from "../utils/axiosErrorHandler";
 
 export const getUser = async (id: number, token: string): Promise<UserResponse> => {
     try {
