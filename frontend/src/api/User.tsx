@@ -6,7 +6,6 @@ export const getUser = async (id: number, token: string): Promise<UserResponse> 
         const API_URL = process.env.REACT_APP_API_URL;
         const url = `${API_URL}/user/${String(id)}?token=${token}`;
         const res = await axios.get<UserResponse>(url);
-        console.log(res);
         return res.data;
     } catch (error: unknown) {
         throw error;

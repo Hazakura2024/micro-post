@@ -17,7 +17,6 @@ const SideBar = () => {
         toast.success('投稿しました！')
       }
 
-      console.log(res)
       // (学習メモ): ここに到達するということは、成功したということ
       setMsg("");
 

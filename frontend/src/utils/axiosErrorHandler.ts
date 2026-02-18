@@ -8,7 +8,6 @@ export const handleAxiosError = (error: unknown, defaultMessage: string): never 
 
     // NOTE: 2.HTTPエラー
     if (error instanceof AxiosError && error.response) {
-        console.log(error.response)
         throw error;
     }
 
