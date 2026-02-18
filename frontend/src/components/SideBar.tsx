@@ -10,8 +10,10 @@ const SideBar = () => {
   const [msg, setMsg] = useState("");
   const { userInfo } = useContext(UserContext);
   const { getPostList } = useContext(PostListContext);
+  const [isPosting, setIsPosting] = useState(false);
   const onSendClick = async () => {
     try {
+      setIsPosting(true);
       const res = await createPost(userInfo.token, msg);
       if (res.success) {
         toast.success('投稿しました！')
@@ -25,6 +27,8 @@ const SideBar = () => {
     } catch (error: unknown) {
       const msg = extractErrorMessage(error, '投稿に失敗しました。')
       toast.error(msg)
+    } finally {
+      setIsPosting(false);
     }
   };
 
@@ -40,7 +44,7 @@ const SideBar = () => {
       </SSideBarRow>
       <SSideBarRow>
         <SSideBarButton
-          disabled={(msg === "") || (msg.length > 140) ? true : false}
+          disabled={(msg === "") || (msg.length > 140) || isPosting ? true : false}
           onClick={onSendClick}
         >
           送信
