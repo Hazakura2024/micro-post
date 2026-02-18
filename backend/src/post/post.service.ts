@@ -74,7 +74,7 @@ export class PostService {
         'micro_post.created_at as created_at',
       ])
       // SQL: ORDER BY micro_post.created_at DESC
-      .orderBy('micro_post.created_At', 'DESC')
+      .orderBy('micro_post.created_at', 'DESC')
 
       // オフセット（ページネーション用）
       // SQL: OFFSET 10 (例)
@@ -93,6 +93,9 @@ export class PostService {
     };
     const records = await qb.getRawMany<ResultType>();
 
-    return records;
+    return records.map((record) => ({
+      ...record,
+      created_at: record.created_at.toISOString(),
+    }));
   }
 }

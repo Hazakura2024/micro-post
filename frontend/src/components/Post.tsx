@@ -4,9 +4,10 @@ import styled from "styled-components";
 
 // (学習メモ): propsはオブジェクトになるので、左側に分割代入
 const Post = ({ post }: { post: PostType }) => {
+  // FIX: localhostだとUTCになってrenderだとJTCになるっぽい？
   // NOTE: サーバーがZをつけて、UTCであるという指定をしていないので、ここでつける 
-  const dateString = `${post.created_at}Z`;
-  const date = new Date(dateString);
+  const dateString = post.created_at.toString().endsWith('Z') ? post.created_at : `${post.created_at.toString().replace(' ', 'T')}Z`;
+  const date = new Date(post.created_at);
   const getDateString = (dateObj: Date) => {
     return dateObj.toLocaleString();
   };
