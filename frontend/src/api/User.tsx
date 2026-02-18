@@ -1,5 +1,6 @@
-import axios, { Axios, AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { UserResponse } from "../types/User";
+import { handleAxiosError } from "../utils/axiosErrorHandler";
 
 export const getUser = async (id: number, token: string): Promise<UserResponse> => {
     try {
@@ -9,7 +10,7 @@ export const getUser = async (id: number, token: string): Promise<UserResponse> 
         console.log(res);
         return res.data;
     } catch (error) {
-        throw new Error();
+        throw handleAxiosError(error, "ユーザー取得に失敗しました");
     }
 };
 
@@ -24,18 +25,6 @@ export const createUser = async (name: string, email: string, password: string):
         });
         return res.data;
     } catch (error: unknown) {
-        // NOTE: 1.ネットワークエラー（サーバー到達負荷の場合）
-        if (error instanceof AxiosError && !error.response) {
-            throw new Error('ネットワークに接続できません');
-        }
-
-        // NOTE: 2.HTTPエラー
-        if (error instanceof AxiosError && error.response) {
-            throw error;
-        }
-
-        // NOTE: その他の予期しないエラー
-        throw new Error("予期しないエラーが発生")
-
+        throw handleAxiosError(error, "登録に失敗しました");
     }
 }
