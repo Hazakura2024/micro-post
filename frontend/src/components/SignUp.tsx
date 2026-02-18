@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { createUser } from "../api/User";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import { extractErrorMessage } from "../utils/extractErrorMessage";
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -31,12 +32,7 @@ const SignUp = () => {
                 navigate("/main");
             }
         } catch (error: unknown) {
-            let msg = "登録に失敗しました。";
-            if (error instanceof AxiosError && error.response?.data?.message) {
-                msg = error.response.data.message;
-            } else if (error instanceof AxiosError) {
-                msg = error.message;
-            }
+            const msg = extractErrorMessage(error, "登録に失敗しました。");
             setErrorMessage(msg)
             toast.error(msg)
         }
