@@ -13,6 +13,7 @@ export const createPost = async (token: string, msg: string): Promise<CreatePost
     return res.data;
 
   } catch (error: unknown) {
+    // NOTE: エラーは自動的にthrowされコンポーネント側でextractErrorMessageを使う
     throw error;
   }
 };
@@ -24,6 +25,7 @@ export const getList = async (token: string): Promise<PostType[]> => {
     const res = await axios.get<PostType[]>(url);
     return res.data;
   } catch (error: unknown) {
+    // NOTE: エラーは自動的にthrowされコンポーネント側でextractErrorMessageを使う
     throw error;
   }
 };

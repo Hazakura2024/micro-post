@@ -8,6 +8,7 @@ export const getUser = async (id: number, token: string): Promise<UserResponse> 
         const res = await axios.get<UserResponse>(url);
         return res.data;
     } catch (error: unknown) {
+        // NOTE: エラーは自動的にthrowされコンポーネント側でextractErrorMessageを使う
         throw error;
     }
 };
@@ -23,6 +24,7 @@ export const createUser = async (name: string, email: string, password: string):
         });
         return res.data;
     } catch (error: unknown) {
+        // NOTE: エラーは自動的にthrowされコンポーネント側でextractErrorMessageを使う
         throw error;
     }
 }
