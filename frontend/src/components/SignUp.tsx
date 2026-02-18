@@ -89,7 +89,7 @@ const SignUp = () => {
                     <input
                         id="id"
                         value={mail}
-                        type="text"
+                        type="email"
                         onChange={(evt) => setMail(evt.target.value)}
                     />
                 </SSignUpInput>
