@@ -3,10 +3,10 @@ import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Get()
-  // STUDY: URLのクエリパラメタは@Query()デコレータで取り出せる
+  // (学習メモ):  URLのクエリパラメタは@Query()デコレータで取り出せる
   async getAuth(
     @Query('user_id') name: string,
     @Query('password') password: string,

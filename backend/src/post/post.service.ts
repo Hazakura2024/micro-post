@@ -14,7 +14,7 @@ export class PostService {
   ) { }
 
   async createPost(message: string, token: string) {
-    // ログイン済みかチェック
+    // NOTE: ログイン済みかチェック
     const now = new Date();
     const auth = await this.AuthRepository.findOne({
       where: {
@@ -26,7 +26,7 @@ export class PostService {
       throw new ForbiddenException();
     }
 
-    // レコードを作成
+    // NOTE: レコードを作成
     const record = {
       user_id: auth.user_id,
       content: message,
@@ -40,7 +40,7 @@ export class PostService {
   }
 
   async getList(token: string, start: number = 0, nr_records: number = 1) {
-    //ログイン済かチェック
+    // NOTE: ログイン済かチェック
     const now = new Date();
     const auth = await this.AuthRepository.findOne({
       where: {
@@ -53,6 +53,7 @@ export class PostService {
     }
 
     const qb = this.microPostRepository
+      // (学習メモ): 以下、学習用メモ
       // 1. クエリビルダーの開始
       // SQL: SELECT * FROM micro_post AS micro_post
       .createQueryBuilder('micro_post')
