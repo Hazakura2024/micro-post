@@ -10,7 +10,7 @@ export const getUser = async (id: number, token: string): Promise<UserResponse> 
         console.log(res);
         return res.data;
     } catch (error) {
-        throw handleAxiosError(error, "ユーザー取得に失敗しました");
+        throw error;
     }
 };
 
@@ -25,6 +25,6 @@ export const createUser = async (name: string, email: string, password: string):
         });
         return res.data;
     } catch (error: unknown) {
-        throw handleAxiosError(error, "登録に失敗しました");
+        throw error;
     }
 }

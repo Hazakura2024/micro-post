@@ -1,5 +1,6 @@
 import axios from "axios";
 import { PostType } from "../types/Post";
+import { handleAxiosError } from "../utils/axiosErrorHandler";
 
 export const createPost = async (token: string, msg: string): Promise<void> => {
   try {
@@ -12,7 +13,7 @@ export const createPost = async (token: string, msg: string): Promise<void> => {
     });
     console.log(res.status);
   } catch (error) {
-    throw new Error();
+    throw error;
   }
 };
 
@@ -23,6 +24,6 @@ export const getList = async (token: string): Promise<PostType[]> => {
     const res = await axios.get<PostType[]>(url);
     return res.data;
   } catch (error) {
-    throw new Error();
+    throw error;
   }
 };

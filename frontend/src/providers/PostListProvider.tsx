@@ -9,6 +9,8 @@ import React, {
 import { PostType } from "../types/Post";
 import { getList } from "../api/Post";
 import { UserContext, UserProvider } from "./UserProvider";
+import { extractErrorMessage } from "../utils/extractErrorMessage";
+import { toast } from "react-toastify";
 
 export const PostListContext = createContext(
   {} as {
@@ -28,17 +30,22 @@ export const PostListProvider = ({
   const { userInfo } = useContext(UserContext);
 
   const getPostList = async () => {
-    const posts = await getList(userInfo.token);
-    console.log(posts);
+    try {
+      const posts = await getList(userInfo.token);
+      console.log(posts);
 
-    if (posts) {
-      const formattedPosts = posts.map((p: PostType) => ({
-        id: p.id,
-        user_name: p.user_name,
-        content: p.content,
-        created_at: new Date(p.created_at),
-      }));
-      setPostList(formattedPosts);
+      if (posts) {
+        const formattedPosts = posts.map((p: PostType) => ({
+          id: p.id,
+          user_name: p.user_name,
+          content: p.content,
+          created_at: new Date(p.created_at),
+        }));
+        setPostList(formattedPosts);
+      }
+    } catch (error) {
+      const msg = extractErrorMessage(error, '投稿が取得できません');
+      toast.error(msg);
     }
   };
 

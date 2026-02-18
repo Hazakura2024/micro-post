@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../providers/UserProvider";
 import styled from "styled-components";
 import { createUser } from "../api/User";
-import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 

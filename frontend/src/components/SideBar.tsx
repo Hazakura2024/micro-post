@@ -4,6 +4,7 @@ import { createPost } from "../api/Post";
 import { PostListContext } from "../providers/PostListProvider";
 import styled from "styled-components";
 import { toast } from "react-toastify";
+import { extractErrorMessage } from "../utils/extractErrorMessage";
 
 const SideBar = () => {
   const [msg, setMsg] = useState("");
@@ -19,8 +20,8 @@ const SideBar = () => {
       getPostList();
       // (学習メモ): createPost 成功 → setMsg → getPostList の順番が保証されている
     } catch (error: unknown) {
-      console.log("投稿に失敗しました", error);
-      toast.error('投稿に失敗しました')
+      const msg = extractErrorMessage(error, '投稿に失敗しました。')
+      toast.error(msg)
     }
   };
 

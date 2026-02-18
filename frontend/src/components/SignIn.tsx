@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../providers/UserProvider";
 import styled from "styled-components";
 import { toast } from "react-toastify";
+import { extractErrorMessage } from "../utils/extractErrorMessage";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const SignIn = () => {
         navigate("/main");
       }
     } catch (error: unknown) {
-      const msg = error instanceof Error ? error.message : "ログインに失敗しました";
+      const msg = extractErrorMessage(error, 'ログインできません')
       setErrorMessage(msg);
       toast.error(msg);
     }
