@@ -11,10 +11,10 @@ export class PostService {
     private microPostRepository: Repository<MicroPost>,
     @InjectRepository(Auth)
     private AuthRepository: Repository<Auth>,
-  ) {}
+  ) { }
 
   async createPost(message: string, token: string) {
-    // ログイン済みかチェック
+    // NOTE: ログイン済みかチェック
     const now = new Date();
     const auth = await this.AuthRepository.findOne({
       where: {
@@ -26,16 +26,21 @@ export class PostService {
       throw new ForbiddenException();
     }
 
-    // レコードを作成
+    // NOTE: レコードを作成
     const record = {
       user_id: auth.user_id,
       content: message,
     };
-    await this.microPostRepository.save(record);
+    const savedPost = await this.microPostRepository.save(record);
+
+    return {
+      id: savedPost.id,
+      success: true,
+    };
   }
 
   async getList(token: string, start: number = 0, nr_records: number = 1) {
-    //ログイン済かチェック
+    // NOTE: ログイン済かチェック
     const now = new Date();
     const auth = await this.AuthRepository.findOne({
       where: {
@@ -48,6 +53,7 @@ export class PostService {
     }
 
     const qb = this.microPostRepository
+      // (学習メモ): 以下、学習用メモ
       // 1. クエリビルダーの開始
       // SQL: SELECT * FROM micro_post AS micro_post
       .createQueryBuilder('micro_post')
@@ -86,7 +92,6 @@ export class PostService {
       created_at: Date;
     };
     const records = await qb.getRawMany<ResultType>();
-    console.log(records);
 
     return records;
   }

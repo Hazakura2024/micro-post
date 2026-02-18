@@ -13,7 +13,7 @@ export class AuthService {
     private userRepository: Repository<User>,
     @InjectRepository(Auth)
     private authRepository: Repository<Auth>,
-  ) {}
+  ) { }
 
   async getAuth(name: string, password: string) {
     // name, passwordからUserレコード検索
@@ -53,12 +53,12 @@ export class AuthService {
     });
 
     if (auth) {
-      // 更新
+      // NOTE: 更新
       auth.expire_at = expire;
       await this.authRepository.save(auth);
       ret.token = auth.token;
     } else {
-      // 挿入
+      // NOTE: 挿入
       const token = crypto.randomUUID();
       const record = {
         user_id: user.id,

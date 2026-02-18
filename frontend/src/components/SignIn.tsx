@@ -18,13 +18,14 @@ const SignIn = () => {
     try {
       setErrorMessage("");
       const ret = await signIn(userId, pass);
-      if (ret?.token) {
-        setUserInfo({
-          id: ret.user_id,
-          token: ret.token,
-        });
-        navigate("/main");
+      if (!ret?.token) {
+        toast.error('ログインに失敗しました')
       }
+      setUserInfo({
+        id: ret.user_id,
+        token: ret.token,
+      });
+      navigate("/main");
     } catch (error: unknown) {
       const msg = extractErrorMessage(error, 'ログインできません')
       setErrorMessage(msg);
@@ -58,7 +59,7 @@ const SignIn = () => {
           <input
             id="password"
             value={pass}
-            type="text"
+            type="password"
             onChange={(evt) => setPass(evt.target.value)}
           />
         </SSignInInput>

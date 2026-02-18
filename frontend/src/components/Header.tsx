@@ -17,23 +17,22 @@ const Header = () => {
     navigate("/");
   };
 
-  const getMyUser = async () => {
-    try {
-      const user = await getUser(userInfo.id, userInfo.token);
-      setUserName(user.name);
-    } catch (error: unknown) {
-      const msg = extractErrorMessage(error, 'ユーザー情報が取得できません');
-      toast.error(msg);
-    }
-  };
+
 
   useEffect(() => {
-    try {
-      getMyUser();
-    } catch (error: unknown) {
-      console.log("ユーザー情報が取得できませんでした。");
-    }
-  }, []);
+    const getMyUser = async () => {
+      try {
+        const user = await getUser(userInfo.id, userInfo.token);
+        setUserName(user.name);
+      } catch (error: unknown) {
+        const msg = extractErrorMessage(error, 'ユーザー情報が取得できません');
+        toast.error(msg);
+        setUserName("");
+      }
+    };
+    // (学習メモ): useEffect 内で使う変数/関数は依存配列に入れるべき
+    getMyUser();
+  }, [userInfo.id, userInfo.token]);
 
   return (
     <SHeader>

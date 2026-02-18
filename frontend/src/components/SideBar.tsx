@@ -12,7 +12,10 @@ const SideBar = () => {
   const { getPostList } = useContext(PostListContext);
   const onSendClick = async () => {
     try {
-      await createPost(userInfo.token, msg);
+      const res = await createPost(userInfo.token, msg);
+      if (res.success) {
+        toast.success('投稿しました！')
+      }
 
       // (学習メモ): ここに到達するということは、成功したということ
       setMsg("");

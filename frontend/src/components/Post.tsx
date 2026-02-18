@@ -2,15 +2,18 @@ import React from "react";
 import { PostType } from "../types/Post";
 import styled from "styled-components";
 
-// (学習メモ): key属性もpropsオブジェクトに含まれるので、左側に分割代入
+// (学習メモ): propsはオブジェクトになるので、左側に分割代入
 const Post = ({ post }: { post: PostType }) => {
+  // NOTE: サーバーがZをつけて、UTCであるという指定をしていないので、ここでつける 
+  const dateString = `${post.created_at}Z`;
+  const date = new Date(dateString);
   const getDateString = (dateObj: Date) => {
-    return dateObj.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
+    return dateObj.toLocaleString();
   };
   return (
     <SPost>
       <div>
-        <SName>{getDateString(post.created_at)}</SName>
+        <SName>{getDateString(date)}</SName>
         <SDate>{post.user_name}</SDate>
       </div>
       <div>{post.content}</div>

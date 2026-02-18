@@ -3,9 +3,7 @@ import PostList from "./PostList";
 
 const Contents = () => {
   return (
-    <div>
-      <PostList></PostList>
-    </div>
+    <PostList></PostList>
   );
 };
 

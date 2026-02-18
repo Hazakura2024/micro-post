@@ -32,7 +32,6 @@ export const PostListProvider = ({
   const getPostList = async () => {
     try {
       const posts = await getList(userInfo.token);
-      console.log(posts);
 
       if (posts) {
         const formattedPosts = posts.map((p: PostType) => ({
