@@ -11,7 +11,7 @@ export class PostService {
     private microPostRepository: Repository<MicroPost>,
     @InjectRepository(Auth)
     private AuthRepository: Repository<Auth>,
-  ) {}
+  ) { }
 
   async createPost(message: string, token: string) {
     // ログイン済みかチェック
@@ -31,7 +31,12 @@ export class PostService {
       user_id: auth.user_id,
       content: message,
     };
-    await this.microPostRepository.save(record);
+    const savedPost = await this.microPostRepository.save(record);
+
+    return {
+      id: savedPost.id,
+      success: true,
+    };
   }
 
   async getList(token: string, start: number = 0, nr_records: number = 1) {
@@ -86,7 +91,6 @@ export class PostService {
       created_at: Date;
     };
     const records = await qb.getRawMany<ResultType>();
-    console.log(records);
 
     return records;
   }

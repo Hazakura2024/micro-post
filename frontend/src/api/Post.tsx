@@ -1,16 +1,17 @@
 import axios from "axios";
-import { PostType } from "../types/Post";
+import { CreatePostResponse, PostType } from "../types/Post";
 
-export const createPost = async (token: string, msg: string): Promise<void> => {
+export const createPost = async (token: string, msg: string): Promise<CreatePostResponse> => {
   try {
     const API_URL = process.env.REACT_APP_API_URL;
     const url = `${API_URL}/post?token=${token}`;
     // (学習メモ): ここのvoidはレスポンスボディの型を指定しているだけで、resオブジェクト全体の型ではない。
     // (学習メモ): axiosがジェネリクスパラメータでdataにその型をセットしてくれる
-    const res = await axios.post<void>(url, {
+    const res = await axios.post<CreatePostResponse>(url, {
       message: msg,
     });
-    console.log(res.status);
+    return res.data;
+
   } catch (error: unknown) {
     throw error;
   }
