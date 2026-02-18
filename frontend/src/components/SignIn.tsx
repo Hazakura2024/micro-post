@@ -58,7 +58,7 @@ const SignIn = () => {
           <input
             id="password"
             value={pass}
-            type="text"
+            type="password"
             onChange={(evt) => setPass(evt.target.value)}
           />
         </SSignInInput>
