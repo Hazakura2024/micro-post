@@ -8,7 +8,7 @@ const signIn = async (userId: string, pass: string): Promise<AuthResponse> => {
     const res = await axios.get<AuthResponse>(url);
     return res.data;
   } catch (error: unknown) {
-    throw new Error(`認証失敗: ${error}`);
+    throw error;
   }
 };
 

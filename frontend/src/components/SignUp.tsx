@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../providers/UserProvider";
 import styled from "styled-components";
 import { createUser } from "../api/User";
-import { AxiosError } from "axios";
+import { toast } from "react-toastify";
+import { extractErrorMessage } from "../utils/extractErrorMessage";
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -30,12 +31,9 @@ const SignUp = () => {
                 navigate("/main");
             }
         } catch (error: unknown) {
-            if (error instanceof AxiosError) {
-                const msg = error.response?.data?.message;
-                setErrorMessage(msg || "登録に失敗しました。");
-            } else {
-                setErrorMessage('不明なエラーが発生しました')
-            }
+            const msg = extractErrorMessage(error, "登録に失敗しました。");
+            setErrorMessage(msg)
+            toast.error(msg)
         }
     };
 
@@ -125,7 +123,7 @@ const SSignUpLabel = styled.span`
 `;
 
 const SSignUpInput = styled.span`
-  dispaly: inline-block;
+  display: inline-block;
   width: auto;
   vertical-align: top;
   margin-left: 4px;

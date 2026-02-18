@@ -3,6 +3,8 @@ import { UserContext } from "../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "../api/User";
 import styled from "styled-components";
+import { extractErrorMessage } from "../utils/extractErrorMessage";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const { userInfo, setUserInfo } = useContext(UserContext);
@@ -16,8 +18,13 @@ const Header = () => {
   };
 
   const getMyUser = async () => {
-    const user = await getUser(userInfo.id, userInfo.token);
-    setUserName(user.name);
+    try {
+      const user = await getUser(userInfo.id, userInfo.token);
+      setUserName(user.name);
+    } catch (error: unknown) {
+      const msg = extractErrorMessage(error, 'ユーザー情報が取得できません');
+      toast.error(msg);
+    }
   };
 
   useEffect(() => {
