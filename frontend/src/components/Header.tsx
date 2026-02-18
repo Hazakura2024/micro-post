@@ -28,11 +28,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    try {
-      getMyUser();
-    } catch (error: unknown) {
-      console.log("ユーザー情報が取得できませんでした。");
-    }
+    getMyUser();
   }, []);
 
   return (
