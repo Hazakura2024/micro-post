@@ -17,6 +17,8 @@ export const PostListContext = createContext(
     postList: PostType[];
     setPostList: Dispatch<SetStateAction<PostType[]>>;
     getPostList: () => Promise<void>;
+    isloading: boolean;
+    setIsloading: Dispatch<React.SetStateAction<boolean>>;
   },
 );
 
@@ -26,10 +28,12 @@ export const PostListProvider = ({
   children: React.ReactNode;
 }) => {
   const [postList, setPostList] = useState<PostType[]>([]);
+  const [isloading, setIsloading] = useState(false);
 
   const { userInfo } = useContext(UserContext);
 
   const getPostList = async () => {
+    setIsloading(true);
     try {
       const posts = await getList(userInfo.token);
 
@@ -45,12 +49,14 @@ export const PostListProvider = ({
     } catch (error: unknown) {
       const msg = extractErrorMessage(error, '投稿が取得できません');
       toast.error(msg);
+    } finally {
+      setIsloading(false);
     }
   };
 
   const value = useMemo(
-    () => ({ postList, setPostList, getPostList }),
-    [postList, setPostList],
+    () => ({ postList, setPostList, getPostList, isloading, setIsloading }),
+    [postList, setPostList, isloading],
   );
   return (
     <PostListContext.Provider value={value}>

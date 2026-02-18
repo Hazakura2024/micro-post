@@ -5,8 +5,7 @@ import Post from "./Post";
 import styled from "styled-components";
 
 const PostList = () => {
-  const { postList, setPostList, getPostList } = useContext(PostListContext);
-  const { userInfo } = useContext(UserContext);
+  const { postList, getPostList, isloading, setIsloading } = useContext(PostListContext);
 
   useEffect(() => {
     getPostList();
@@ -20,8 +19,9 @@ const PostList = () => {
     <SPostList>
       <SHeader>
         <div>投稿一覧 </div>
-        <SSideBarButton onClick={onClickReload}>更新</SSideBarButton>
+        <SSideBarButton disabled={isloading} onClick={onClickReload}>更新</SSideBarButton>
       </SHeader>
+      {isloading && <div>読込み中...</div>}
 
       {postList.map((p) => (
         <Post key={p.id} post={p} />
@@ -58,4 +58,8 @@ const SSideBarButton = styled.button`
   border-radius: 8px;
   color: #fafafa;
   width: 96px;
+  &:disabled {
+    background-color: #8491c3;
+    cursor: not-allowed;
+  }
 `;

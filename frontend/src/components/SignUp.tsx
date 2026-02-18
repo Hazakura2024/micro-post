@@ -15,6 +15,7 @@ const SignUp = () => {
     const [pass, setPass] = useState("");
     const { setUserInfo } = useContext(UserContext);
     const [errorMessage, setErrorMessage] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const onSignClick = async () => {
 
@@ -42,7 +43,7 @@ const SignUp = () => {
             return;
         }
 
-
+        setIsSubmitting(true);
         try {
             setErrorMessage("");
 
@@ -60,6 +61,8 @@ const SignUp = () => {
             const msg = extractErrorMessage(error, "登録に失敗しました。");
             setErrorMessage(msg)
             toast.error(msg)
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -113,7 +116,7 @@ const SignUp = () => {
                 )}
             </SSignUpRow>
             <SSignUpRow>
-                <SSignUpButton type="button" onClick={onSignClick}>
+                <SSignUpButton disabled={isSubmitting} type="button" onClick={onSignClick}>
                     SignUp
                 </SSignUpButton>
             </SSignUpRow>
@@ -160,6 +163,10 @@ const SSignUpButton = styled.button`
   color: #f0f0f0;
   padding: 4px 16px;
   border-radius: 8px;
+  &:disabled {
+    background-color: #c1c1c1;
+    cursor: not-allowed;
+  }
 `;
 
 const SErrorMessage = styled.div`
