@@ -12,8 +12,8 @@ const SideBar = () => {
   const { getPostList } = useContext(PostListContext);
   const [isPosting, setIsPosting] = useState(false);
   const onSendClick = async () => {
+    setIsPosting(true);
     try {
-      setIsPosting(true);
       const res = await createPost(userInfo.token, msg);
       if (res.success) {
         toast.success('投稿しました！')

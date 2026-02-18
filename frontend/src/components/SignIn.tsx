@@ -13,8 +13,10 @@ const SignIn = () => {
   const [pass, setPass] = useState("");
   const { setUserInfo } = useContext(UserContext);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSignClick = async () => {
+    setIsSubmitting(true);
     try {
       setErrorMessage("");
       const ret = await signIn(userId, pass);
@@ -30,6 +32,8 @@ const SignIn = () => {
       const msg = extractErrorMessage(error, 'ログインできません')
       setErrorMessage(msg);
       toast.error(msg);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -70,7 +74,7 @@ const SignIn = () => {
         )}
       </SSignInRow>
       <SSignInRow>
-        <SSignInButton type="button" onClick={onSignClick}>
+        <SSignInButton disabled={isSubmitting} type="button" onClick={onSignClick}>
           Login
         </SSignInButton>
       </SSignInRow>
@@ -117,6 +121,10 @@ const SSignInButton = styled.button`
   color: #f0f0f0;
   padding: 4px 16px;
   border-radius: 8px;
+  &:disabled {
+    background-color: #c1c1c1;
+    cursor: not-allowed;
+  }
 `;
 
 const SErrorMessage = styled.div`
