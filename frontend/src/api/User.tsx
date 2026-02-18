@@ -9,7 +9,7 @@ export const getUser = async (id: number, token: string): Promise<UserResponse> 
         const res = await axios.get<UserResponse>(url);
         console.log(res);
         return res.data;
-    } catch (error) {
+    } catch (error: unknown) {
         throw error;
     }
 };

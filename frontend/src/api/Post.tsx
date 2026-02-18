@@ -12,7 +12,7 @@ export const createPost = async (token: string, msg: string): Promise<void> => {
       message: msg,
     });
     console.log(res.status);
-  } catch (error) {
+  } catch (error: unknown) {
     throw error;
   }
 };
@@ -23,7 +23,7 @@ export const getList = async (token: string): Promise<PostType[]> => {
     const url = `${API_URL}/post?records=20&token=${token}`;
     const res = await axios.get<PostType[]>(url);
     return res.data;
-  } catch (error) {
+  } catch (error: unknown) {
     throw error;
   }
 };
