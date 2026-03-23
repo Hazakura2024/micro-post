@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Auth } from 'src/entities/auth';
 import { MicroPost } from 'src/entities/micropost';
@@ -11,7 +11,7 @@ export class PostService {
     private microPostRepository: Repository<MicroPost>,
     @InjectRepository(Auth)
     private AuthRepository: Repository<Auth>,
-  ) {}
+  ) { }
 
   async createPost(message: string, token: string) {
     // NOTE: ログイン済みかチェック
@@ -50,6 +50,18 @@ export class PostService {
     });
     if (!auth) {
       throw new ForbiddenException();
+    }
+
+    // 対象ポストを取得
+    const post = await this.microPostRepository.findOne({
+      where: { id: Equal(id) },
+    });
+    if (!post) {
+      throw new NotFoundException('投稿が見つかりません');
+    }
+
+    if (auth.user_id !== post.user_id) {
+      throw new ForbiddenException('自分以外の投稿は削除できません');
     }
 
     // 対象レコードを削除
