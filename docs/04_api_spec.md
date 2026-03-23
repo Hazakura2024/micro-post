@@ -152,3 +152,24 @@
 ### エラー
 
 - `403 Forbidden`: トークン不正、または期限切れ
+
+## 7. ポスト削除
+
+- Method/Path: `DELETE /post/:post_id`
+- Path Parameter
+  - `post_id` (number, 必須)
+- Query
+  - `token` (string, 必須)
+
+### リクエスト例
+
+`DELETE /post/1?token=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+
+### レスポンス（204 No Content）
+
+- Body: なし
+
+### エラー
+
+- `400 Bad Request`: id 不正
+- `403 Forbidden`: トークン不正、または期限切れ

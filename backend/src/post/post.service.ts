@@ -11,7 +11,7 @@ export class PostService {
     private microPostRepository: Repository<MicroPost>,
     @InjectRepository(Auth)
     private AuthRepository: Repository<Auth>,
-  ) { }
+  ) {}
 
   async createPost(message: string, token: string) {
     // NOTE: ログイン済みかチェック
@@ -37,6 +37,23 @@ export class PostService {
       id: savedPost.id,
       success: true,
     };
+  }
+
+  async deletePost(id: number, token: string) {
+    // NOTE: ログイン済かチェック
+    const now = new Date();
+    const auth = await this.AuthRepository.findOne({
+      where: {
+        token: Equal(token),
+        expire_at: MoreThan(now),
+      },
+    });
+    if (!auth) {
+      throw new ForbiddenException();
+    }
+
+    // 対象レコードを削除
+    await this.microPostRepository.delete(id);
   }
 
   async getList(token: string, start: number = 0, nr_records: number = 1) {
