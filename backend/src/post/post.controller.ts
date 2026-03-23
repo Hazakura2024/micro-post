@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDTO, PostQueryDto } from 'src/dto/create-post.dto';
 
@@ -24,5 +32,10 @@ export class PostController {
     @Query('records') records: number,
   ) {
     return await this.postService.getList(token, start, records);
+  }
+
+  @Delete(':id')
+  async deletePost(@Param('id') id: number, @Query('token') token: string) {
+    return await this.postService.deletePost(id, token);
   }
 }

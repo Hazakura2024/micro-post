@@ -1,11 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import { PostListContext } from "../providers/PostListProvider";
-import { UserContext } from "../providers/UserProvider";
 import Post from "./Post";
 import styled from "styled-components";
 
 const PostList = () => {
-  const { postList, getPostList, isloading, setIsloading } = useContext(PostListContext);
+  const { postList, getPostList, isloading } = useContext(PostListContext);
 
   useEffect(() => {
     getPostList();
@@ -24,7 +23,7 @@ const PostList = () => {
       {isloading && <div>読込み中...</div>}
 
       {postList.map((p) => (
-        <Post key={p.id} post={p} />
+        <Post key={p.id} postId={p.id} userName={p.user_name} post={p} />
       ))}
     </SPostList>
   );

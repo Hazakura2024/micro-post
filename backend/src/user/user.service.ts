@@ -17,11 +17,10 @@ export class UserService {
     private userRepository: Repository<User>,
     @InjectRepository(Auth)
     private authRepository: Repository<Auth>,
-  ) { }
+  ) {}
 
   // NOTE: createUserを作成
   async createUser(name: string, email: string, password: string) {
-
     // NOTE: メールアドレスの重複チェック
     const existingUserByEmail = await this.userRepository.findOne({
       where: { email: Equal(email) },

@@ -13,7 +13,7 @@ export class AuthService {
     private userRepository: Repository<User>,
     @InjectRepository(Auth)
     private authRepository: Repository<Auth>,
-  ) { }
+  ) {}
 
   async getAuth(name: string, password: string) {
     // name, passwordからUserレコード検索

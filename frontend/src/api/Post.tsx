@@ -18,6 +18,21 @@ export const createPost = async (token: string, msg: string): Promise<CreatePost
   }
 };
 
+export const deletePost = async (id: number, token: string) => {
+  try {
+    const API_URL = process.env.REACT_APP_API_URL;
+    const url = `${API_URL}/post/${id}?token=${token}`;
+    // (学習メモ): ここのvoidはレスポンスボディの型を指定しているだけで、resオブジェクト全体の型ではない。
+    // (学習メモ): axiosがジェネリクスパラメータでdataにその型をセットしてくれる
+    const res = await axios.delete(url);
+    return res.data;
+
+  } catch (error: unknown) {
+    // NOTE: エラーは自動的にthrowされコンポーネント側でextractErrorMessageを使う
+    throw error;
+  }
+};
+
 export const getList = async (token: string): Promise<PostType[]> => {
   try {
     const API_URL = process.env.REACT_APP_API_URL;
