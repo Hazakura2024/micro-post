@@ -29,6 +29,7 @@ const Post = ({ postId, userName, post }: { postId: number, userName: string, po
     try {
       await deletePost(postId, userInfo.token);
       await getPostList();
+      toast.success('削除しました')
     } catch (error) {
       const msg = extractErrorMessage(error, '削除に失敗しました。')
       toast.error(msg)
