@@ -1,11 +1,10 @@
 import React, { useContext, useEffect } from "react";
 import { PostListContext } from "../providers/PostListProvider";
-import { UserContext } from "../providers/UserProvider";
 import Post from "./Post";
 import styled from "styled-components";
 
 const PostList = () => {
-  const { postList, getPostList, isloading, setIsloading } = useContext(PostListContext);
+  const { postList, getPostList, isloading } = useContext(PostListContext);
 
   useEffect(() => {
     getPostList();
