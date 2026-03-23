@@ -23,7 +23,7 @@ const PostList = () => {
       {isloading && <div>読込み中...</div>}
 
       {postList.map((p) => (
-        <Post key={p.id} post={p} />
+        <Post key={p.id} postId={p.id} userName={p.user_name} post={p} />
       ))}
     </SPostList>
   );
