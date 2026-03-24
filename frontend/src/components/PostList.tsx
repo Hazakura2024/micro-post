@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { PostListContext } from "../providers/PostListProvider";
 import Post from "./Post";
 import styled from "styled-components";
@@ -6,9 +6,12 @@ import styled from "styled-components";
 const PostList = () => {
   const { postList, getPostList, isLoading } = useContext(PostListContext);
 
+  const [page, setPage] = useState(1);
+
   useEffect(() => {
-    getPostList();
-  }, []);
+
+    getPostList((page - 1) * 10);
+  }, [page]);
 
   const onClickReload = () => {
     getPostList();
@@ -27,6 +30,10 @@ const PostList = () => {
       {postList.map((p) => (
         <Post key={p.id} postId={p.id} userName={p.user_name} post={p} />
       ))}
+      <div>
+        <button onClick={() => setPage(page - 1)} disabled={page <= 1}>前へ</button>
+        <button onClick={() => setPage(page + 1)} disabled={postList.length < 10}>次へ</button>
+      </div>
     </SPostList>
   );
 };
