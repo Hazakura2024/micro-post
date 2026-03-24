@@ -134,7 +134,7 @@ export class PostService {
     }
 
     if (user_name) {
-      qb = qb.andWhere('micro_psot.name ILIKE :user_name', { user_name: `%${user_name}%` });
+      qb = qb.andWhere('user.name ILIKE :user_name', { user_name: `%${user_name}%` });
     }
 
     type ResultType = {
