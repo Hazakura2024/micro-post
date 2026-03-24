@@ -11,12 +11,24 @@ const PostList = () => {
   const [userText, setUserText] = useState("");
 
   useEffect(() => {
-    getPostList((page - 1) * 10);
+    getPostList((page - 1) * 10, 10, wordText, userText);
   }, [page]);
 
   const onClickReload = () => {
     getPostList();
   };
+
+  const onClickSearch = () => {
+    getPostList(0, 10, wordText, userText)
+  }
+
+  const onClickNext = () => {
+    setPage(page + 1)
+  }
+
+  const onClickBack = () => {
+    setPage(page - 1)
+  }
 
   return (
     <SPostList>
@@ -27,7 +39,7 @@ const PostList = () => {
         </SReloadButton>
         <input type="text" value={wordText} onChange={e => setWordText(e.target.value)} placeholder="内容を検索" />
         <input type="text" value={userText} onChange={e => setUserText(e.target.value)} placeholder="ユーザーの投稿を検索" />
-        <SSearchButton>検索</SSearchButton>
+        <SSearchButton onClick={onClickSearch}>検索</SSearchButton>
       </SHeader>
       {isLoading && <div>読込み中...</div>}
 
@@ -35,18 +47,18 @@ const PostList = () => {
         <Post key={p.id} postId={p.id} userName={p.user_name} post={p} />
       ))}
       <div>
-        <SDeleteButton
-          onClick={() => setPage(page - 1)}
+        <SPageButton
+          onClick={onClickBack}
           disabled={isLoading || page <= 1}
         >
           前へ
-        </SDeleteButton>
-        <SDeleteButton
-          onClick={() => setPage(page + 1)}
+        </SPageButton>
+        <SPageButton
+          onClick={onClickNext}
           disabled={isLoading || postList.length < 10}
         >
           次へ
-        </SDeleteButton>
+        </SPageButton>
       </div>
     </SPostList>
   );
@@ -87,7 +99,7 @@ const SReloadButton = styled.button`
   }
 `;
 
-const SDeleteButton = styled.button`
+const SPageButton = styled.button`
   background-color: #b8d200;
   color: white;
   border-color: #eeeeee;
