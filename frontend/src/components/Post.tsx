@@ -7,19 +7,26 @@ import { PostListContext } from "../providers/PostListProvider";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { toast } from "react-toastify";
 
-
-
 // (学習メモ): propsはオブジェクトになるので、左側に分割代入
-const Post = ({ postId, userName, post }: { postId: number, userName: string, post: PostType }) => {
-
+const Post = ({
+  postId,
+  userName,
+  post,
+}: {
+  postId: number;
+  userName: string;
+  post: PostType;
+}) => {
   const { userInfo } = useContext(UserContext);
   const { getPostList } = useContext(PostListContext);
 
   // const isMyPost =  userName === userInfo.id;
 
   // FIX: localhostだとUTCになってrenderだとJTCになるっぽい？
-  // NOTE: サーバーがZをつけて、UTCであるという指定をしていないので、ここでつける 
-  const dateString = post.created_at.toString().endsWith('Z') ? post.created_at : `${post.created_at.toString().replace(' ', 'T')}Z`;
+  // NOTE: サーバーがZをつけて、UTCであるという指定をしていないので、ここでつける
+  // const dateString = post.created_at.toString().endsWith("Z")
+  //   ? post.created_at
+  //   : `${post.created_at.toString().replace(" ", "T")}Z`;
   const date = new Date(post.created_at);
   const getDateString = (dateObj: Date) => {
     return dateObj.toLocaleString();
@@ -29,18 +36,21 @@ const Post = ({ postId, userName, post }: { postId: number, userName: string, po
     try {
       await deletePost(postId, userInfo.token);
       await getPostList();
+      toast.success("削除しました");
     } catch (error) {
-      const msg = extractErrorMessage(error, '削除に失敗しました。')
-      toast.error(msg)
+      const msg = extractErrorMessage(error, "削除に失敗しました。");
+      toast.error(msg);
     }
-  }
+  };
 
   return (
     <SPost>
       <div>
         <SName>{getDateString(date)}</SName>
         <SDate>{post.user_name}</SDate>
-        <SDeleteButton disabled={false} onClick={onClickDelete}>delete</SDeleteButton>
+        <SDeleteButton disabled={false} onClick={onClickDelete}>
+          delete
+        </SDeleteButton>
       </div>
       <div>{post.content}</div>
     </SPost>
@@ -71,10 +81,10 @@ const SDeleteButton = styled.button`
   margin-left: 8px;
   background-color: #ee827c;
   color: white;
-    border-color: #eeeeee;
+  border-color: #eeeeee;
   border-radius: 8px;
   color: #fafafa;
   &:disabled {
     display: none;
   }
-`
+`;

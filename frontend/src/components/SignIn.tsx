@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import signIn from "../api/Auth";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../providers/UserProvider";
@@ -11,7 +11,7 @@ const SignIn = () => {
 
   const [userId, setUserId] = useState("");
   const [pass, setPass] = useState("");
-  const { setUserInfo } = useContext(UserContext);
+  const { saveInfoWithName } = useContext(UserContext);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -21,15 +21,15 @@ const SignIn = () => {
       setErrorMessage("");
       const ret = await signIn(userId, pass);
       if (!ret?.token) {
-        toast.error('ログインに失敗しました')
+        toast.error("ログインに失敗しました");
       }
-      setUserInfo({
-        id: ret.user_id,
-        token: ret.token,
-      });
+
+      await saveInfoWithName(ret.user_id, ret.token);
+      console.log("navigate前");
       navigate("/main");
+      console.log("navigate後");
     } catch (error: unknown) {
-      const msg = extractErrorMessage(error, 'ログインできません')
+      const msg = extractErrorMessage(error, "ログインできません");
       setErrorMessage(msg);
       toast.error(msg);
     } finally {
@@ -74,7 +74,11 @@ const SignIn = () => {
         )}
       </SSignInRow>
       <SSignInRow>
-        <SSignInButton disabled={isSubmitting} type="button" onClick={onSignClick}>
+        <SSignInButton
+          disabled={isSubmitting}
+          type="button"
+          onClick={onSignClick}
+        >
           Login
         </SSignInButton>
       </SSignInRow>

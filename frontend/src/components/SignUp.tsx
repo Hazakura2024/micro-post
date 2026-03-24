@@ -13,12 +13,11 @@ const SignUp = () => {
     const [userId, setUserId] = useState("");
     const [mail, setMail] = useState("");
     const [pass, setPass] = useState("");
-    const { setUserInfo } = useContext(UserContext);
+    const { saveInfoWithName } = useContext(UserContext);
     const [errorMessage, setErrorMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const onSignClick = async () => {
-
         // (学習メモ): フロントエンド側にも入力バリデーションを追加すべき
         // (学習メモ): .trim()は空白や改行文字を取り除いたものを返す
         if (!userId.trim() || !mail.trim() || !mail.trim()) {
@@ -33,13 +32,12 @@ const SignUp = () => {
         // (学習メモ): @  @が入る
         // (学習メモ): \.　.が入る
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) {
-            toast.error('正しいメールアドレスを入力してください')
+            toast.error("正しいメールアドレスを入力してください");
             return;
         }
 
-
         if (pass.length < 6) {
-            toast.error('パスワードは6文字以上です');
+            toast.error("パスワードは6文字以上です");
             return;
         }
 
@@ -51,16 +49,14 @@ const SignUp = () => {
 
             const ret = await signIn(userId, pass);
             if (ret?.token) {
-                setUserInfo({
-                    id: ret.user_id,
-                    token: ret.token,
-                });
+                await saveInfoWithName(ret.user_id, ret.token);
+
                 navigate("/main");
             }
         } catch (error: unknown) {
             const msg = extractErrorMessage(error, "登録に失敗しました。");
-            setErrorMessage(msg)
-            toast.error(msg)
+            setErrorMessage(msg);
+            toast.error(msg);
         } finally {
             setIsSubmitting(false);
         }
@@ -111,12 +107,14 @@ const SignUp = () => {
                 </SSignUpInput>
             </SSignUpRow>
             <SSignUpRow>
-                {errorMessage && (
-                    <SErrorMessage>{errorMessage}</SErrorMessage>
-                )}
+                {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
             </SSignUpRow>
             <SSignUpRow>
-                <SSignUpButton disabled={isSubmitting} type="button" onClick={onSignClick}>
+                <SSignUpButton
+                    disabled={isSubmitting}
+                    type="button"
+                    onClick={onSignClick}
+                >
                     SignUp
                 </SSignUpButton>
             </SSignUpRow>

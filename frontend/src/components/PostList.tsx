@@ -18,7 +18,9 @@ const PostList = () => {
     <SPostList>
       <SHeader>
         <div>投稿一覧 </div>
-        <SSideBarButton disabled={isloading} onClick={onClickReload}>更新</SSideBarButton>
+        <SSideBarButton disabled={isloading} onClick={onClickReload}>
+          更新
+        </SSideBarButton>
       </SHeader>
       {isloading && <div>読込み中...</div>}
 

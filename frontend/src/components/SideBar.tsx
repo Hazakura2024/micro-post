@@ -16,7 +16,7 @@ const SideBar = () => {
     try {
       const res = await createPost(userInfo.token, msg);
       if (res.success) {
-        toast.success('投稿しました！')
+        toast.success("投稿しました！");
       }
 
       // (学習メモ): ここに到達するということは、成功したということ
@@ -25,8 +25,8 @@ const SideBar = () => {
       getPostList();
       // (学習メモ): createPost 成功 → setMsg → getPostList の順番が保証されている
     } catch (error: unknown) {
-      const msg = extractErrorMessage(error, '投稿に失敗しました。')
-      toast.error(msg)
+      const msg = extractErrorMessage(error, "投稿に失敗しました。");
+      toast.error(msg);
     } finally {
       setIsPosting(false);
     }
@@ -44,7 +44,7 @@ const SideBar = () => {
       </SSideBarRow>
       <SSideBarRow>
         <SSideBarButton
-          disabled={(msg === "") || (msg.length > 140) || isPosting ? true : false}
+          disabled={msg === "" || msg.length > 140 || isPosting ? true : false}
           onClick={onSendClick}
         >
           送信

@@ -1,44 +1,23 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { UserContext } from "../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "../api/User";
 import styled from "styled-components";
-import { extractErrorMessage } from "../utils/extractErrorMessage";
-import { toast } from "react-toastify";
 
 const Header = () => {
   const { userInfo, setUserInfo } = useContext(UserContext);
-  const [userName, setUserName] = useState("");
 
   const navigate = useNavigate();
 
   const onClickLogout = () => {
-    setUserInfo({ id: 0, token: "" });
+    setUserInfo({ id: 0, name: "", token: "" });
     navigate("/");
   };
-
-
-
-  useEffect(() => {
-    const getMyUser = async () => {
-      try {
-        const user = await getUser(userInfo.id, userInfo.token);
-        setUserName(user.name);
-      } catch (error: unknown) {
-        const msg = extractErrorMessage(error, 'ユーザー情報が取得できません');
-        toast.error(msg);
-        setUserName("");
-      }
-    };
-    // (学習メモ): useEffect 内で使う変数/関数は依存配列に入れるべき
-    getMyUser();
-  }, [userInfo.id, userInfo.token]);
 
   return (
     <SHeader>
       <SLogo>MicroPost</SLogo>
       <SRgightItem>
-        <SName>{userName}さん</SName>
+        <SName>{userInfo.name}さん</SName>
         <SLogout onClick={onClickLogout}>ログアウト</SLogout>
       </SRgightItem>
     </SHeader>
