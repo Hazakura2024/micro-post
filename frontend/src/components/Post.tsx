@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { PostType } from "../types/Post";
 import styled from "styled-components";
 import { deletePost } from "../api/Post";
@@ -32,7 +32,10 @@ const Post = ({
     return dateObj.toLocaleString();
   };
 
+  const [isDeleting, setIsDeleting] = useState(false);
   const onClickDelete = async () => {
+    if (isDeleting) return;
+    setIsDeleting(true);
     try {
       await deletePost(postId, userInfo.token);
       await getPostList();
@@ -40,6 +43,8 @@ const Post = ({
     } catch (error) {
       const msg = extractErrorMessage(error, "削除に失敗しました。");
       toast.error(msg);
+    } finally {
+      setIsDeleting(false)
     }
   };
 
@@ -48,7 +53,7 @@ const Post = ({
       <div>
         <SName>{getDateString(date)}</SName>
         <SDate>{post.user_name}</SDate>
-        <SDeleteButton disabled={userInfo.id !== post.user_id} onClick={onClickDelete}>
+        <SDeleteButton hidden={userInfo.id !== post.user_id} disabled={isDeleting} onClick={onClickDelete}>
           delete
         </SDeleteButton>
       </div>
@@ -85,7 +90,11 @@ const SDeleteButton = styled.button`
   border-radius: 8px;
   color: #fafafa;
   cursor: pointer;
-  &:disabled {
+  &:hidden {
     display: none;
   }
+  &:disabled {
+    background-color: #f6bfbc;
+  }
+
 `;

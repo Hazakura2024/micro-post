@@ -4,7 +4,7 @@ import Post from "./Post";
 import styled from "styled-components";
 
 const PostList = () => {
-  const { postList, getPostList, isloading } = useContext(PostListContext);
+  const { postList, getPostList, isLoading } = useContext(PostListContext);
 
   useEffect(() => {
     getPostList();
@@ -18,11 +18,11 @@ const PostList = () => {
     <SPostList>
       <SHeader>
         <div>投稿一覧 </div>
-        <SSideBarButton disabled={isloading} onClick={onClickReload}>
+        <SSideBarButton disabled={isLoading} onClick={onClickReload}>
           更新
         </SSideBarButton>
       </SHeader>
-      {isloading && <div>読込み中...</div>}
+      {isLoading && <div>読込み中...</div>}
 
       {postList.map((p) => (
         <Post key={p.id} postId={p.id} userName={p.user_name} post={p} />
