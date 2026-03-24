@@ -31,8 +31,8 @@ const PostList = () => {
         <Post key={p.id} postId={p.id} userName={p.user_name} post={p} />
       ))}
       <div>
-        <button onClick={() => setPage(page - 1)} disabled={page <= 1}>前へ</button>
-        <button onClick={() => setPage(page + 1)} disabled={postList.length < 10}>次へ</button>
+        <SDeleteButton onClick={() => setPage(page - 1)} disabled={page <= 1}>前へ</SDeleteButton>
+        <SDeleteButton onClick={() => setPage(page + 1)} disabled={postList.length < 10}>次へ</SDeleteButton>
       </div>
     </SPostList>
   );
@@ -66,8 +66,21 @@ const SSideBarButton = styled.button`
   border-radius: 8px;
   color: #fafafa;
   width: 96px;
+  cursor: pointer;
   &:disabled {
     background-color: #8491c3;
     cursor: not-allowed;
   }
 `;
+
+const SDeleteButton = styled.button`
+  background-color: #b8d200;
+  color: white;
+  border-color: #eeeeee;
+  border-radius: 4px;
+  color: #fafafa;
+  cursor: pointer;
+  &:disabled {
+    background-color: #d8e698;
+    cursor: not-allowed;
+  }`
