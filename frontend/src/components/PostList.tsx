@@ -21,9 +21,9 @@ const PostList = () => {
     <SPostList>
       <SHeader>
         <div>投稿一覧 </div>
-        <SSideBarButton disabled={isLoading} onClick={onClickReload}>
+        <SReloadButton disabled={isLoading} onClick={onClickReload}>
           更新
-        </SSideBarButton>
+        </SReloadButton>
       </SHeader>
       {isLoading && <div>読込み中...</div>}
 
@@ -31,8 +31,8 @@ const PostList = () => {
         <Post key={p.id} postId={p.id} userName={p.user_name} post={p} />
       ))}
       <div>
-        <SDeleteButton onClick={() => setPage(page - 1)} disabled={page <= 1}>前へ</SDeleteButton>
-        <SDeleteButton onClick={() => setPage(page + 1)} disabled={postList.length < 10}>次へ</SDeleteButton>
+        <SDeleteButton onClick={() => setPage(page - 1)} disabled={isLoading || page <= 1}>前へ</SDeleteButton>
+        <SDeleteButton onClick={() => setPage(page + 1)} disabled={isLoading || postList.length < 10}>次へ</SDeleteButton>
       </div>
     </SPostList>
   );
@@ -58,7 +58,7 @@ const SHeader = styled.div`
   padding-left: 8px;
 `;
 
-const SSideBarButton = styled.button`
+const SReloadButton = styled.button`
   background-color: #00a3af;
   border-color: #eeeeee;
   padding: 4px;
