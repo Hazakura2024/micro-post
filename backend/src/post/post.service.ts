@@ -73,7 +73,7 @@ export class PostService {
     start: number = 0,
     nr_records: number = 1,
     word?: string,
-    userName?: string,
+    user_name?: string,
   ) {
     // NOTE: ログイン済かチェック
     const now = new Date();
@@ -87,7 +87,7 @@ export class PostService {
       throw new ForbiddenException();
     }
 
-    const qb = this.microPostRepository
+    let qb = this.microPostRepository
       // (学習メモ): 以下、学習用メモ
       // 1. クエリビルダーの開始
       // SQL: SELECT * FROM micro_post AS micro_post
@@ -119,7 +119,23 @@ export class PostService {
 
       // リミット（ページネーション用）
       // SQL: LIMIT 5 (例)
-      .limit(nr_records);
+      .limit(nr_records)
+
+      // (学習メモ): 以降はandWhereで統一できるように、先にダミーのwhereを置いておく
+      .where('1 = 1');
+
+    // NOTE: 検索機能
+
+    // (学習メモ): ILIKEは大文字小文字関係なく検索、PostgreSQLの機能
+    // (学習メモ): %${word}%` 前後に%で部分一致検索 :wordに%${word}%が入る
+    // (学習メモ): :q と { q: ... } SQLインジェクション対策
+    if (word) {
+      qb = qb.andWhere('micro_post.content ILIKE :word', { word: `%${word}%` });
+    }
+
+    if (user_name) {
+      qb = qb.andWhere('micro_psot.name ILIKE :user_name', { user_name: `%${user_name}%` });
+    }
 
     type ResultType = {
       id: number;
