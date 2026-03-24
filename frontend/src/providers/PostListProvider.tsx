@@ -16,7 +16,7 @@ export const PostListContext = createContext(
   {} as {
     postList: PostType[];
     setPostList: Dispatch<SetStateAction<PostType[]>>;
-    getPostList: (start?: number, record?: number) => Promise<void>
+    getPostList: (start?: number, record?: number, word?: string, user_name?: string) => Promise<void>;
     isLoading: boolean;
     setIsLoading: Dispatch<React.SetStateAction<boolean>>;
   },
@@ -32,11 +32,11 @@ export const PostListProvider = ({
 
   const { userInfo } = useContext(UserContext);
 
-  const getPostList = async (start?: number, record?: number) => {
+  const getPostList = async (start?: number, record?: number, word?: string, user_name?: string) => {
     if (isLoading) return;
     setIsLoading(true);
     try {
-      const posts = await getList(userInfo.token, start, record);
+      const posts = await getList(userInfo.token, start, record, word, user_name);
 
       if (posts) {
         const formattedPosts = posts.map((p: PostType) => ({

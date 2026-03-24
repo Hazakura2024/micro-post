@@ -44,7 +44,7 @@ const Post = ({
       const msg = extractErrorMessage(error, "削除に失敗しました。");
       toast.error(msg);
     } finally {
-      setIsDeleting(false)
+      setIsDeleting(false);
     }
   };
 
@@ -53,7 +53,11 @@ const Post = ({
       <div>
         <SName>{getDateString(date)}</SName>
         <SDate>{post.user_name}</SDate>
-        <SDeleteButton hidden={userInfo.id !== post.user_id} disabled={isDeleting} onClick={onClickDelete}>
+        <SDeleteButton
+          hidden={userInfo.id !== post.user_id}
+          disabled={isDeleting}
+          onClick={onClickDelete}
+        >
           delete
         </SDeleteButton>
       </div>
@@ -96,5 +100,4 @@ const SDeleteButton = styled.button`
   &:disabled {
     background-color: #f6bfbc;
   }
-
 `;

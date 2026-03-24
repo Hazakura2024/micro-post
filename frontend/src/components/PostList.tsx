@@ -7,15 +7,51 @@ const PostList = () => {
   const { postList, getPostList, isLoading } = useContext(PostListContext);
 
   const [page, setPage] = useState(1);
+  const [wordText, setWordText] = useState("");
+  const [userText, setUserText] = useState("");
+
+  // FIX: 入力即時api発火で良くないので修正する必要あり
+
+  // // 入力を遅くする
+  // const [debouncedWord, setDebouncedWord] = useState(wordText)
+  // const [debouncedUser, setDebouncedUser] = useState(userText)
+  // useEffect(() => {
+  //   const t = setTimeout(() => {
+  //     setDebouncedUser(userText)
+  //     setDebouncedWord(wordText)
+  //   }, 400);
+  //   return () => clearTimeout(t)
+  // }, [wordText, userText])
+
+  // メインの取得
+  useEffect(() => {
+    getPostList(0, undefined, wordText, userText);
+    setPage(1)
+  }, [wordText, userText]);
 
   useEffect(() => {
-
-    getPostList((page - 1) * 10);
+    getPostList((page - 1) * 10, undefined, wordText, userText);
   }, [page]);
 
+  // 更新ボタンはこのままで良さそう
   const onClickReload = () => {
-    getPostList();
+    getPostList(0, undefined, wordText, userText);
+    setPage(1)
   };
+
+  const onClickClear = () => {
+    setUserText("")
+    setWordText("")
+    setPage(1)
+  }
+
+  const onClickNext = () => {
+    setPage(page + 1)
+  }
+
+  const onClickBack = () => {
+    setPage(page - 1)
+  }
 
   return (
     <SPostList>
@@ -24,6 +60,9 @@ const PostList = () => {
         <SReloadButton disabled={isLoading} onClick={onClickReload}>
           更新
         </SReloadButton>
+        <input type="text" value={wordText} onChange={e => setWordText(e.target.value)} placeholder="内容を検索" />
+        <input type="text" value={userText} onChange={e => setUserText(e.target.value)} placeholder="ユーザーの投稿を検索" />
+        <SClearButton onClick={onClickClear}>クリア</SClearButton>
       </SHeader>
       {isLoading && <div>読込み中...</div>}
 
@@ -31,8 +70,18 @@ const PostList = () => {
         <Post key={p.id} postId={p.id} userName={p.user_name} post={p} />
       ))}
       <div>
-        <SDeleteButton onClick={() => setPage(page - 1)} disabled={isLoading || page <= 1}>前へ</SDeleteButton>
-        <SDeleteButton onClick={() => setPage(page + 1)} disabled={isLoading || postList.length < 10}>次へ</SDeleteButton>
+        <SPageButton
+          onClick={onClickBack}
+          disabled={isLoading || page <= 1}
+        >
+          前へ
+        </SPageButton>
+        <SPageButton
+          onClick={onClickNext}
+          disabled={isLoading || postList.length < 10}
+        >
+          次へ
+        </SPageButton>
       </div>
     </SPostList>
   );
@@ -73,7 +122,7 @@ const SReloadButton = styled.button`
   }
 `;
 
-const SDeleteButton = styled.button`
+const SPageButton = styled.button`
   background-color: #b8d200;
   color: white;
   border-color: #eeeeee;
@@ -83,4 +132,20 @@ const SDeleteButton = styled.button`
   &:disabled {
     background-color: #d8e698;
     cursor: not-allowed;
-  }`
+  }
+`;
+
+const SClearButton = styled.button`
+  background-color: #00a3af;
+  border-color: #eeeeee;
+  padding: 4px;
+  margin: 16px;
+  border-radius: 8px;
+  color: #fafafa;
+  width: 54px;
+  cursor: pointer;
+  &:disabled {
+    background-color: #8491c3;
+    cursor: not-allowed;
+  }
+`;
