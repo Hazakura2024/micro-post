@@ -142,6 +142,7 @@
 [
   {
     "id": 3,
+    "user_id": 1,
     "user_name": "taro",
     "content": "投稿内容",
     "created_at": "2026-03-23T12:34:56.000Z"
