@@ -43,7 +43,7 @@ export const getList = async (
 ): Promise<PostType[]> => {
   try {
     const API_URL = process.env.REACT_APP_API_URL;
-    const url = `${API_URL}/post?records=${records}&start=${start}&token=${token}${word ? "&word=" + word : ""}${user_name ? "&user_name=" + user_name : ""}`;
+    const url = `${API_URL}/post?records=${records}&start=${start}&token=${token}${word ? "&word=" + encodeURIComponent(word) : ""}${user_name ? "&user_name=" + encodeURIComponent(user_name) : ""}`;
     const res = await axios.get<PostType[]>(url);
     return res.data;
   } catch (error: unknown) {

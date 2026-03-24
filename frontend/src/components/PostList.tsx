@@ -10,17 +10,38 @@ const PostList = () => {
   const [wordText, setWordText] = useState("");
   const [userText, setUserText] = useState("");
 
+  // FIX: 入力即時api発火で良くないので修正する必要あり
+
+  // // 入力を遅くする
+  // const [debouncedWord, setDebouncedWord] = useState(wordText)
+  // const [debouncedUser, setDebouncedUser] = useState(userText)
+  // useEffect(() => {
+  //   const t = setTimeout(() => {
+  //     setDebouncedUser(userText)
+  //     setDebouncedWord(wordText)
+  //   }, 400);
+  //   return () => clearTimeout(t)
+  // }, [wordText, userText])
+
+  // メインの取得
   useEffect(() => {
-    getPostList((page - 1) * 10, 10, wordText, userText);
+    getPostList(0, undefined, wordText, userText);
+    setPage(1)
+  }, [wordText, userText]);
+
+  useEffect(() => {
+    getPostList((page - 1) * 10, undefined, wordText, userText);
   }, [page]);
 
+  // 更新ボタンはこのままで良さそう
   const onClickReload = () => {
-    getPostList();
+    getPostList(0, undefined, wordText, userText);
+    setPage(1)
   };
 
-  const onClickSearch = () => {
-    getPostList(0, 10, wordText, userText)
-  }
+  // const onClickSearch = () => {
+  //   setPage(1)
+  // }
 
   const onClickNext = () => {
     setPage(page + 1)
@@ -39,7 +60,7 @@ const PostList = () => {
         </SReloadButton>
         <input type="text" value={wordText} onChange={e => setWordText(e.target.value)} placeholder="内容を検索" />
         <input type="text" value={userText} onChange={e => setUserText(e.target.value)} placeholder="ユーザーの投稿を検索" />
-        <SSearchButton onClick={onClickSearch}>検索</SSearchButton>
+        {/* <SSearchButton onClick={onClickSearch}>検索</SSearchButton> */}
       </SHeader>
       {isLoading && <div>読込み中...</div>}
 
