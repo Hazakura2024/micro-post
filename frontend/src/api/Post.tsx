@@ -34,10 +34,10 @@ export const deletePost = async (id: number, token: string) => {
   }
 };
 
-export const getList = async (token: string): Promise<PostType[]> => {
+export const getList = async (token: string, start: number | void, records: number | void): Promise<PostType[]> => {
   try {
     const API_URL = process.env.REACT_APP_API_URL;
-    const url = `${API_URL}/post?records=20&token=${token}`;
+    const url = `${API_URL}/post?records=${records || 10}&start=${start || 0}&token=${token}`;
     const res = await axios.get<PostType[]>(url);
     return res.data;
   } catch (error: unknown) {
