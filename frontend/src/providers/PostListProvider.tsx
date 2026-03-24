@@ -16,7 +16,7 @@ export const PostListContext = createContext(
   {} as {
     postList: PostType[];
     setPostList: Dispatch<SetStateAction<PostType[]>>;
-    getPostList: (start?: number, record?: number) => Promise<void>
+    getPostList: (start?: number, record?: number) => Promise<void>;
     isLoading: boolean;
     setIsLoading: Dispatch<React.SetStateAction<boolean>>;
   },

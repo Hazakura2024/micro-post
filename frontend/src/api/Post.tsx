@@ -34,7 +34,11 @@ export const deletePost = async (id: number, token: string) => {
   }
 };
 
-export const getList = async (token: string, start: number = 0, records: number = 10): Promise<PostType[]> => {
+export const getList = async (
+  token: string,
+  start: number = 0,
+  records: number = 10,
+): Promise<PostType[]> => {
   try {
     const API_URL = process.env.REACT_APP_API_URL;
     const url = `${API_URL}/post?records=${records}&start=${start}&token=${token}`;

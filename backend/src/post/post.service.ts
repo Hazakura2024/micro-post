@@ -68,7 +68,13 @@ export class PostService {
     await this.microPostRepository.delete(id);
   }
 
-  async getList(token: string, start: number = 0, nr_records: number = 1) {
+  async getList(
+    token: string,
+    start: number = 0,
+    nr_records: number = 1,
+    word?: string,
+    userName?: string,
+  ) {
     // NOTE: ログイン済かチェック
     const now = new Date();
     const auth = await this.AuthRepository.findOne({

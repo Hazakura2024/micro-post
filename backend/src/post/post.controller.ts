@@ -30,8 +30,16 @@ export class PostController {
     @Query('token') token: string,
     @Query('start') start: number,
     @Query('records') records: number,
+    @Query('word') word?: string,
+    @Query('user_name') user_name?: string,
   ) {
-    return await this.postService.getList(token, start, records);
+    return await this.postService.getList(
+      token,
+      start,
+      records,
+      word,
+      user_name,
+    );
   }
 
   @Delete(':id')

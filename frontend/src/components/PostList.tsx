@@ -9,7 +9,6 @@ const PostList = () => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-
     getPostList((page - 1) * 10);
   }, [page]);
 
@@ -34,8 +33,18 @@ const PostList = () => {
         <Post key={p.id} postId={p.id} userName={p.user_name} post={p} />
       ))}
       <div>
-        <SDeleteButton onClick={() => setPage(page - 1)} disabled={isLoading || page <= 1}>前へ</SDeleteButton>
-        <SDeleteButton onClick={() => setPage(page + 1)} disabled={isLoading || postList.length < 10}>次へ</SDeleteButton>
+        <SDeleteButton
+          onClick={() => setPage(page - 1)}
+          disabled={isLoading || page <= 1}
+        >
+          前へ
+        </SDeleteButton>
+        <SDeleteButton
+          onClick={() => setPage(page + 1)}
+          disabled={isLoading || postList.length < 10}
+        >
+          次へ
+        </SDeleteButton>
       </div>
     </SPostList>
   );
@@ -86,7 +95,8 @@ const SDeleteButton = styled.button`
   &:disabled {
     background-color: #d8e698;
     cursor: not-allowed;
-  }`
+  }
+`;
 
 const SSearchButton = styled.button`
   background-color: #00a3af;
