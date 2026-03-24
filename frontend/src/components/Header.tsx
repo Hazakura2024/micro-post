@@ -65,4 +65,5 @@ const SLogout = styled.button`
   padding-top: 8px;
   padding-bottom: 8px;
   text-align: center;
+  cursor: pointer;
 `;

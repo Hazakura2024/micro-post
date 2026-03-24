@@ -48,7 +48,7 @@ const Post = ({
       <div>
         <SName>{getDateString(date)}</SName>
         <SDate>{post.user_name}</SDate>
-        <SDeleteButton disabled={false} onClick={onClickDelete}>
+        <SDeleteButton disabled={userInfo.id !== post.user_id} onClick={onClickDelete}>
           delete
         </SDeleteButton>
       </div>
@@ -84,6 +84,7 @@ const SDeleteButton = styled.button`
   border-color: #eeeeee;
   border-radius: 8px;
   color: #fafafa;
+  cursor: pointer;
   &:disabled {
     display: none;
   }

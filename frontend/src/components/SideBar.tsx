@@ -79,6 +79,7 @@ const SSideBarButton = styled.button`
   border-radius: 8px;
   color: #fafafa;
   width: 100%;
+  cursor: pointer;
   &:disabled {
     background-color: #8491c3;
     cursor: not-allowed;
