@@ -47,7 +47,7 @@ export const PostListProvider = ({
         setPostList(formattedPosts);
       }
     } catch (error: unknown) {
-      const msg = extractErrorMessage(error, '投稿が取得できません');
+      const msg = extractErrorMessage(error, "投稿が取得できません");
       toast.error(msg);
     } finally {
       setIsloading(false);

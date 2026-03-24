@@ -3,7 +3,6 @@ import { UserContext } from "../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-
 const Header = () => {
   const { userInfo, setUserInfo } = useContext(UserContext);
 

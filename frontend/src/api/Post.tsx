@@ -1,7 +1,10 @@
 import axios from "axios";
 import { CreatePostResponse, PostType } from "../types/Post";
 
-export const createPost = async (token: string, msg: string): Promise<CreatePostResponse> => {
+export const createPost = async (
+  token: string,
+  msg: string,
+): Promise<CreatePostResponse> => {
   try {
     const API_URL = process.env.REACT_APP_API_URL;
     const url = `${API_URL}/post?token=${token}`;
@@ -11,7 +14,6 @@ export const createPost = async (token: string, msg: string): Promise<CreatePost
       message: msg,
     });
     return res.data;
-
   } catch (error: unknown) {
     // NOTE: エラーは自動的にthrowされコンポーネント側でextractErrorMessageを使う
     throw error;
@@ -26,7 +28,6 @@ export const deletePost = async (id: number, token: string) => {
     // (学習メモ): axiosがジェネリクスパラメータでdataにその型をセットしてくれる
     const res = await axios.delete(url);
     return res.data;
-
   } catch (error: unknown) {
     // NOTE: エラーは自動的にthrowされコンポーネント側でextractErrorMessageを使う
     throw error;

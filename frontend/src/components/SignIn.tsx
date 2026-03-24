@@ -6,7 +6,6 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 
-
 const SignIn = () => {
   const navigate = useNavigate();
 
@@ -22,15 +21,15 @@ const SignIn = () => {
       setErrorMessage("");
       const ret = await signIn(userId, pass);
       if (!ret?.token) {
-        toast.error('ログインに失敗しました')
+        toast.error("ログインに失敗しました");
       }
 
       await saveInfoWithName(ret.user_id, ret.token);
-      console.log("navigate前")
+      console.log("navigate前");
       navigate("/main");
-      console.log("navigate後")
+      console.log("navigate後");
     } catch (error: unknown) {
-      const msg = extractErrorMessage(error, 'ログインできません')
+      const msg = extractErrorMessage(error, "ログインできません");
       setErrorMessage(msg);
       toast.error(msg);
     } finally {
@@ -75,7 +74,11 @@ const SignIn = () => {
         )}
       </SSignInRow>
       <SSignInRow>
-        <SSignInButton disabled={isSubmitting} type="button" onClick={onSignClick}>
+        <SSignInButton
+          disabled={isSubmitting}
+          type="button"
+          onClick={onSignClick}
+        >
           Login
         </SSignInButton>
       </SSignInRow>
