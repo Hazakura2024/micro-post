@@ -24,9 +24,9 @@ const Post = ({
 
   // FIX: localhostだとUTCになってrenderだとJTCになるっぽい？
   // NOTE: サーバーがZをつけて、UTCであるという指定をしていないので、ここでつける
-  const dateString = post.created_at.toString().endsWith("Z")
-    ? post.created_at
-    : `${post.created_at.toString().replace(" ", "T")}Z`;
+  // const dateString = post.created_at.toString().endsWith("Z")
+  //   ? post.created_at
+  //   : `${post.created_at.toString().replace(" ", "T")}Z`;
   const date = new Date(post.created_at);
   const getDateString = (dateObj: Date) => {
     return dateObj.toLocaleString();

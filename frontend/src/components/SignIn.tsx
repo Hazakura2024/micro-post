@@ -11,7 +11,7 @@ const SignIn = () => {
 
   const [userId, setUserId] = useState("");
   const [pass, setPass] = useState("");
-  const { setUserInfo, saveInfoWithName } = useContext(UserContext);
+  const { saveInfoWithName } = useContext(UserContext);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
