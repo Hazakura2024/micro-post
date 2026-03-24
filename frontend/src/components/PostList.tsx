@@ -24,6 +24,9 @@ const PostList = () => {
         <SReloadButton disabled={isLoading} onClick={onClickReload}>
           更新
         </SReloadButton>
+        <input type="text" placeholder="内容を検索" />
+        <input type="text" placeholder="ユーザーの投稿を検索" />
+        <SSearchButton>検索</SSearchButton>
       </SHeader>
       {isLoading && <div>読込み中...</div>}
 
@@ -84,3 +87,18 @@ const SDeleteButton = styled.button`
     background-color: #d8e698;
     cursor: not-allowed;
   }`
+
+const SSearchButton = styled.button`
+  background-color: #00a3af;
+  border-color: #eeeeee;
+  padding: 4px;
+  margin: 16px;
+  border-radius: 8px;
+  color: #fafafa;
+  width: 48px;
+  cursor: pointer;
+  &:disabled {
+    background-color: #8491c3;
+    cursor: not-allowed;
+  }
+`;
