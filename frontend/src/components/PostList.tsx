@@ -39,9 +39,11 @@ const PostList = () => {
     setPage(1)
   };
 
-  // const onClickSearch = () => {
-  //   setPage(1)
-  // }
+  const onClickClear = () => {
+    setUserText("")
+    setWordText("")
+    setPage(1)
+  }
 
   const onClickNext = () => {
     setPage(page + 1)
@@ -60,7 +62,7 @@ const PostList = () => {
         </SReloadButton>
         <input type="text" value={wordText} onChange={e => setWordText(e.target.value)} placeholder="内容を検索" />
         <input type="text" value={userText} onChange={e => setUserText(e.target.value)} placeholder="ユーザーの投稿を検索" />
-        {/* <SSearchButton onClick={onClickSearch}>検索</SSearchButton> */}
+        <SClearButton onClick={onClickClear}>クリア</SClearButton>
       </SHeader>
       {isLoading && <div>読込み中...</div>}
 
@@ -133,14 +135,14 @@ const SPageButton = styled.button`
   }
 `;
 
-const SSearchButton = styled.button`
+const SClearButton = styled.button`
   background-color: #00a3af;
   border-color: #eeeeee;
   padding: 4px;
   margin: 16px;
   border-radius: 8px;
   color: #fafafa;
-  width: 48px;
+  width: 54px;
   cursor: pointer;
   &:disabled {
     background-color: #8491c3;
