@@ -98,6 +98,7 @@ export class PostService {
       // 意味: 全部の列はいらないので、必要な列だけ選んで、使いやすい名前に変えます。
       .select([
         'micro_post.id as id',
+        'micro_post.user_id as user_id',
         'user.name as user_name',
         'micro_post.content as content',
         'micro_post.created_at as created_at',
@@ -117,6 +118,7 @@ export class PostService {
     type ResultType = {
       id: number;
       content: string;
+      user_id: number;
       user_name: string;
       created_at: Date;
     };
