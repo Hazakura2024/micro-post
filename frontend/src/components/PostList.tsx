@@ -7,6 +7,8 @@ const PostList = () => {
   const { postList, getPostList, isLoading } = useContext(PostListContext);
 
   const [page, setPage] = useState(1);
+  const [wordText, setWordText] = useState("");
+  const [userText, setUserText] = useState("");
 
   useEffect(() => {
     getPostList((page - 1) * 10);
@@ -23,8 +25,8 @@ const PostList = () => {
         <SReloadButton disabled={isLoading} onClick={onClickReload}>
           更新
         </SReloadButton>
-        <input type="text" placeholder="内容を検索" />
-        <input type="text" placeholder="ユーザーの投稿を検索" />
+        <input type="text" value={wordText} onChange={e => setWordText(e.target.value)} placeholder="内容を検索" />
+        <input type="text" value={userText} onChange={e => setUserText(e.target.value)} placeholder="ユーザーの投稿を検索" />
         <SSearchButton>検索</SSearchButton>
       </SHeader>
       {isLoading && <div>読込み中...</div>}
