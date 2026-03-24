@@ -12,6 +12,7 @@ const SideBar = () => {
   const { getPostList } = useContext(PostListContext);
   const [isPosting, setIsPosting] = useState(false);
   const onSendClick = async () => {
+    if (isPosting) return;
     setIsPosting(true);
     try {
       const res = await createPost(userInfo.token, msg);
