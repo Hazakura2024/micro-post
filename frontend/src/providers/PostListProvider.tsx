@@ -28,6 +28,7 @@ export const PostListContext = createContext(
     getPostList: (start?: number, record?: number, word?: string, user_name?: string) => Promise<void>;
     isLoading: boolean;
     setIsLoading: Dispatch<React.SetStateAction<boolean>>;
+    refreshCurrent: () => void
   },
 );
 
@@ -69,13 +70,17 @@ export const PostListProvider = ({
     }
   };
 
+  const refreshCurrent = () => {
+    getPostList((page - 1) * 10, undefined, searchWord, searchName)
+  }
+
   useEffect(() => {
     getPostList((page - 1) * 10, undefined, searchWord, searchName)
   },
     [page, searchName, searchWord])
 
   const value = useMemo(
-    () => ({ postList, setPostList, getPostList, isLoading, setIsLoading, searchWord, setSearchWord, searchName, setSearchName, page, setPage }),
+    () => ({ postList, setPostList, getPostList, isLoading, setIsLoading, searchWord, setSearchWord, searchName, setSearchName, page, setPage, refreshCurrent }),
     [postList, setPostList, isLoading, searchName, setSearchWord, page],
   );
   return (

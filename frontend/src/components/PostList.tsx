@@ -13,7 +13,7 @@ const PostList = () => {
     searchWord,
     setSearchWord,
     searchName,
-    setSearchName
+    setSearchName,
   } = useContext(PostListContext);
 
   // const [page, setPage] = useState(1);
