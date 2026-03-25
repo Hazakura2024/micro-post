@@ -86,6 +86,7 @@ export class UserService {
     };
   }
 
+  // ユーザー名変更
   async editName(token: string, name: string) {
     // ログイン済かチェック
     const now = new Date();
@@ -103,7 +104,7 @@ export class UserService {
     const existingUserByName = await this.userRepository.findOne({
       where: { name: Equal(name) },
     });
-    if (existingUserByName) {
+    if (existingUserByName && existingUserByName.id !== auth.user_id) {
       throw new ConflictException('このユーザー名は使用されています。');
     }
 
