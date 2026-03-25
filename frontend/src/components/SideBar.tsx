@@ -9,7 +9,7 @@ import { extractErrorMessage } from "../utils/extractErrorMessage";
 const SideBar = () => {
   const [msg, setMsg] = useState("");
   const { userInfo } = useContext(UserContext);
-  const { getPostList } = useContext(PostListContext);
+  const { refreshCurrent } = useContext(PostListContext);
   const [isPosting, setIsPosting] = useState(false);
   const onSendClick = async () => {
     if (isPosting) return;
@@ -23,7 +23,7 @@ const SideBar = () => {
       // (学習メモ): ここに到達するということは、成功したということ
       setMsg("");
 
-      getPostList();
+      refreshCurrent();
       // (学習メモ): createPost 成功 → setMsg → getPostList の順番が保証されている
     } catch (error: unknown) {
       const msg = extractErrorMessage(error, "投稿に失敗しました。");

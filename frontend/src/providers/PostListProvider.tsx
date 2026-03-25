@@ -3,6 +3,7 @@ import React, {
   useState,
   createContext,
   useContext,
+  useEffect,
 } from "react";
 import type {
   Dispatch,
@@ -17,10 +18,17 @@ import { toast } from "react-toastify";
 export const PostListContext = createContext(
   {} as {
     postList: PostType[];
+    searchWord: string
+    setSearchWord: React.Dispatch<React.SetStateAction<string>>
+    searchName: string
+    setSearchName: React.Dispatch<React.SetStateAction<string>>
+    page: number
+    setPage: React.Dispatch<React.SetStateAction<number>>
     setPostList: Dispatch<SetStateAction<PostType[]>>;
     getPostList: (start?: number, record?: number, word?: string, user_name?: string) => Promise<void>;
     isLoading: boolean;
     setIsLoading: Dispatch<React.SetStateAction<boolean>>;
+    refreshCurrent: () => void
   },
 );
 
@@ -31,6 +39,10 @@ export const PostListProvider = ({
 }) => {
   const [postList, setPostList] = useState<PostType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [searchWord, setSearchWord] = useState("");
+  const [searchName, setSearchName] = useState("");
+  const [page, setPage] = useState(1);
 
   const { userInfo } = useContext(UserContext);
 
@@ -58,9 +70,18 @@ export const PostListProvider = ({
     }
   };
 
+  const refreshCurrent = () => {
+    getPostList((page - 1) * 10, undefined, searchWord, searchName)
+  }
+
+  useEffect(() => {
+    getPostList((page - 1) * 10, undefined, searchWord, searchName)
+  },
+    [page, searchName, searchWord])
+
   const value = useMemo(
-    () => ({ postList, setPostList, getPostList, isLoading, setIsLoading }),
-    [postList, setPostList, isLoading],
+    () => ({ postList, setPostList, getPostList, isLoading, setIsLoading, searchWord, setSearchWord, searchName, setSearchName, page, setPage, refreshCurrent }),
+    [postList, setPostList, isLoading, searchName, setSearchWord, page],
   );
   return (
     <PostListContext.Provider value={value}>

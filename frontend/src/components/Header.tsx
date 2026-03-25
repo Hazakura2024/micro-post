@@ -6,9 +6,11 @@ import { FaPen } from "react-icons/fa";
 import { editUser } from "../api/User";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
+import { PostListContext } from "../providers/PostListProvider";
 
 const Header = () => {
   const { userInfo, setUserInfo, saveInfoWithName } = useContext(UserContext);
+  const { refreshCurrent } = useContext(PostListContext)
 
   const [isEditing, setIsEditing] = useState(false);
   const [editningName, setEditingName] = useState("")
@@ -35,6 +37,7 @@ const Header = () => {
       await saveInfoWithName(userInfo.id, userInfo.token,)
       toast.success("名前の変更に成功しました！")
       setIsEditing(false)
+      refreshCurrent()
 
     } catch (error) {
       const msg = extractErrorMessage(error, "名前の変更に失敗しました")
@@ -51,14 +54,14 @@ const Header = () => {
         {isEditing
           ? <div>
             <SInput type="text" placeholder="名前を編集..." value={editningName} onChange={e => setEditingName(e.target.value)} />
-            <SNameButton onClick={onClickSend} disabled={isSendingName}>変更</SNameButton>
+            <SNameButton onClick={onClickSend} disabled={editningName.length > 20}>変更</SNameButton>
           </div>
           : <SName>{userInfo.name}</SName>}
 
 
         <SName>さん</SName>
 
-        <SEdit onClick={onClickEdit}>
+        <SEdit onClick={onClickEdit} >
           <FaPen />
         </SEdit>
 
@@ -124,8 +127,8 @@ const SEdit = styled.button`
 `;
 
 const SInput = styled.input`
-  height: 20px;
-  margin-top: 8px;
+  height: 24px;
+  box-sizing: border-box;
 `
 
 const SNameButton = styled.button`
@@ -135,6 +138,7 @@ const SNameButton = styled.button`
   border-color: #eeeeee;
   border-radius: 4px;
   color: #fafafa;
+  box-sizing: border-box;
   cursor: pointer;
   &:disabled {
     background-color: #d8e698;

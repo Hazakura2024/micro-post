@@ -4,11 +4,21 @@ import Post from "./Post";
 import styled from "styled-components";
 
 const PostList = () => {
-  const { postList, getPostList, isLoading } = useContext(PostListContext);
+  const {
+    postList,
+    getPostList,
+    isLoading,
+    page,
+    setPage,
+    searchWord,
+    setSearchWord,
+    searchName,
+    setSearchName,
+  } = useContext(PostListContext);
 
-  const [page, setPage] = useState(1);
-  const [wordText, setWordText] = useState("");
-  const [userText, setUserText] = useState("");
+  // const [page, setPage] = useState(1);
+  // const [wordText, setWordText] = useState("");
+  // const [userText, setUserText] = useState("");
 
   // FIX: 入力即時api発火で良くないので修正する必要あり
 
@@ -23,25 +33,25 @@ const PostList = () => {
   //   return () => clearTimeout(t)
   // }, [wordText, userText])
 
-  // メインの取得
+  // 初表示時の取得
   useEffect(() => {
-    getPostList(0, undefined, wordText, userText);
+    getPostList(0, undefined, searchWord, searchName);
     setPage(1)
-  }, [wordText, userText]);
+  }, []);
 
-  useEffect(() => {
-    getPostList((page - 1) * 10, undefined, wordText, userText);
-  }, [page]);
+  // useEffect(() => {
+  //   getPostList((page - 1) * 10, undefined, wordText, userText);
+  // }, [page]);
 
   // 更新ボタンはこのままで良さそう
   const onClickReload = () => {
-    getPostList(0, undefined, wordText, userText);
+    getPostList(0, undefined, searchWord, searchName);
     setPage(1)
   };
 
   const onClickClear = () => {
-    setUserText("")
-    setWordText("")
+    setSearchName("")
+    setSearchWord("")
     setPage(1)
   }
 
@@ -53,6 +63,18 @@ const PostList = () => {
     setPage(page - 1)
   }
 
+  const onChangeSerachWord = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
+    setPage(1)
+    setSearchWord(e.target.value)
+
+  }
+  const onChangeSerachName = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
+    setPage(1)
+    setSearchName(e.target.value)
+  }
+
+
+
   return (
     <SPostList>
       <SHeader>
@@ -60,8 +82,8 @@ const PostList = () => {
         <SReloadButton disabled={isLoading} onClick={onClickReload}>
           更新
         </SReloadButton>
-        <input type="text" value={wordText} onChange={e => setWordText(e.target.value)} placeholder="内容を検索" />
-        <input type="text" value={userText} onChange={e => setUserText(e.target.value)} placeholder="ユーザーの投稿を検索" />
+        <input type="text" value={searchWord} onChange={(e) => onChangeSerachWord(e)} placeholder="内容を検索" />
+        <input type="text" value={searchName} onChange={(e) => onChangeSerachName(e)} placeholder="ユーザーの投稿を検索" />
         <SClearButton onClick={onClickClear}>クリア</SClearButton>
       </SHeader>
       {isLoading && <div>読込み中...</div>}
