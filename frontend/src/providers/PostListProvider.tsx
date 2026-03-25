@@ -3,6 +3,7 @@ import React, {
   useState,
   createContext,
   useContext,
+  useEffect,
 } from "react";
 import type {
   Dispatch,
@@ -67,6 +68,11 @@ export const PostListProvider = ({
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    getPostList((page - 1) * 10, undefined, searchWord, searchName)
+  },
+    [page, searchName, searchWord])
 
   const value = useMemo(
     () => ({ postList, setPostList, getPostList, isLoading, setIsLoading, searchWord, setSearchWord, searchName, setSearchName, page, setPage }),
