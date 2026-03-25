@@ -34,6 +34,7 @@ const Header = () => {
 
       await saveInfoWithName(userInfo.id, userInfo.token,)
       toast.success("名前の変更に成功しました！")
+      setIsEditing(false)
 
     } catch (error) {
       const msg = extractErrorMessage(error, "名前の変更に失敗しました")
