@@ -19,7 +19,10 @@ const Header = () => {
       <SLogo>MicroPost</SLogo>
       <SRgightItem>
         <SName>{userInfo.name}さん</SName>
-        <FaPen />
+        <SEdit>
+          <FaPen />
+        </SEdit>
+
         <SLogout onClick={onClickLogout}>ログアウト</SLogout>
 
       </SRgightItem>
@@ -67,6 +70,16 @@ const SLogout = styled.button`
   border: none;
   padding-top: 8px;
   padding-bottom: 8px;
+  text-align: center;
+  cursor: pointer;
+`;
+
+const SEdit = styled.button`
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding-top: 4px;
+  padding-bottom: 4px;
   text-align: center;
   cursor: pointer;
 `;
