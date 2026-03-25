@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { PostType } from "../types/Post";
+import type { PostType } from "../types/Post";
 import styled from "styled-components";
 import { deletePost } from "../api/Post";
 import { UserContext } from "../providers/UserProvider";
