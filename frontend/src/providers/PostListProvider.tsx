@@ -21,6 +21,8 @@ export const PostListContext = createContext(
     setSearchWord: React.Dispatch<React.SetStateAction<string>>
     searchName: string
     setSearchName: React.Dispatch<React.SetStateAction<string>>
+    page: number
+    setPage: React.Dispatch<React.SetStateAction<number>>
     setPostList: Dispatch<SetStateAction<PostType[]>>;
     getPostList: (start?: number, record?: number, word?: string, user_name?: string) => Promise<void>;
     isLoading: boolean;
@@ -38,6 +40,7 @@ export const PostListProvider = ({
 
   const [searchWord, setSearchWord] = useState("");
   const [searchName, setSearchName] = useState("");
+  const [page, setPage] = useState(1);
 
   const { userInfo } = useContext(UserContext);
 
@@ -66,8 +69,8 @@ export const PostListProvider = ({
   };
 
   const value = useMemo(
-    () => ({ postList, setPostList, getPostList, isLoading, setIsLoading, searchWord, setSearchWord, searchName, setSearchName }),
-    [postList, setPostList, isLoading, searchName, setSearchWord],
+    () => ({ postList, setPostList, getPostList, isLoading, setIsLoading, searchWord, setSearchWord, searchName, setSearchName, page, setPage }),
+    [postList, setPostList, isLoading, searchName, setSearchWord, page],
   );
   return (
     <PostListContext.Provider value={value}>
