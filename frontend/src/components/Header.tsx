@@ -127,8 +127,8 @@ const SEdit = styled.button`
 `;
 
 const SInput = styled.input`
-  height: 20px;
-  margin-top: 8px;
+  height: 24px;
+  box-sizing: border-box;
 `
 
 const SNameButton = styled.button`
@@ -138,6 +138,7 @@ const SNameButton = styled.button`
   border-color: #eeeeee;
   border-radius: 4px;
   color: #fafafa;
+  box-sizing: border-box;
   cursor: pointer;
   &:disabled {
     background-color: #d8e698;
