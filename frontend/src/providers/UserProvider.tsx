@@ -1,12 +1,14 @@
 import {
   createContext,
-  Dispatch,
-  SetStateAction,
   useEffect,
   useMemo,
   useState,
 } from "react";
-import { UserInfo } from "../types/User";
+import type {
+  Dispatch,
+  SetStateAction,
+} from "react";
+import type { UserInfo } from "../types/User";
 import { getUser } from "../api/User";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { toast } from "react-toastify";

@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { UserContext } from "../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { FaPen } from "react-icons/fa";
 
 const Header = () => {
   const { userInfo, setUserInfo } = useContext(UserContext);
@@ -18,7 +19,9 @@ const Header = () => {
       <SLogo>MicroPost</SLogo>
       <SRgightItem>
         <SName>{userInfo.name}さん</SName>
+        <FaPen />
         <SLogout onClick={onClickLogout}>ログアウト</SLogout>
+
       </SRgightItem>
     </SHeader>
   );

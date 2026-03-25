@@ -1,12 +1,14 @@
 import React, {
-  Dispatch,
-  SetStateAction,
   useMemo,
   useState,
   createContext,
   useContext,
 } from "react";
-import { PostType } from "../types/Post";
+import type {
+  Dispatch,
+  SetStateAction,
+} from "react";
+import type { PostType } from "../types/Post";
 import { getList } from "../api/Post";
 import { UserContext } from "./UserProvider";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
