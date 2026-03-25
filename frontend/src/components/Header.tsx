@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { UserContext } from "../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -7,6 +7,9 @@ import { FaPen } from "react-icons/fa";
 const Header = () => {
   const { userInfo, setUserInfo } = useContext(UserContext);
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [edintingName, setEditingName] = useState("")
+
   const navigate = useNavigate();
 
   const onClickLogout = () => {
@@ -14,12 +17,23 @@ const Header = () => {
     navigate("/");
   };
 
+  const onClickEdit = () => {
+    setIsEditing((prev) => !prev)
+    setEditingName("")
+  }
+
   return (
     <SHeader>
       <SLogo>MicroPost</SLogo>
       <SRgightItem>
-        <SName>{userInfo.name}さん</SName>
-        <SEdit>
+        {isEditing
+          ? <SInput type="text" placeholder="名前を入力..." value={edintingName} onChange={e => setEditingName(e.target.value)} />
+          : <SName>{userInfo.name}</SName>}
+
+
+        <SName>さん</SName>
+
+        <SEdit onClick={onClickEdit}>
           <FaPen />
         </SEdit>
 
@@ -83,3 +97,8 @@ const SEdit = styled.button`
   text-align: center;
   cursor: pointer;
 `;
+
+const SInput = styled.input`
+  height: 20px;
+  margin: 10px;
+`
