@@ -54,14 +54,14 @@ const Header = () => {
         {isEditing
           ? <div>
             <SInput type="text" placeholder="名前を編集..." value={editningName} onChange={e => setEditingName(e.target.value)} />
-            <SNameButton onClick={onClickSend} disabled={isSendingName}>変更</SNameButton>
+            <SNameButton onClick={onClickSend} disabled={editningName.length > 20}>変更</SNameButton>
           </div>
           : <SName>{userInfo.name}</SName>}
 
 
         <SName>さん</SName>
 
-        <SEdit onClick={onClickEdit}>
+        <SEdit onClick={onClickEdit} >
           <FaPen />
         </SEdit>
 
