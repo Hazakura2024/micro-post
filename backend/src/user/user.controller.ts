@@ -21,8 +21,11 @@ export class UserController {
     return await this.userService.getUser(token, id);
   }
 
-  @Patch(':id')
-  async editUser(@Param('id') token: string, @Body() editNameDto: EditNameDto) {
+  @Patch('me')
+  async editUser(
+    @Query('token') token: string,
+    @Body() editNameDto: EditNameDto,
+  ) {
     return await this.userService.editName(token, editNameDto.name);
   }
 }
