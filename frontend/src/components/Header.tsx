@@ -11,7 +11,7 @@ const Header = () => {
   const { userInfo, setUserInfo, saveInfoWithName } = useContext(UserContext);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [edintingName, setEditingName] = useState("")
+  const [editningName, setEditingName] = useState("")
   const [isSendingName, setIsSendingName] = useState(false)
 
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const Header = () => {
   const onClickSend = async () => {
     setIsSendingName(true)
     try {
-      await editUser(userInfo.token, edintingName)
+      await editUser(userInfo.token, editningName)
       setEditingName("")
 
       await saveInfoWithName(userInfo.id, userInfo.token,)
@@ -49,7 +49,7 @@ const Header = () => {
       <SRgightItem>
         {isEditing
           ? <div>
-            <SInput type="text" placeholder="名前を入力..." value={edintingName} onChange={e => setEditingName(e.target.value)} />
+            <SInput type="text" placeholder="名前を入力..." value={editningName} onChange={e => setEditingName(e.target.value)} />
             <SNameButton onClick={onClickSend} disabled={isSendingName}>送信</SNameButton>
           </div>
           : <SName>{userInfo.name}</SName>}
