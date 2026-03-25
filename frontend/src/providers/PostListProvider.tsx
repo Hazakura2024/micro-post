@@ -81,7 +81,7 @@ export const PostListProvider = ({
 
   const value = useMemo(
     () => ({ postList, setPostList, getPostList, isLoading, setIsLoading, searchWord, setSearchWord, searchName, setSearchName, page, setPage, refreshCurrent }),
-    [postList, setPostList, isLoading, searchName, setSearchWord, page],
+    [postList, setPostList, isLoading, searchName, searchWord, page],
   );
   return (
     <PostListContext.Provider value={value}>
