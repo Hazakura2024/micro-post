@@ -6,9 +6,11 @@ import { FaPen } from "react-icons/fa";
 import { editUser } from "../api/User";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
+import { PostListContext } from "../providers/PostListProvider";
 
 const Header = () => {
   const { userInfo, setUserInfo, saveInfoWithName } = useContext(UserContext);
+  const { refreshCurrent } = useContext(PostListContext)
 
   const [isEditing, setIsEditing] = useState(false);
   const [editningName, setEditingName] = useState("")
@@ -35,6 +37,7 @@ const Header = () => {
       await saveInfoWithName(userInfo.id, userInfo.token,)
       toast.success("名前の変更に成功しました！")
       setIsEditing(false)
+      refreshCurrent()
 
     } catch (error) {
       const msg = extractErrorMessage(error, "名前の変更に失敗しました")
