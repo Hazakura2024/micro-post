@@ -1,11 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { UserContext } from "../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaPen } from "react-icons/fa";
+import { editUser } from "../api/User";
+import { toast } from "react-toastify";
+import { extractErrorMessage } from "../utils/extractErrorMessage";
 
 const Header = () => {
-  const { userInfo, setUserInfo } = useContext(UserContext);
+  const { userInfo, setUserInfo, saveInfoWithName } = useContext(UserContext);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editningName, setEditingName] = useState("")
+  const [isSendingName, setIsSendingName] = useState(false)
 
   const navigate = useNavigate();
 
@@ -14,12 +21,47 @@ const Header = () => {
     navigate("/");
   };
 
+  const onClickEdit = () => {
+    setIsEditing((prev) => !prev)
+    setEditingName("")
+  }
+
+  const onClickSend = async () => {
+    setIsSendingName(true)
+    try {
+      await editUser(userInfo.token, editningName)
+      setEditingName("")
+
+      await saveInfoWithName(userInfo.id, userInfo.token,)
+      toast.success("名前の変更に成功しました！")
+      setIsEditing(false)
+
+    } catch (error) {
+      const msg = extractErrorMessage(error, "名前の変更に失敗しました")
+      toast.error(msg)
+    } finally {
+      setIsSendingName(false)
+    }
+  }
+
   return (
     <SHeader>
       <SLogo>MicroPost</SLogo>
       <SRgightItem>
-        <SName>{userInfo.name}さん</SName>
-        <FaPen />
+        {isEditing
+          ? <div>
+            <SInput type="text" placeholder="名前を編集..." value={editningName} onChange={e => setEditingName(e.target.value)} />
+            <SNameButton onClick={onClickSend} disabled={isSendingName}>変更</SNameButton>
+          </div>
+          : <SName>{userInfo.name}</SName>}
+
+
+        <SName>さん</SName>
+
+        <SEdit onClick={onClickEdit}>
+          <FaPen />
+        </SEdit>
+
         <SLogout onClick={onClickLogout}>ログアウト</SLogout>
 
       </SRgightItem>
@@ -69,4 +111,33 @@ const SLogout = styled.button`
   padding-bottom: 8px;
   text-align: center;
   cursor: pointer;
+`;
+
+const SEdit = styled.button`
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  text-align: center;
+  cursor: pointer;
+`;
+
+const SInput = styled.input`
+  height: 20px;
+  margin-top: 8px;
+`
+
+const SNameButton = styled.button`
+  background-color: #b8d200;
+  margin-top: 4px;
+  color: white;
+  border-color: #eeeeee;
+  border-radius: 4px;
+  color: #fafafa;
+  cursor: pointer;
+  &:disabled {
+    background-color: #d8e698;
+    cursor: not-allowed;
+  }
 `;

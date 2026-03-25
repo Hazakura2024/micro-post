@@ -17,7 +17,7 @@ export class UserService {
     private userRepository: Repository<User>,
     @InjectRepository(Auth)
     private authRepository: Repository<Auth>,
-  ) {}
+  ) { }
 
   // NOTE: createUserを作成
   async createUser(name: string, email: string, password: string) {
@@ -83,6 +83,49 @@ export class UserService {
       name: user.name,
       email: user.email,
       createdAt: user.created_at,
+    };
+  }
+
+  // ユーザー名変更
+  async editName(token: string, name: string) {
+    // ログイン済かチェック
+    const now = new Date();
+    const auth = await this.authRepository.findOne({
+      where: {
+        token: Equal(token),
+        expire_at: MoreThan(now),
+      },
+    });
+    if (!auth) {
+      throw new ForbiddenException();
+    }
+
+    // NOTE: ユーザー名の重複チェック
+    const existingUserByName = await this.userRepository.findOne({
+      where: { name: Equal(name) },
+    });
+    if (existingUserByName && existingUserByName.id !== auth.user_id) {
+      throw new ConflictException('このユーザー名は使用されています。');
+    }
+
+    // ユーザー取得
+    const user = await this.userRepository.findOne({
+      where: {
+        id: Equal(auth.user_id),
+      },
+    });
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    user.name = name;
+
+    const savedUser = await this.userRepository.save(user);
+    return {
+      id: savedUser.id,
+      name: savedUser.name,
+      email: savedUser.email,
+      createdAt: savedUser.created_at,
     };
   }
 }
