@@ -3,12 +3,16 @@ import { UserContext } from "../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaPen } from "react-icons/fa";
+import { editUser } from "../api/User";
+import { toast } from "react-toastify";
+import { extractErrorMessage } from "../utils/extractErrorMessage";
 
 const Header = () => {
-  const { userInfo, setUserInfo } = useContext(UserContext);
+  const { userInfo, setUserInfo, saveInfoWithName } = useContext(UserContext);
 
   const [isEditing, setIsEditing] = useState(false);
   const [edintingName, setEditingName] = useState("")
+  const [isSendingName, setIsSendingName] = useState(false)
 
   const navigate = useNavigate();
 
@@ -22,12 +26,32 @@ const Header = () => {
     setEditingName("")
   }
 
+  const onClickSend = async () => {
+    setIsSendingName(true)
+    try {
+      await editUser(userInfo.token, edintingName)
+      setEditingName("")
+
+      await saveInfoWithName(userInfo.id, userInfo.token,)
+      toast.success("名前の変更に成功しました！")
+
+    } catch (error) {
+      const msg = extractErrorMessage(error, "名前の変更に失敗しました")
+      toast.error(msg)
+    } finally {
+      setIsSendingName(false)
+    }
+  }
+
   return (
     <SHeader>
       <SLogo>MicroPost</SLogo>
       <SRgightItem>
         {isEditing
-          ? <SInput type="text" placeholder="名前を入力..." value={edintingName} onChange={e => setEditingName(e.target.value)} />
+          ? <div>
+            <SInput type="text" placeholder="名前を入力..." value={edintingName} onChange={e => setEditingName(e.target.value)} />
+            <SNameButton onClick={onClickSend} disabled={isSendingName}>送信</SNameButton>
+          </div>
           : <SName>{userInfo.name}</SName>}
 
 
@@ -100,5 +124,19 @@ const SEdit = styled.button`
 
 const SInput = styled.input`
   height: 20px;
-  margin: 10px;
+  margin-top: 8px;
 `
+
+const SNameButton = styled.button`
+  background-color: #b8d200;
+  margin-top: 4px;
+  color: white;
+  border-color: #eeeeee;
+  border-radius: 4px;
+  color: #fafafa;
+  cursor: pointer;
+  &:disabled {
+    background-color: #d8e698;
+    cursor: not-allowed;
+  }
+`;

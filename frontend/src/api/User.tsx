@@ -39,7 +39,7 @@ export const createUser = async (
 export const editUser = async (token: string, name: string) => {
   try {
     const API_URL = import.meta.env.VITE_API_URL;
-    const url = `${API_URL}/me?token=${token}`;
+    const url = `${API_URL}/user/me?token=${token}`;
     const res = await axios.patch(url, {
       name: name,
     });
