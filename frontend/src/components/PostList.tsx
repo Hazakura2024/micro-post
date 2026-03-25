@@ -63,6 +63,18 @@ const PostList = () => {
     setPage(page - 1)
   }
 
+  const onChangeSerachWord = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
+    setPage(1)
+    setSearchWord(e.target.value)
+
+  }
+  const onChangeSerachName = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
+    setPage(1)
+    setSearchName(e.target.value)
+  }
+
+
+
   return (
     <SPostList>
       <SHeader>
@@ -70,8 +82,8 @@ const PostList = () => {
         <SReloadButton disabled={isLoading} onClick={onClickReload}>
           更新
         </SReloadButton>
-        <input type="text" value={searchWord} onChange={e => setSearchWord(e.target.value)} placeholder="内容を検索" />
-        <input type="text" value={searchName} onChange={e => setSearchName(e.target.value)} placeholder="ユーザーの投稿を検索" />
+        <input type="text" value={searchWord} onChange={(e) => onChangeSerachWord(e)} placeholder="内容を検索" />
+        <input type="text" value={searchName} onChange={(e) => onChangeSerachName(e)} placeholder="ユーザーの投稿を検索" />
         <SClearButton onClick={onClickClear}>クリア</SClearButton>
       </SHeader>
       {isLoading && <div>読込み中...</div>}
