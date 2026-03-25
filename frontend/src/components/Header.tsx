@@ -50,8 +50,8 @@ const Header = () => {
       <SRgightItem>
         {isEditing
           ? <div>
-            <SInput type="text" placeholder="名前を入力..." value={editningName} onChange={e => setEditingName(e.target.value)} />
-            <SNameButton onClick={onClickSend} disabled={isSendingName}>送信</SNameButton>
+            <SInput type="text" placeholder="名前を編集..." value={editningName} onChange={e => setEditingName(e.target.value)} />
+            <SNameButton onClick={onClickSend} disabled={isSendingName}>変更</SNameButton>
           </div>
           : <SName>{userInfo.name}</SName>}
 
