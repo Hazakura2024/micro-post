@@ -20,6 +20,9 @@ export class User {
   @Column('varchar')
   email: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  icon_path?: string;
+
   @CreateDateColumn()
   readonly created_at?: Date;
 
