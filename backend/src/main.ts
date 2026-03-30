@@ -1,11 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.useGlobalPipes(new ValidationPipe());
+
+  app.useStaticAssets(join(process.cwd(), 'upload'), {
+    prefix: '/upload/',
+  });
 
   // NOTE: CORS（Cross-Origin Resource Sharing:違うオリジンからのアクセス）を有効にする
   const frontendOrigin = process.env.FRONTEND_URL?.replace(/\/$/, '');
