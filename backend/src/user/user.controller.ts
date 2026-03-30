@@ -46,7 +46,6 @@ export class UserController {
     @Query('token') token: string,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-
     if (!file) {
       throw new BadRequestException('画像ファイルを読み込めません')
     }

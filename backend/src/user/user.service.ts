@@ -5,7 +5,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { createHash } from 'crypto';
+import { createHash, randomUUID } from 'crypto';
+import { fstat, promises } from 'fs';
+import { extname, join } from 'path';
 import { Auth } from 'src/entities/auth';
 import { User } from 'src/entities/user.entity';
 import { Equal, MoreThan, Repository } from 'typeorm';
@@ -153,6 +155,39 @@ export class UserService {
       throw new NotFoundException();
     }
 
-    return;
+    // 保存先ディレクトリ
+    const userDir = join(process.cwd(), 'uploads', 'users', String(user.id));
+    await promises.mkdir(userDir, { recursive: true });
+
+    // ランダムファイル名を作成
+    const ext = extname(file.originalname) || '.bin';
+    const filename = `${randomUUID()}${ext}`;
+    const absPath = join(userDir, filename);
+
+    // ストレージに保存
+    await promises.writeFile(absPath, file.buffer);
+
+    // DBに保存する相対パス
+    const nextIconPath = `/uploads/users/${user.id}/${filename}`;
+
+    // 旧画像削除
+    const prevIconPath = user.icon_path;
+    user.icon_path = nextIconPath;
+    await this.userRepository.save(user);
+
+    if (prevIconPath) {
+      const prevAbsPath = join(process.cwd(), prevIconPath.replace(/^\//, ''));
+      try {
+        await promises.unlink(prevAbsPath);
+      } catch {
+        // 削除失敗は無視
+      }
+    }
+
+    return {
+      id: user.id,
+      name: user.name,
+      iconPath: user.icon_path,
+    };
   }
 }
