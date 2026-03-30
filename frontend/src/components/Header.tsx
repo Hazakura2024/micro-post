@@ -3,7 +3,7 @@ import { UserContext } from "../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaPen, FaRegUserCircle } from "react-icons/fa";
-import { editUser } from "../api/User";
+import { editUser, uploadIcon } from "../api/User";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { PostListContext } from "../providers/PostListProvider";
@@ -65,9 +65,15 @@ const Header = () => {
   const onClickSubmitImage = async () => {
     setIsSubimittingImage(true)
     try {
-      console.log("trt-block")
+
+      if (!selectedFile) return;
+      const res = await uploadIcon(userInfo.token, selectedFile);
+      console.log(res)
+      toast.success("アイコンの変更に成功しました！")
     } catch (error) {
       console.log(error);
+      const msg = extractErrorMessage(error, "アイコンの変更に失敗しました")
+      toast.error(msg)
     } finally {
       setSelectedFile(null)
       setIsSubimittingImage(false)
