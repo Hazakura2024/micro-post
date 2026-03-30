@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -74,6 +74,21 @@ const Header = () => {
     }
   }
 
+  const [previewUrl, setPreviewUrl] = useState<string | null>();
+
+  useEffect(() => {
+    if (!selectedFile) {
+      setPreviewUrl(null)
+      return;
+    }
+
+    const url = URL.createObjectURL(selectedFile);
+    setPreviewUrl(url)
+
+    return () => { URL.revokeObjectURL(url); };
+
+  }, [selectedFile])
+
   return (
     <SHeader>
       <SLogo>MicroPost</SLogo>
@@ -88,6 +103,7 @@ const Header = () => {
         {isEditingImage
           ? <div>
             <SInput type="file" accept="image/png, image/jpg " onChange={e => onChangeInputImage(e)} />
+            {previewUrl ? <SImage src={previewUrl} alt="選択中の画像プレビュー" /> : <div>画像未選択</div>}
             <SSubmitButton onClick={onClickSubmitImage} disabled={isSubbmittingImage}>送信</SSubmitButton>
           </div>
           : <div></div>}
@@ -184,3 +200,7 @@ const SSubmitButton = styled.button`
     cursor: not-allowed;
   }
 `;
+
+const SImage = styled.img`
+  height: 24px ;
+`
