@@ -8,12 +8,16 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   // NOTE: CORS（Cross-Origin Resource Sharing:違うオリジンからのアクセス）を有効にする
+  const frontendOrigin = process.env.FRONTEND_URL?.replace(/\/$/, '');
+
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3001',
+    origin: frontendOrigin
+      ? [frontendOrigin, 'http://localhost:3001', 'http://127.0.0.1:3001']
+      : ['http://localhost:3001', 'http://127.0.0.1:3001'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
 
   await app.listen(process.env.PORT ?? 3000);
 }
-bootstrap();
+void bootstrap();
