@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { UserContext } from "../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { FaPen } from "react-icons/fa";
+import { FaPen, FaRegUserCircle } from "react-icons/fa";
 import { editUser } from "../api/User";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
@@ -61,9 +61,13 @@ const Header = () => {
 
         <SName>さん</SName>
 
-        <SEdit onClick={onClickEdit} >
+        <SIconButton onClick={onClickEdit} >
           <FaPen />
-        </SEdit>
+        </SIconButton>
+
+        <SIconButton>
+          <FaRegUserCircle />
+        </SIconButton>
 
         <SLogout onClick={onClickLogout}>ログアウト</SLogout>
 
@@ -116,7 +120,7 @@ const SLogout = styled.button`
   cursor: pointer;
 `;
 
-const SEdit = styled.button`
+const SIconButton = styled.button`
   background-color: transparent;
   color: white;
   border: none;
