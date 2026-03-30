@@ -8,11 +8,13 @@ import {
   Post,
   Query,
   UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from 'src/dto/create-user.dto';
 import { EditNameDto } from 'src/dto/edit-name.dto';
 import type { Express } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
 export class UserController {
@@ -40,6 +42,7 @@ export class UserController {
     return await this.userService.editName(token, editNameDto.name);
   }
 
+  @UseInterceptors(FileInterceptor('icon'))
   @Patch('me/icon')
   uploadIcon(
     @Query('token') token: string,
