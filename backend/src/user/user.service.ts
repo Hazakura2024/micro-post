@@ -190,4 +190,19 @@ export class UserService {
       iconPath: user.icon_path,
     };
   }
+
+  async getIcon(token: string) {
+    // ログイン済かチェック
+    const now = new Date();
+    const auth = await this.authRepository.findOne({
+      where: {
+        token: Equal(token),
+        expire_at: MoreThan(now),
+      },
+    });
+    if (!auth) {
+      throw new ForbiddenException();
+    }
+    return;
+  }
 }

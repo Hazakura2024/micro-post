@@ -53,4 +53,9 @@ export class UserController {
     }
     return this.userService.uploadImage(token, file);
   }
+
+  @Get('me/icon')
+  async getIcon(@Query('token') token: string) {
+    return this.userService.getIcon(token);
+  }
 }
