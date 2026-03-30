@@ -17,8 +17,8 @@ const Header = () => {
   const [isSubmittingName, setIsSubmittingName] = useState(false)
 
   const [isEditingImage, setIsEdigingImage] = useState(false)
-  const [selectedFile, setSelectedFile] = useState()
-  const [isSubbmittingImage, setIsSubimittingImage] = useState()
+  const [selectedFile, setSelectedFile] = useState<File | null>()
+  const [isSubbmittingImage, setIsSubimittingImage] = useState(false)
 
   const navigate = useNavigate();
 
@@ -34,7 +34,12 @@ const Header = () => {
 
   const onClickEditImage = () => {
     setIsEdigingImage((prev) => !prev)
-    setSelectedFile()
+    setSelectedFile(null)
+  }
+
+  const onChangeInputImage = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setSelectedFile(file);
   }
 
 
@@ -81,7 +86,7 @@ const Header = () => {
 
         {isEditingImage
           ? <div>
-            <SInput type="file" accept="image/png, image/jpg " />
+            <SInput type="file" accept="image/png, image/jpg " onChange={e => onChangeInputImage(e)} />
             <SSubmitButton onClick={onClickSubmitImage}>送信</SSubmitButton>
           </div>
           : <div></div>}
