@@ -57,6 +57,15 @@ const Header = () => {
     }
   }
 
+  const onClickSubmitImage = async () => {
+    try {
+      console.log("trt-block")
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setSelectedFile()
+    }
+  }
 
   return (
     <SHeader>
@@ -73,7 +82,7 @@ const Header = () => {
         {isEditingImage
           ? <div>
             <SInput type="file" accept="image/png, image/jpg " />
-            <SNameButton>送信</SNameButton>
+            <SNameButton onClick={onClickSubmitImage}>送信</SNameButton>
           </div>
           : <div></div>}
 
