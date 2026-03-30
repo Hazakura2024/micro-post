@@ -3,7 +3,7 @@ import { UserContext } from "../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaPen, FaRegUserCircle } from "react-icons/fa";
-import { editUser, uploadIcon } from "../api/User";
+import { editUser, getIcon, uploadIcon } from "../api/User";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { PostListContext } from "../providers/PostListProvider";
@@ -95,6 +95,18 @@ const Header = () => {
 
   }, [selectedFile])
 
+  const [imageUrl, setImageUrl] = useState("");
+
+  useEffect(() => {
+    const getImageURL = async (token: string) => {
+      const imgUrl = await getIcon(token);
+      setImageUrl(imgUrl);
+    }
+    getImageURL(userInfo.token)
+  }, [isEditingImage])
+
+
+
   return (
     <SHeader>
       <SLogo>MicroPost</SLogo>
@@ -112,7 +124,7 @@ const Header = () => {
             {previewUrl ? <SImage src={previewUrl} alt="選択中の画像プレビュー" /> : <div>画像未選択</div>}
             <SSubmitButton onClick={onClickSubmitImage} disabled={isSubbmittingImage}>送信</SSubmitButton>
           </div>
-          : <div></div>}
+          : <img src={`${import.meta.env.VITE_STORAGE_URL}${imageUrl}`}></img>}
 
 
 
