@@ -129,7 +129,7 @@ export class UserService {
     };
   }
 
-  async uploadImage(token: string, file) {
+  async uploadImage(token: string, file: Express.Multer.File) {
     // ログイン済かチェック
     const now = new Date();
     const auth = await this.authRepository.findOne({
