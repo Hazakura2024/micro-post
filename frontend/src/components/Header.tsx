@@ -32,6 +32,12 @@ const Header = () => {
     setEditingNameName("")
   }
 
+  const onClickEditImage = () => {
+    setIsEdigingImage((prev) => !prev)
+    setSelectedFile()
+  }
+
+
   const onClickSend = async () => {
     setIsSubmittingName(true)
     try {
@@ -51,6 +57,7 @@ const Header = () => {
     }
   }
 
+
   return (
     <SHeader>
       <SLogo>MicroPost</SLogo>
@@ -61,15 +68,24 @@ const Header = () => {
             <SNameButton onClick={onClickSend} disabled={editningName.length > 20}>変更</SNameButton>
           </div>
           : <SName>{userInfo.name}</SName>}
-
-
         <SName>さん</SName>
+
+        {isEditingImage
+          ? <div>
+            <SInput type="file" accept="image/png, image/jpg " />
+            <SNameButton>送信</SNameButton>
+          </div>
+          : <div></div>}
+
+
+
+
 
         <SIconButton onClick={onClickEdit} >
           <FaPen />
         </SIconButton>
 
-        <SIconButton>
+        <SIconButton onClick={onClickEditImage}>
           <FaRegUserCircle />
         </SIconButton>
 
