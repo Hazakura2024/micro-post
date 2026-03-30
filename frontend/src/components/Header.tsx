@@ -124,7 +124,7 @@ const Header = () => {
             {previewUrl ? <SImage src={previewUrl} alt="選択中の画像プレビュー" /> : <div>画像未選択</div>}
             <SSubmitButton onClick={onClickSubmitImage} disabled={isSubbmittingImage}>送信</SSubmitButton>
           </div>
-          : <img src={`${import.meta.env.VITE_STORAGE_URL}${imageUrl}`}></img>}
+          : <SImage src={`${import.meta.env.VITE_STORAGE_URL}${imageUrl}`} />}
 
 
 
