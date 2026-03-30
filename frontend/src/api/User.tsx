@@ -40,3 +40,17 @@ export const editUser = async (token: string, name: string) => {
   return res.data;
 
 }
+
+export const uploadIcon = async (token: string, file: File) => {
+
+  const formData = new FormData();
+  formData.append("icon", file);
+
+  const API_URL = import.meta.env.VITE_API_URL;
+  const url = `${API_URL}/user/me/icon?token=${token}`;
+  const res = await axios.patch(url, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  })
+
+  return res.data;
+}

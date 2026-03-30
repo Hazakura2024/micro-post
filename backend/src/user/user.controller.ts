@@ -13,7 +13,6 @@ import { UserService } from './user.service';
 import { CreateUserDto } from 'src/dto/create-user.dto';
 import { EditNameDto } from 'src/dto/edit-name.dto';
 import type { Express } from 'express';
-import { NetworkResources } from 'inspector/promises';
 
 @Controller('user')
 export class UserController {
