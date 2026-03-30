@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { createHash, randomUUID } from 'crypto';
-import { fstat, promises } from 'fs';
+import { promises } from 'fs';
 import { extname, join } from 'path';
 import { Auth } from 'src/entities/auth';
 import { User } from 'src/entities/user.entity';
