@@ -14,8 +14,11 @@ const Header = () => {
 
   const [isEditingName, setIsEditingName] = useState(false);
   const [editningName, setEditingNameName] = useState("")
-  const [isSendingName, setIsSendingName] = useState(false)
+  const [isSubmittingName, setIsSubmittingName] = useState(false)
 
+  const [isEditingImage, setIsEdigingImage] = useState()
+  const [selectedFile, setSelectedFile] = useState()
+  const [isSubbmittingImage, setIsSubimittingImage] = useState()
 
   const navigate = useNavigate();
 
@@ -30,7 +33,7 @@ const Header = () => {
   }
 
   const onClickSend = async () => {
-    setIsSendingName(true)
+    setIsSubmittingName(true)
     try {
       await editUser(userInfo.token, editningName)
       setEditingNameName("")
@@ -44,7 +47,7 @@ const Header = () => {
       const msg = extractErrorMessage(error, "名前の変更に失敗しました")
       toast.error(msg)
     } finally {
-      setIsSendingName(false)
+      setIsSubmittingName(false)
     }
   }
 
