@@ -9,8 +9,8 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  app.useStaticAssets(join(process.cwd(), 'upload'), {
-    prefix: '/upload/',
+  app.useStaticAssets(join(process.cwd(), 'uploads'), {
+    prefix: '/uploads/',
   });
 
   // NOTE: CORS（Cross-Origin Resource Sharing:違うオリジンからのアクセス）を有効にする

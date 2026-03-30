@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -12,6 +13,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from 'src/dto/create-user.dto';
 import { EditNameDto } from 'src/dto/edit-name.dto';
 import type { Express } from 'express';
+import { NetworkResources } from 'inspector/promises';
 
 @Controller('user')
 export class UserController {
@@ -44,6 +46,10 @@ export class UserController {
     @Query('token') token: string,
     @UploadedFile() file?: Express.Multer.File,
   ) {
+
+    if (!file) {
+      throw new BadRequestException('画像ファイルを読み込めません')
+    }
     return this.userService.uploadImage(token, file);
   }
 }
