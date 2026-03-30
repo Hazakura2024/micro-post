@@ -12,9 +12,10 @@ const Header = () => {
   const { userInfo, setUserInfo, saveInfoWithName } = useContext(UserContext);
   const { refreshCurrent } = useContext(PostListContext)
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [editningName, setEditingName] = useState("")
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editningName, setEditingNameName] = useState("")
   const [isSendingName, setIsSendingName] = useState(false)
+
 
   const navigate = useNavigate();
 
@@ -24,19 +25,19 @@ const Header = () => {
   };
 
   const onClickEdit = () => {
-    setIsEditing((prev) => !prev)
-    setEditingName("")
+    setIsEditingName((prev) => !prev)
+    setEditingNameName("")
   }
 
   const onClickSend = async () => {
     setIsSendingName(true)
     try {
       await editUser(userInfo.token, editningName)
-      setEditingName("")
+      setEditingNameName("")
 
       await saveInfoWithName(userInfo.id, userInfo.token,)
       toast.success("名前の変更に成功しました！")
-      setIsEditing(false)
+      setIsEditingName(false)
       refreshCurrent()
 
     } catch (error) {
@@ -51,9 +52,9 @@ const Header = () => {
     <SHeader>
       <SLogo>MicroPost</SLogo>
       <SRgightItem>
-        {isEditing
+        {isEditingName
           ? <div>
-            <SInput type="text" placeholder="名前を編集..." value={editningName} onChange={e => setEditingName(e.target.value)} />
+            <SInput type="text" placeholder="名前を編集..." value={editningName} onChange={e => setEditingNameName(e.target.value)} />
             <SNameButton onClick={onClickSend} disabled={editningName.length > 20}>変更</SNameButton>
           </div>
           : <SName>{userInfo.name}</SName>}
