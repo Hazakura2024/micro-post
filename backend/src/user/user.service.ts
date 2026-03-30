@@ -203,6 +203,17 @@ export class UserService {
     if (!auth) {
       throw new ForbiddenException();
     }
-    return;
+
+    // ユーザー取得
+    const user = await this.userRepository.findOne({
+      where: {
+        id: Equal(auth.user_id),
+      },
+    });
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return user.icon_path;
   }
 }
