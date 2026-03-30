@@ -128,4 +128,20 @@ export class UserService {
       createdAt: savedUser.created_at,
     };
   }
+
+  async uploadImage(token: string, file) {
+    // ログイン済かチェック
+    const now = new Date();
+    const auth = await this.authRepository.findOne({
+      where: {
+        token: Equal(token),
+        expire_at: MoreThan(now),
+      },
+    });
+
+    if (!auth) {
+      throw new ForbiddenException();
+    }
+    return;
+  }
 }

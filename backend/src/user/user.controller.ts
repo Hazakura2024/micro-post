@@ -1,7 +1,17 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UploadedFile,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from 'src/dto/create-user.dto';
 import { EditNameDto } from 'src/dto/edit-name.dto';
+import type { Express } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -27,5 +37,13 @@ export class UserController {
     @Body() editNameDto: EditNameDto,
   ) {
     return await this.userService.editName(token, editNameDto.name);
+  }
+
+  @Patch('me/icon')
+  uploadIcon(
+    @Query('token') token: string,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    return this.userService.uploadImage(token, file);
   }
 }
