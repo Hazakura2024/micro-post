@@ -83,8 +83,7 @@ const Header = () => {
             <SInput type="text" placeholder="名前を編集..." value={editningName} onChange={e => setEditingNameName(e.target.value)} />
             <SSubmitButton onClick={onClickSend} disabled={isSubmittingName || editningName.length > 20}>変更</SSubmitButton>
           </div>
-          : <SName>{userInfo.name}</SName>}
-        <SName>さん</SName>
+          : <SName>{userInfo.name}さん</SName>}
 
         {isEditingImage
           ? <div>
