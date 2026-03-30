@@ -16,7 +16,7 @@ const Header = () => {
   const [editningName, setEditingNameName] = useState("")
   const [isSubmittingName, setIsSubmittingName] = useState(false)
 
-  const [isEditingImage, setIsEdigingImage] = useState()
+  const [isEditingImage, setIsEdigingImage] = useState(false)
   const [selectedFile, setSelectedFile] = useState()
   const [isSubbmittingImage, setIsSubimittingImage] = useState()
 
@@ -74,7 +74,7 @@ const Header = () => {
         {isEditingName
           ? <div>
             <SInput type="text" placeholder="名前を編集..." value={editningName} onChange={e => setEditingNameName(e.target.value)} />
-            <SNameButton onClick={onClickSend} disabled={editningName.length > 20}>変更</SNameButton>
+            <SSubmitButton onClick={onClickSend} disabled={editningName.length > 20}>変更</SSubmitButton>
           </div>
           : <SName>{userInfo.name}</SName>}
         <SName>さん</SName>
@@ -82,7 +82,7 @@ const Header = () => {
         {isEditingImage
           ? <div>
             <SInput type="file" accept="image/png, image/jpg " />
-            <SNameButton onClick={onClickSubmitImage}>送信</SNameButton>
+            <SSubmitButton onClick={onClickSubmitImage}>送信</SSubmitButton>
           </div>
           : <div></div>}
 
@@ -164,7 +164,7 @@ const SInput = styled.input`
   box-sizing: border-box;
 `
 
-const SNameButton = styled.button`
+const SSubmitButton = styled.button`
   background-color: #b8d200;
   margin-top: 4px;
   color: white;
