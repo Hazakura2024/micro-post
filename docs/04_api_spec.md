@@ -174,3 +174,21 @@
 
 - `400 Bad Request`: id 不正
 - `403 Forbidden`: トークン不正、または期限切れ
+
+## 8. アイコン登録
+
+- Method/Path: `PATCH /user/me/icon`
+- Path Parameter
+  - `token` (string, 必須)
+
+### リクエスト例
+
+`PATCH /user/me/icon?token=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+
+### レスポンス（204 No Content）
+
+- Body: なし
+
+### エラー
+
+- `403 Forbidden`: トークン不正、または期限切れ

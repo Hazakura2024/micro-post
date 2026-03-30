@@ -5,7 +5,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { createHash } from 'crypto';
+import { createHash, randomUUID } from 'crypto';
+import { promises } from 'fs';
+import { extname, join } from 'path';
 import { Auth } from 'src/entities/auth';
 import { User } from 'src/entities/user.entity';
 import { Equal, MoreThan, Repository } from 'typeorm';
@@ -126,6 +128,66 @@ export class UserService {
       name: savedUser.name,
       email: savedUser.email,
       createdAt: savedUser.created_at,
+    };
+  }
+
+  async uploadImage(token: string, file: Express.Multer.File) {
+    // ログイン済かチェック
+    const now = new Date();
+    const auth = await this.authRepository.findOne({
+      where: {
+        token: Equal(token),
+        expire_at: MoreThan(now),
+      },
+    });
+
+    if (!auth) {
+      throw new ForbiddenException();
+    }
+
+    // ユーザー取得
+    const user = await this.userRepository.findOne({
+      where: {
+        id: Equal(auth.user_id),
+      },
+    });
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    // 保存先ディレクトリ
+    const userDir = join(process.cwd(), 'uploads', 'users', String(user.id));
+    await promises.mkdir(userDir, { recursive: true });
+
+    // ランダムファイル名を作成
+    const ext = extname(file.originalname) || '.bin';
+    const filename = `${randomUUID()}${ext}`;
+    const absPath = join(userDir, filename);
+
+    // ストレージに保存
+    await promises.writeFile(absPath, file.buffer);
+
+    // DBに保存する相対パス
+    const nextIconPath = `/uploads/users/${user.id}/${filename}`;
+
+    // 旧画像削除
+    const prevIconPath = user.icon_path;
+    user.icon_path = nextIconPath;
+    await this.userRepository.save(user);
+
+    if (prevIconPath) {
+      const prevAbsPath = join(process.cwd(), prevIconPath.replace(/^\//, ''));
+      try {
+        await promises.unlink(prevAbsPath);
+      } catch {
+        // 削除失敗は無視
+      }
+    }
+
+    return {
+      id: user.id,
+      name: user.name,
+      iconPath: user.icon_path,
     };
   }
 }

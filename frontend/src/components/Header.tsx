@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { FaPen } from "react-icons/fa";
-import { editUser } from "../api/User";
+import { FaPen, FaRegUserCircle } from "react-icons/fa";
+import { editUser, uploadIcon } from "../api/User";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { PostListContext } from "../providers/PostListProvider";
@@ -12,9 +12,13 @@ const Header = () => {
   const { userInfo, setUserInfo, saveInfoWithName } = useContext(UserContext);
   const { refreshCurrent } = useContext(PostListContext)
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [editningName, setEditingName] = useState("")
-  const [isSendingName, setIsSendingName] = useState(false)
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editningName, setEditingNameName] = useState("")
+  const [isSubmittingName, setIsSubmittingName] = useState(false)
+
+  const [isEditingImage, setIsEdigingImage] = useState(false)
+  const [selectedFile, setSelectedFile] = useState<File | null>()
+  const [isSubbmittingImage, setIsSubimittingImage] = useState(false)
 
   const navigate = useNavigate();
 
@@ -24,46 +28,103 @@ const Header = () => {
   };
 
   const onClickEdit = () => {
-    setIsEditing((prev) => !prev)
-    setEditingName("")
+    setIsEditingName((prev) => !prev)
+    setEditingNameName("")
   }
 
+  const onClickEditImage = () => {
+    setIsEdigingImage((prev) => !prev)
+    setSelectedFile(null)
+  }
+
+  const onChangeInputImage = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setSelectedFile(file);
+  }
+
+
   const onClickSend = async () => {
-    setIsSendingName(true)
+    setIsSubmittingName(true)
     try {
       await editUser(userInfo.token, editningName)
-      setEditingName("")
+      setEditingNameName("")
 
       await saveInfoWithName(userInfo.id, userInfo.token,)
       toast.success("名前の変更に成功しました！")
-      setIsEditing(false)
+      setIsEditingName(false)
       refreshCurrent()
 
     } catch (error) {
       const msg = extractErrorMessage(error, "名前の変更に失敗しました")
       toast.error(msg)
     } finally {
-      setIsSendingName(false)
+      setIsSubmittingName(false)
     }
   }
+
+  const onClickSubmitImage = async () => {
+    setIsSubimittingImage(true)
+    try {
+
+      if (!selectedFile) return;
+      const res = await uploadIcon(userInfo.token, selectedFile);
+      console.log(res)
+      toast.success("アイコンの変更に成功しました！")
+    } catch (error) {
+      console.log(error);
+      const msg = extractErrorMessage(error, "アイコンの変更に失敗しました")
+      toast.error(msg)
+    } finally {
+      setSelectedFile(null)
+      setIsSubimittingImage(false)
+    }
+  }
+
+  const [previewUrl, setPreviewUrl] = useState<string | null>();
+
+  useEffect(() => {
+    if (!selectedFile) {
+      setPreviewUrl(null)
+      return;
+    }
+
+    const url = URL.createObjectURL(selectedFile);
+    setPreviewUrl(url)
+
+    return () => { URL.revokeObjectURL(url); };
+
+  }, [selectedFile])
 
   return (
     <SHeader>
       <SLogo>MicroPost</SLogo>
       <SRgightItem>
-        {isEditing
+        {isEditingName
           ? <div>
-            <SInput type="text" placeholder="名前を編集..." value={editningName} onChange={e => setEditingName(e.target.value)} />
-            <SNameButton onClick={onClickSend} disabled={editningName.length > 20}>変更</SNameButton>
+            <SInput type="text" placeholder="名前を編集..." value={editningName} onChange={e => setEditingNameName(e.target.value)} />
+            <SSubmitButton onClick={onClickSend} disabled={isSubmittingName || editningName.length > 20}>変更</SSubmitButton>
           </div>
-          : <SName>{userInfo.name}</SName>}
+          : <SName>{userInfo.name}さん</SName>}
+
+        {isEditingImage
+          ? <div>
+            <SInput type="file" accept="image/png, image/jpg " onChange={e => onChangeInputImage(e)} />
+            {previewUrl ? <SImage src={previewUrl} alt="選択中の画像プレビュー" /> : <div>画像未選択</div>}
+            <SSubmitButton onClick={onClickSubmitImage} disabled={isSubbmittingImage}>送信</SSubmitButton>
+          </div>
+          : <div></div>}
 
 
-        <SName>さん</SName>
 
-        <SEdit onClick={onClickEdit} >
+
+
+        <SIconButton onClick={onClickEdit} >
           <FaPen />
-        </SEdit>
+        </SIconButton>
+
+        <SIconButton onClick={onClickEditImage}>
+          <FaRegUserCircle />
+        </SIconButton>
 
         <SLogout onClick={onClickLogout}>ログアウト</SLogout>
 
@@ -116,7 +177,7 @@ const SLogout = styled.button`
   cursor: pointer;
 `;
 
-const SEdit = styled.button`
+const SIconButton = styled.button`
   background-color: transparent;
   color: white;
   border: none;
@@ -131,7 +192,7 @@ const SInput = styled.input`
   box-sizing: border-box;
 `
 
-const SNameButton = styled.button`
+const SSubmitButton = styled.button`
   background-color: #b8d200;
   margin-top: 4px;
   color: white;
@@ -145,3 +206,7 @@ const SNameButton = styled.button`
     cursor: not-allowed;
   }
 `;
+
+const SImage = styled.img`
+  height: 24px ;
+`

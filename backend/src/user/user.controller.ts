@@ -1,7 +1,20 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from 'src/dto/create-user.dto';
 import { EditNameDto } from 'src/dto/edit-name.dto';
+import type { Express } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
 export class UserController {
@@ -27,5 +40,17 @@ export class UserController {
     @Body() editNameDto: EditNameDto,
   ) {
     return await this.userService.editName(token, editNameDto.name);
+  }
+
+  @UseInterceptors(FileInterceptor('icon'))
+  @Patch('me/icon')
+  uploadIcon(
+    @Query('token') token: string,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    if (!file) {
+      throw new BadRequestException('画像ファイルを読み込めません')
+    }
+    return this.userService.uploadImage(token, file);
   }
 }
