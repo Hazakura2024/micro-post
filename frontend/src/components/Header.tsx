@@ -63,12 +63,14 @@ const Header = () => {
   }
 
   const onClickSubmitImage = async () => {
+    setIsSubimittingImage(true)
     try {
       console.log("trt-block")
     } catch (error) {
       console.log(error);
     } finally {
-      setSelectedFile()
+      setSelectedFile(null)
+      setIsSubimittingImage(false)
     }
   }
 
@@ -79,7 +81,7 @@ const Header = () => {
         {isEditingName
           ? <div>
             <SInput type="text" placeholder="名前を編集..." value={editningName} onChange={e => setEditingNameName(e.target.value)} />
-            <SSubmitButton onClick={onClickSend} disabled={editningName.length > 20}>変更</SSubmitButton>
+            <SSubmitButton onClick={onClickSend} disabled={isSubmittingName || editningName.length > 20}>変更</SSubmitButton>
           </div>
           : <SName>{userInfo.name}</SName>}
         <SName>さん</SName>
@@ -87,7 +89,7 @@ const Header = () => {
         {isEditingImage
           ? <div>
             <SInput type="file" accept="image/png, image/jpg " onChange={e => onChangeInputImage(e)} />
-            <SSubmitButton onClick={onClickSubmitImage}>送信</SSubmitButton>
+            <SSubmitButton onClick={onClickSubmitImage} disabled={isSubbmittingImage}>送信</SSubmitButton>
           </div>
           : <div></div>}
 
