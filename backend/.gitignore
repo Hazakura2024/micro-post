@@ -61,4 +61,4 @@ docker-compose.override.yml
 *.tar
 
 # uploads
-uploads
+/uploads
