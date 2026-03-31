@@ -31,7 +31,7 @@ export class AuthService {
       },
     });
     if (!user) {
-      throw new NotFoundException();
+      throw new UnauthorizedException();
     }
 
     //NOTE: パスワードから該当のユーザを検索する処理
