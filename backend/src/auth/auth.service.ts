@@ -35,21 +35,10 @@ export class AuthService {
     }
 
     //NOTE: パスワードから該当のユーザを検索する処理
-    // crypto.は削除
     const isValid = await bcrypt.compare(password, user.hash);
     if (!isValid) {
       throw new UnauthorizedException();
     }
-    // const user = await this.userRepository.findOne({
-    //   where: {
-    //     name: Equal(name),
-    //     hash: Equal(hash),
-    //   },
-    // });
-
-    // if (!user) {
-    //   throw new UnauthorizedException();
-    // }
 
     // NOTE: authtableへのレコードの挿入
 
