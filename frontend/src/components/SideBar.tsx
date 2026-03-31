@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
-import { UserContext } from "../providers/UserProvider";
 import { createPost } from "../api/Post";
 import { PostListContext } from "../providers/PostListProvider";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
+import { UserContext } from "../contexts/UserContext";
 
 const SideBar = () => {
   const [msg, setMsg] = useState("");

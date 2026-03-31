@@ -2,10 +2,11 @@ import React, { useContext, useState } from "react";
 import type { PostType } from "../types/Post";
 import styled from "styled-components";
 import { deletePost } from "../api/Post";
-import { UserContext } from "../providers/UserProvider";
+
 import { PostListContext } from "../providers/PostListProvider";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { toast } from "react-toastify";
+import { UserContext } from "../contexts/UserContext";
 
 // (学習メモ): propsはオブジェクトになるので、左側に分割代入
 const Post = ({
