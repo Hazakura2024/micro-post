@@ -97,13 +97,7 @@ const Header = () => {
 
   const [imageUrl, setImageUrl] = useState("");
 
-  useEffect(() => {
-    const getImageURL = async (token: string) => {
-      const imgUrl = await getIcon(token);
-      setImageUrl(imgUrl);
-    }
-    getImageURL(userInfo.token)
-  }, [isEditingImage])
+
 
 
 

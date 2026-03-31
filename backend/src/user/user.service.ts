@@ -84,6 +84,7 @@ export class UserService {
       id: user.id,
       name: user.name,
       email: user.email,
+      icon_path: user.icon_path,
       createdAt: user.created_at,
     };
   }

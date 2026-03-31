@@ -33,7 +33,7 @@ export const UserContext = createContext(
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   // (学習メモ): children（子コンポーネントたち）を取り出す。
 
-  const [userInfo, setUserInfo] = useState({ id: 0, name: "", token: "" });
+  const [userInfo, setUserInfo] = useState<UserInfo>({ id: 0, name: "", icon_path: "", token: "" });
   // (学習メモ): value 属性に渡したオブジェクトが、中に入っている全コンポーネントからアクセス可能に。
 
   const saveInfoWithName = async (id: number, token: string) => {
@@ -42,14 +42,16 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       setUserInfo({
         id: id,
         name: user.name,
+        icon_path: user.icon_path,
         token: token,
       });
     } catch (error: unknown) {
-      const msg = extractErrorMessage(error, "ユーザー名が取得できません");
+      const msg = extractErrorMessage(error, "ユーザー情報が取得できません");
       toast.error(msg);
       setUserInfo({
         id: id,
         name: "",
+        icon_path: "",
         token: token,
       });
     }
