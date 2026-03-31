@@ -5,33 +5,27 @@ export const createPost = async (
   token: string,
   msg: string,
 ): Promise<CreatePostResponse> => {
-  try {
-    const API_URL = import.meta.env.VITE_API_URL;
-    const url = `${API_URL}/post?token=${token}`;
-    // (学習メモ): ここのvoidはレスポンスボディの型を指定しているだけで、resオブジェクト全体の型ではない。
-    // (学習メモ): axiosがジェネリクスパラメータでdataにその型をセットしてくれる
-    const res = await axios.post<CreatePostResponse>(url, {
-      message: msg,
-    });
-    return res.data;
-  } catch (error: unknown) {
-    // NOTE: エラーは自動的にthrowされコンポーネント側でextractErrorMessageを使う
-    throw error;
-  }
+
+  const API_URL = import.meta.env.VITE_API_URL;
+  const url = `${API_URL}/post?token=${token}`;
+  // (学習メモ): ここのvoidはレスポンスボディの型を指定しているだけで、resオブジェクト全体の型ではない。
+  // (学習メモ): axiosがジェネリクスパラメータでdataにその型をセットしてくれる
+  const res = await axios.post<CreatePostResponse>(url, {
+    message: msg,
+  });
+  return res.data;
+
 };
 
 export const deletePost = async (id: number, token: string) => {
-  try {
-    const API_URL = import.meta.env.VITE_API_URL;
-    const url = `${API_URL}/post/${id}?token=${token}`;
-    // (学習メモ): ここのvoidはレスポンスボディの型を指定しているだけで、resオブジェクト全体の型ではない。
-    // (学習メモ): axiosがジェネリクスパラメータでdataにその型をセットしてくれる
-    const res = await axios.delete(url);
-    return res.data;
-  } catch (error: unknown) {
-    // NOTE: エラーは自動的にthrowされコンポーネント側でextractErrorMessageを使う
-    throw error;
-  }
+
+  const API_URL = import.meta.env.VITE_API_URL;
+  const url = `${API_URL}/post/${id}?token=${token}`;
+  // (学習メモ): ここのvoidはレスポンスボディの型を指定しているだけで、resオブジェクト全体の型ではない。
+  // (学習メモ): axiosがジェネリクスパラメータでdataにその型をセットしてくれる
+  const res = await axios.delete(url);
+  return res.data;
+
 };
 
 export const getList = async (
@@ -41,13 +35,9 @@ export const getList = async (
   word?: string,
   user_name?: string,
 ): Promise<PostType[]> => {
-  try {
-    const API_URL = import.meta.env.VITE_API_URL;
-    const url = `${API_URL}/post?records=${records}&start=${start}&token=${token}${word ? "&word=" + encodeURIComponent(word) : ""}${user_name ? "&user_name=" + encodeURIComponent(user_name) : ""}`;
-    const res = await axios.get<PostType[]>(url);
-    return res.data;
-  } catch (error: unknown) {
-    // NOTE: エラーは自動的にthrowされコンポーネント側でextractErrorMessageを使う
-    throw error;
-  }
+  const API_URL = import.meta.env.VITE_API_URL;
+  const url = `${API_URL}/post?records=${records}&start=${start}&token=${token}${word ? "&word=" + encodeURIComponent(word) : ""}${user_name ? "&user_name=" + encodeURIComponent(user_name) : ""}`;
+  const res = await axios.get<PostType[]>(url);
+  return res.data;
+
 };
