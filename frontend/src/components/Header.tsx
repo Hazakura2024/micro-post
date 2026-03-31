@@ -66,10 +66,10 @@ const Header = () => {
   const onClickSubmitImage = async () => {
     setIsSubimittingImage(true)
     try {
-
       if (!selectedFile) return;
       const res = await uploadIcon(userInfo.token, selectedFile);
       console.log(res)
+      setUserInfo({ ...userInfo, icon_path: res.icon_path })
       toast.success("アイコンの変更に成功しました！")
     } catch (error) {
       console.log(error);
@@ -78,7 +78,6 @@ const Header = () => {
     } finally {
       setSelectedFile(null)
       setIsSubimittingImage(false)
-      saveInfoWithName(userInfo.id, userInfo.token)
       setIsEdigingImage(false)
     }
   }
