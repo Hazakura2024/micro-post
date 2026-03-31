@@ -5,7 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { createHash, randomUUID } from 'crypto';
+import { randomUUID } from 'crypto';
+import * as bcrypt from 'bcrypt';
 import { promises } from 'fs';
 import { extname, join } from 'path';
 import { Auth } from 'src/entities/auth';
@@ -40,7 +41,7 @@ export class UserService {
     }
 
     // NOTE: ユーザー作成
-    const hash = createHash('md5').update(password).digest('hex');
+    const hash = await bcrypt.hash(password, 10);
     const record = {
       name: name,
       email: email,
