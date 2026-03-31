@@ -11,9 +11,10 @@ import type {
 } from "react";
 import type { PostType } from "../types/Post";
 import { getList } from "../api/Post";
-import { UserContext } from "./UserProvider";
+
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { toast } from "react-toastify";
+import { UserContext } from "../contexts/UserContext";
 
 export const PostListContext = createContext(
   {} as {

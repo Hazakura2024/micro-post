@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import signIn from "../api/Auth";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../providers/UserProvider";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
+import { UserContext } from "../contexts/UserContext";
 
 const SignIn = () => {
   const navigate = useNavigate();

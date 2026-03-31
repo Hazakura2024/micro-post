@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
 import Layout from "../components/Layout";
 import { PostListProvider } from "../providers/PostListProvider";
-import { UserContext } from "../providers/UserProvider";
+
 import { Navigate } from "react-router-dom";
+import { UserContext } from "../contexts/UserContext";
 
 const Main = () => {
   const { userInfo } = useContext(UserContext);

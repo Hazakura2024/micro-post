@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import { UserContext } from "../providers/UserProvider";
+
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { FaPen, FaRegUserCircle } from "react-icons/fa";
-import { editUser, uploadIcon } from "../api/User";
+import { FaPen, FaRegUserCircle, FaUserCircle } from "react-icons/fa";
+import { editUser, getIcon, uploadIcon } from "../api/User";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { PostListContext } from "../providers/PostListProvider";
+import { UserContext } from "../contexts/UserContext";
 
 const Header = () => {
   const { userInfo, setUserInfo, saveInfoWithName } = useContext(UserContext);
@@ -23,7 +24,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   const onClickLogout = () => {
-    setUserInfo({ id: 0, name: "", token: "" });
+    setUserInfo({ id: 0, name: "", icon_path: null, token: "" });
     navigate("/");
   };
 
@@ -65,10 +66,10 @@ const Header = () => {
   const onClickSubmitImage = async () => {
     setIsSubimittingImage(true)
     try {
-
       if (!selectedFile) return;
       const res = await uploadIcon(userInfo.token, selectedFile);
       console.log(res)
+      setUserInfo({ ...userInfo, icon_path: res.icon_path })
       toast.success("アイコンの変更に成功しました！")
     } catch (error) {
       console.log(error);
@@ -77,6 +78,7 @@ const Header = () => {
     } finally {
       setSelectedFile(null)
       setIsSubimittingImage(false)
+      setIsEdigingImage(false)
     }
   }
 
@@ -95,6 +97,11 @@ const Header = () => {
 
   }, [selectedFile])
 
+
+
+
+
+
   return (
     <SHeader>
       <SLogo>MicroPost</SLogo>
@@ -112,7 +119,7 @@ const Header = () => {
             {previewUrl ? <SImage src={previewUrl} alt="選択中の画像プレビュー" /> : <div>画像未選択</div>}
             <SSubmitButton onClick={onClickSubmitImage} disabled={isSubbmittingImage}>送信</SSubmitButton>
           </div>
-          : <div></div>}
+          : (userInfo.icon_path ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${userInfo.icon_path}`} /> : <FaUserCircle />)}
 
 
 

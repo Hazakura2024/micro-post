@@ -84,6 +84,7 @@ export class UserService {
       id: user.id,
       name: user.name,
       email: user.email,
+      icon_path: user.icon_path,
       createdAt: user.created_at,
     };
   }
@@ -170,11 +171,12 @@ export class UserService {
     // DBに保存する相対パス
     const nextIconPath = `/uploads/users/${user.id}/${filename}`;
 
-    // 旧画像削除
+    // DBに新URL保存
     const prevIconPath = user.icon_path;
     user.icon_path = nextIconPath;
     await this.userRepository.save(user);
 
+    // 旧画像削除
     if (prevIconPath) {
       const prevAbsPath = join(process.cwd(), prevIconPath.replace(/^\//, ''));
       try {
@@ -187,7 +189,33 @@ export class UserService {
     return {
       id: user.id,
       name: user.name,
-      iconPath: user.icon_path,
+      icon_path: user.icon_path,
     };
+  }
+
+  async getIcon(token: string) {
+    // ログイン済かチェック
+    const now = new Date();
+    const auth = await this.authRepository.findOne({
+      where: {
+        token: Equal(token),
+        expire_at: MoreThan(now),
+      },
+    });
+    if (!auth) {
+      throw new ForbiddenException();
+    }
+
+    // ユーザー取得
+    const user = await this.userRepository.findOne({
+      where: {
+        id: Equal(auth.user_id),
+      },
+    });
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return user.icon_path;
   }
 }

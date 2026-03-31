@@ -54,3 +54,11 @@ export const uploadIcon = async (token: string, file: File) => {
 
   return res.data;
 }
+
+export const getIcon = async (token: string) => {
+  const API_URL = import.meta.env.VITE_API_URL;
+  const url = `${API_URL}/user/me/icon?token=${token}`;
+
+  const res = await axios.get(url);
+  return res.data;
+}
