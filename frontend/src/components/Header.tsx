@@ -15,7 +15,7 @@ const Header = () => {
   const { refreshCurrent } = useContext(PostListContext)
 
   const [isEditingName, setIsEditingName] = useState(false);
-  const [editningName, setEditingNameName] = useState("")
+  const [editingName, setEditingNameName] = useState("")
   const [isSubmittingName, setIsSubmittingName] = useState(false)
 
   const [isEditingImage, setIsEdigingImage] = useState(false)
@@ -48,7 +48,7 @@ const Header = () => {
   const onClickSend = async () => {
     setIsSubmittingName(true)
     try {
-      await editUser(userInfo.token, editningName)
+      await editUser(userInfo.token, editingName)
       setEditingNameName("")
 
       await saveInfoWithName(userInfo.id, userInfo.token,)
@@ -109,8 +109,8 @@ const Header = () => {
       <SRgightItem>
         {isEditingName
           ? <div>
-            <SInput type="text" placeholder="名前を編集..." value={editningName} onChange={e => setEditingNameName(e.target.value)} />
-            <SSubmitButton onClick={onClickSend} disabled={isSubmittingName || editningName.length > 20}>変更</SSubmitButton>
+            <SInput type="text" placeholder="名前を編集..." value={editingName} onChange={e => setEditingNameName(e.target.value)} />
+            <SSubmitButton onClick={onClickSend} disabled={isSubmittingName || editingName.length > 20}>変更</SSubmitButton>
           </div>
           : <SName>{userInfo.name}さん</SName>}
 
