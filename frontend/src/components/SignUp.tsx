@@ -20,7 +20,7 @@ const SignUp = () => {
   const onSignClick = async () => {
     // (学習メモ): フロントエンド側にも入力バリデーションを追加すべき
     // (学習メモ): .trim()は空白や改行文字を取り除いたものを返す
-    if (!userId.trim() || !mail.trim() || !mail.trim()) {
+    if (!userId.trim() || !pass.trim() || !mail.trim()) {
       toast.error("すべてのフィールドを入力してください");
       return;
     }
