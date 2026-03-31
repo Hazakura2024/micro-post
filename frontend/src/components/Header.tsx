@@ -24,7 +24,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   const onClickLogout = () => {
-    setUserInfo({ id: 0, name: "", token: "" });
+    setUserInfo({ id: 0, name: "", icon_path: null, token: "" });
     navigate("/");
   };
 
@@ -78,6 +78,8 @@ const Header = () => {
     } finally {
       setSelectedFile(null)
       setIsSubimittingImage(false)
+      saveInfoWithName(userInfo.id, userInfo.token)
+      setIsEdigingImage(false)
     }
   }
 
@@ -96,7 +98,6 @@ const Header = () => {
 
   }, [selectedFile])
 
-  const [imageUrl, setImageUrl] = useState("");
 
 
 
@@ -119,7 +120,7 @@ const Header = () => {
             {previewUrl ? <SImage src={previewUrl} alt="選択中の画像プレビュー" /> : <div>画像未選択</div>}
             <SSubmitButton onClick={onClickSubmitImage} disabled={isSubbmittingImage}>送信</SSubmitButton>
           </div>
-          : (imageUrl ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${imageUrl}`} /> : <FaUserCircle />)}
+          : (userInfo.icon_path ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${userInfo.icon_path}`} /> : <FaUserCircle />)}
 
 
 
