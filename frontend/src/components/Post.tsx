@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import type { PostType } from "../types/Post";
 import styled from "styled-components";
 import { deletePost } from "../api/Post";
@@ -49,7 +49,9 @@ const Post = ({
   return (
     <SPost>
 
-      {post.user_icon ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${post.user_icon}`} alt="" /> : <FaUserCircle size={40} color={stringToColor(post.user_name)} />}
+      {post.user_icon
+        ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${post.user_icon}`} alt="" />
+        : <FaUserCircle size={40} color={stringToColor(post.user_name)} />}
 
       <SPostMain>
         <div>
@@ -82,10 +84,6 @@ const SPost = styled.div`
   align-items: center;
   gap: 8px;
 `;
-
-const SIcon = styled.div`
-  
-`
 
 const SImage = styled.img`
   height: 40px;

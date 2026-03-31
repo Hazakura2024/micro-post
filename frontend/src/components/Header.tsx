@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaPen, FaRegUserCircle, FaUserCircle } from "react-icons/fa";
-import { editUser, getIcon, uploadIcon } from "../api/User";
+import { editUser, uploadIcon } from "../api/User";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { PostListContext } from "../providers/PostListProvider";
