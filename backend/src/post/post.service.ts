@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Auth } from 'src/entities/auth';
 import { MicroPost } from 'src/entities/micropost';
@@ -106,6 +110,7 @@ export class PostService {
         'micro_post.id as id',
         'micro_post.user_id as user_id',
         'user.name as user_name',
+        'user.icon_path as user_icon',
         'micro_post.content as content',
         'micro_post.created_at as created_at',
       ])
@@ -134,7 +139,9 @@ export class PostService {
     }
 
     if (user_name) {
-      qb = qb.andWhere('user.name ILIKE :user_name', { user_name: `%${user_name}%` });
+      qb = qb.andWhere('user.name ILIKE :user_name', {
+        user_name: `%${user_name}%`,
+      });
     }
 
     type ResultType = {
