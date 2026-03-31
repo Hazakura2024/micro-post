@@ -20,7 +20,7 @@ const Header = () => {
 
   const [isEditingImage, setIsEditingImage] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>()
-  const [isSubmittingImage, setIsSubimittingImage] = useState(false)
+  const [isSubmittingImage, setIsSubmittingImage] = useState(false)
 
   const navigate = useNavigate();
 
@@ -65,7 +65,7 @@ const Header = () => {
   }
 
   const onClickSubmitImage = async () => {
-    setIsSubimittingImage(true)
+    setIsSubmittingImage(true)
     try {
       if (!selectedFile) return;
       const res = await uploadIcon(userInfo.token, selectedFile);
@@ -78,7 +78,7 @@ const Header = () => {
       toast.error(msg)
     } finally {
       setSelectedFile(null)
-      setIsSubimittingImage(false)
+      setIsSubmittingImage(false)
       setIsEditingImage(false)
     }
   }
@@ -106,7 +106,7 @@ const Header = () => {
   return (
     <SHeader>
       <SLogo>MicroPost</SLogo>
-      <SRgightItem>
+      <SRightItem>
         {isEditingName
           ? <div>
             <SInput type="text" placeholder="名前を編集..." value={editingName} onChange={e => setEditingName(e.target.value)} />
@@ -136,7 +136,7 @@ const Header = () => {
 
         <SLogout onClick={onClickLogout}>ログアウト</SLogout>
 
-      </SRgightItem>
+      </SRightItem>
     </SHeader>
   );
 };
@@ -161,7 +161,7 @@ const SLogo = styled.div`
   justify-content: start;
 `;
 
-const SRgightItem = styled.div`
+const SRightItem = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
