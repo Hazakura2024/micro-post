@@ -171,11 +171,12 @@ export class UserService {
     // DBに保存する相対パス
     const nextIconPath = `/uploads/users/${user.id}/${filename}`;
 
-    // DBに新URL保存、旧URL削除
+    // DBに新URL保存
     const prevIconPath = user.icon_path;
     user.icon_path = nextIconPath;
     await this.userRepository.save(user);
 
+    // 旧画像削除
     if (prevIconPath) {
       const prevAbsPath = join(process.cwd(), prevIconPath.replace(/^\//, ''));
       try {
