@@ -11,7 +11,7 @@ export const stringToColor = (userName: string) => {
 
     const hue = Math.abs(hash) % 360;
     const saturation = 70;
-    const ligthness = 50;
+    const lightness = 50;
 
-    return `hsl(${hue}, ${saturation}%, ${ligthness}%)`
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`
 };
