@@ -55,8 +55,8 @@ const Post = ({
 
       <SPostMain>
         <div>
-          <SName>{getDateString(date)}</SName>
-          <SDate>{post.user_name}</SDate>
+          <SDate>{getDateString(date)}</SDate>
+          <SName>{post.user_name}</SName>
           <SDeleteButton
             hidden={userInfo.id !== post.user_id}
             disabled={isDeleting}
