@@ -149,6 +149,7 @@ export class PostService {
       content: string;
       user_id: number;
       user_name: string;
+      user_icon: string;
       created_at: Date;
     };
     const records = await qb.getRawMany<ResultType>();
