@@ -58,6 +58,7 @@ export const PostListProvider = ({
           id: p.id,
           user_id: p.user_id,
           user_name: p.user_name,
+          user_icon: p.user_icon,
           content: p.content,
           created_at: new Date(p.created_at),
         }));

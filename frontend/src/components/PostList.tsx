@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { PostListContext } from "../providers/PostListProvider";
 import Post from "./Post";
 import styled from "styled-components";
@@ -89,7 +89,7 @@ const PostList = () => {
       {isLoading && <div>読込み中...</div>}
 
       {postList.map((p) => (
-        <Post key={p.id} postId={p.id} userName={p.user_name} post={p} />
+        <Post key={p.id} post={p} />
       ))}
       <div>
         <SPageButton

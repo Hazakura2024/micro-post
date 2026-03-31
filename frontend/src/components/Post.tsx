@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import type { PostType } from "../types/Post";
 import styled from "styled-components";
 import { deletePost } from "../api/Post";
-
+import { FaUserCircle } from "react-icons/fa";
 import { PostListContext } from "../providers/PostListProvider";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { toast } from "react-toastify";
@@ -10,12 +10,8 @@ import { UserContext } from "../contexts/UserContext";
 
 // (学習メモ): propsはオブジェクトになるので、左側に分割代入
 const Post = ({
-  postId,
-  userName,
   post,
 }: {
-  postId: number;
-  userName: string;
   post: PostType;
 }) => {
   const { userInfo } = useContext(UserContext);
@@ -38,7 +34,7 @@ const Post = ({
     if (isDeleting) return;
     setIsDeleting(true);
     try {
-      await deletePost(postId, userInfo.token);
+      await deletePost(post.id, userInfo.token);
       await getPostList();
       toast.success("削除しました");
     } catch (error) {
@@ -51,30 +47,48 @@ const Post = ({
 
   return (
     <SPost>
-      <div>
-        <SName>{getDateString(date)}</SName>
-        <SDate>{post.user_name}</SDate>
-        <SDeleteButton
-          hidden={userInfo.id !== post.user_id}
-          disabled={isDeleting}
-          onClick={onClickDelete}
-        >
-          delete
-        </SDeleteButton>
-      </div>
-      <div>{post.content}</div>
+
+      {post.user_icon ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${post.user_icon}`} alt="" /> : <FaUserCircle size={40} />}
+
+      <SPostMain>
+        <div>
+          <SName>{getDateString(date)}</SName>
+          <SDate>{post.user_name}</SDate>
+          <SDeleteButton
+            hidden={userInfo.id !== post.user_id}
+            disabled={isDeleting}
+            onClick={onClickDelete}
+          >
+            delete
+          </SDeleteButton>
+        </div>
+        <div>{post.content}</div>
+      </SPostMain>
     </SPost>
   );
 };
 
 export default Post;
 
+const SPostMain = styled.div`
+`;
 const SPost = styled.div`
   margin: 8px 0px;
   border-bottom: 1px solid #aaaaaa;
   text-align: left;
   padding-left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
+
+const SIcon = styled.div`
+  
+`
+
+const SImage = styled.img`
+  height: 40px;
+`
 
 const SName = styled.span`
   font-size: small;
