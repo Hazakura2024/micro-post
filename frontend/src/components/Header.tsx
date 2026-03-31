@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../providers/UserProvider";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { FaPen, FaRegUserCircle } from "react-icons/fa";
+import { FaPen, FaRegUserCircle, FaUserCircle } from "react-icons/fa";
 import { editUser, getIcon, uploadIcon } from "../api/User";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
@@ -124,7 +124,7 @@ const Header = () => {
             {previewUrl ? <SImage src={previewUrl} alt="選択中の画像プレビュー" /> : <div>画像未選択</div>}
             <SSubmitButton onClick={onClickSubmitImage} disabled={isSubbmittingImage}>送信</SSubmitButton>
           </div>
-          : <SImage src={`${import.meta.env.VITE_STORAGE_URL}${imageUrl}`} />}
+          : (imageUrl ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${imageUrl}`} /> : <FaUserCircle />)}
 
 
 
