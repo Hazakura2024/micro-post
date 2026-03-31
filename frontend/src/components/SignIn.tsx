@@ -25,9 +25,7 @@ const SignIn = () => {
       }
 
       await saveInfoWithName(ret.user_id, ret.token);
-      console.log("navigate前");
       navigate("/main");
-      console.log("navigate後");
     } catch (error: unknown) {
       const msg = extractErrorMessage(error, "ログインできません");
       setErrorMessage(msg);
