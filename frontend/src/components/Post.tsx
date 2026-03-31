@@ -7,6 +7,7 @@ import { PostListContext } from "../providers/PostListProvider";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { toast } from "react-toastify";
 import { UserContext } from "../contexts/UserContext";
+import { stringToColor } from "../utils/stringToColor";
 
 // (学習メモ): propsはオブジェクトになるので、左側に分割代入
 const Post = ({
@@ -48,7 +49,7 @@ const Post = ({
   return (
     <SPost>
 
-      {post.user_icon ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${post.user_icon}`} alt="" /> : <FaUserCircle size={40} />}
+      {post.user_icon ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${post.user_icon}`} alt="" /> : <FaUserCircle size={40} color={stringToColor(post.user_name)} />}
 
       <SPostMain>
         <div>
