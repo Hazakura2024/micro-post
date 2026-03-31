@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaPen, FaRegUserCircle, FaUserCircle } from "react-icons/fa";
-import { editUser, getIcon, uploadIcon } from "../api/User";
+import { editUser, uploadIcon } from "../api/User";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { PostListContext } from "../providers/PostListProvider";
@@ -15,12 +15,12 @@ const Header = () => {
   const { refreshCurrent } = useContext(PostListContext)
 
   const [isEditingName, setIsEditingName] = useState(false);
-  const [editningName, setEditingNameName] = useState("")
+  const [editingName, setEditingName] = useState("")
   const [isSubmittingName, setIsSubmittingName] = useState(false)
 
-  const [isEditingImage, setIsEdigingImage] = useState(false)
+  const [isEditingImage, setIsEditingImage] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>()
-  const [isSubbmittingImage, setIsSubimittingImage] = useState(false)
+  const [isSubmittingImage, setIsSubmittingImage] = useState(false)
 
   const navigate = useNavigate();
 
@@ -31,11 +31,11 @@ const Header = () => {
 
   const onClickEdit = () => {
     setIsEditingName((prev) => !prev)
-    setEditingNameName("")
+    setEditingName("")
   }
 
   const onClickEditImage = () => {
-    setIsEdigingImage((prev) => !prev)
+    setIsEditingImage((prev) => !prev)
     setSelectedFile(null)
   }
 
@@ -48,8 +48,8 @@ const Header = () => {
   const onClickSend = async () => {
     setIsSubmittingName(true)
     try {
-      await editUser(userInfo.token, editningName)
-      setEditingNameName("")
+      await editUser(userInfo.token, editingName)
+      setEditingName("")
 
       await saveInfoWithName(userInfo.id, userInfo.token,)
       toast.success("名前の変更に成功しました！")
@@ -65,7 +65,7 @@ const Header = () => {
   }
 
   const onClickSubmitImage = async () => {
-    setIsSubimittingImage(true)
+    setIsSubmittingImage(true)
     try {
       if (!selectedFile) return;
       const res = await uploadIcon(userInfo.token, selectedFile);
@@ -78,8 +78,8 @@ const Header = () => {
       toast.error(msg)
     } finally {
       setSelectedFile(null)
-      setIsSubimittingImage(false)
-      setIsEdigingImage(false)
+      setIsSubmittingImage(false)
+      setIsEditingImage(false)
     }
   }
 
@@ -106,11 +106,11 @@ const Header = () => {
   return (
     <SHeader>
       <SLogo>MicroPost</SLogo>
-      <SRgightItem>
+      <SRightItem>
         {isEditingName
           ? <div>
-            <SInput type="text" placeholder="名前を編集..." value={editningName} onChange={e => setEditingNameName(e.target.value)} />
-            <SSubmitButton onClick={onClickSend} disabled={isSubmittingName || editningName.length > 20}>変更</SSubmitButton>
+            <SInput type="text" placeholder="名前を編集..." value={editingName} onChange={e => setEditingName(e.target.value)} />
+            <SSubmitButton onClick={onClickSend} disabled={isSubmittingName || editingName.length > 20}>変更</SSubmitButton>
           </div>
           : <SName>{userInfo.name}さん</SName>}
 
@@ -118,7 +118,7 @@ const Header = () => {
           ? <div>
             <SInput type="file" accept="image/png, image/jpg " onChange={e => onChangeInputImage(e)} />
             {previewUrl ? <SImage src={previewUrl} alt="選択中の画像プレビュー" /> : <div>画像未選択</div>}
-            <SSubmitButton onClick={onClickSubmitImage} disabled={isSubbmittingImage}>送信</SSubmitButton>
+            <SSubmitButton onClick={onClickSubmitImage} disabled={isSubmittingImage}>送信</SSubmitButton>
           </div>
           : (userInfo.icon_path ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${userInfo.icon_path}`} /> : <FaUserCircle color={stringToColor(userInfo.name)} />)}
 
@@ -136,7 +136,7 @@ const Header = () => {
 
         <SLogout onClick={onClickLogout}>ログアウト</SLogout>
 
-      </SRgightItem>
+      </SRightItem>
     </SHeader>
   );
 };
@@ -161,7 +161,7 @@ const SLogo = styled.div`
   justify-content: start;
 `;
 
-const SRgightItem = styled.div`
+const SRightItem = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;

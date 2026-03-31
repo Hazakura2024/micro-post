@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import type { PostType } from "../types/Post";
 import styled from "styled-components";
 import { deletePost } from "../api/Post";
@@ -49,12 +49,14 @@ const Post = ({
   return (
     <SPost>
 
-      {post.user_icon ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${post.user_icon}`} alt="" /> : <FaUserCircle size={40} color={stringToColor(post.user_name)} />}
+      {post.user_icon
+        ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${post.user_icon}`} alt="" />
+        : <FaUserCircle size={40} color={stringToColor(post.user_name)} />}
 
       <SPostMain>
         <div>
-          <SName>{getDateString(date)}</SName>
-          <SDate>{post.user_name}</SDate>
+          <SDate>{getDateString(date)}</SDate>
+          <SName>{post.user_name}</SName>
           <SDeleteButton
             hidden={userInfo.id !== post.user_id}
             disabled={isDeleting}
@@ -82,10 +84,6 @@ const SPost = styled.div`
   align-items: center;
   gap: 8px;
 `;
-
-const SIcon = styled.div`
-  
-`
 
 const SImage = styled.img`
   height: 40px;
