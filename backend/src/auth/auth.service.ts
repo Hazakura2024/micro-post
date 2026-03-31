@@ -1,7 +1,6 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-// 追加
-import { createHash } from 'crypto';
+import * as bcrypt from 'bcrypt';
 import { Auth } from 'src/entities/auth';
 import { User } from 'src/entities/user.entity';
 import { Equal, Repository } from 'typeorm';
@@ -13,7 +12,7 @@ export class AuthService {
     private userRepository: Repository<User>,
     @InjectRepository(Auth)
     private authRepository: Repository<Auth>,
-  ) {}
+  ) { }
 
   async getAuth(name: string, password: string) {
     // name, passwordからUserレコード検索
@@ -21,19 +20,32 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    //NOTE: パスワードから該当のユーザを検索する処理
-    // crypto.は削除
-    const hash = createHash('md5').update(password).digest('hex');
+    // ユーザー取得
     const user = await this.userRepository.findOne({
       where: {
         name: Equal(name),
-        hash: Equal(hash),
       },
     });
-
     if (!user) {
+      throw new NotFoundException();
+    }
+
+    //NOTE: パスワードから該当のユーザを検索する処理
+    // crypto.は削除
+    const isValid = await bcrypt.compare(password, user.hash);
+    if (!isValid) {
       throw new UnauthorizedException();
     }
+    // const user = await this.userRepository.findOne({
+    //   where: {
+    //     name: Equal(name),
+    //     hash: Equal(hash),
+    //   },
+    // });
+
+    // if (!user) {
+    //   throw new UnauthorizedException();
+    // }
 
     // NOTE: authtableへのレコードの挿入
 
