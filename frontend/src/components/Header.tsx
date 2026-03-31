@@ -15,12 +15,12 @@ const Header = () => {
   const { refreshCurrent } = useContext(PostListContext)
 
   const [isEditingName, setIsEditingName] = useState(false);
-  const [editingName, setEditingNameName] = useState("")
+  const [editingName, setEditingName] = useState("")
   const [isSubmittingName, setIsSubmittingName] = useState(false)
 
-  const [isEditingImage, setIsEdigingImage] = useState(false)
+  const [isEditingImage, setIsEditingImage] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>()
-  const [isSubbmittingImage, setIsSubimittingImage] = useState(false)
+  const [isSubmittingImage, setIsSubimittingImage] = useState(false)
 
   const navigate = useNavigate();
 
@@ -31,11 +31,11 @@ const Header = () => {
 
   const onClickEdit = () => {
     setIsEditingName((prev) => !prev)
-    setEditingNameName("")
+    setEditingName("")
   }
 
   const onClickEditImage = () => {
-    setIsEdigingImage((prev) => !prev)
+    setIsEditingImage((prev) => !prev)
     setSelectedFile(null)
   }
 
@@ -49,7 +49,7 @@ const Header = () => {
     setIsSubmittingName(true)
     try {
       await editUser(userInfo.token, editingName)
-      setEditingNameName("")
+      setEditingName("")
 
       await saveInfoWithName(userInfo.id, userInfo.token,)
       toast.success("名前の変更に成功しました！")
@@ -79,7 +79,7 @@ const Header = () => {
     } finally {
       setSelectedFile(null)
       setIsSubimittingImage(false)
-      setIsEdigingImage(false)
+      setIsEditingImage(false)
     }
   }
 
@@ -109,7 +109,7 @@ const Header = () => {
       <SRgightItem>
         {isEditingName
           ? <div>
-            <SInput type="text" placeholder="名前を編集..." value={editingName} onChange={e => setEditingNameName(e.target.value)} />
+            <SInput type="text" placeholder="名前を編集..." value={editingName} onChange={e => setEditingName(e.target.value)} />
             <SSubmitButton onClick={onClickSend} disabled={isSubmittingName || editingName.length > 20}>変更</SSubmitButton>
           </div>
           : <SName>{userInfo.name}さん</SName>}
@@ -118,7 +118,7 @@ const Header = () => {
           ? <div>
             <SInput type="file" accept="image/png, image/jpg " onChange={e => onChangeInputImage(e)} />
             {previewUrl ? <SImage src={previewUrl} alt="選択中の画像プレビュー" /> : <div>画像未選択</div>}
-            <SSubmitButton onClick={onClickSubmitImage} disabled={isSubbmittingImage}>送信</SSubmitButton>
+            <SSubmitButton onClick={onClickSubmitImage} disabled={isSubmittingImage}>送信</SSubmitButton>
           </div>
           : (userInfo.icon_path ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${userInfo.icon_path}`} /> : <FaUserCircle color={stringToColor(userInfo.name)} />)}
 
