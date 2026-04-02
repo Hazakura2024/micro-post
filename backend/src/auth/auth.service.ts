@@ -1,11 +1,12 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Auth } from 'src/entities/auth';
 import { User } from 'src/entities/user.entity';
-import { Equal, Repository } from 'typeorm';
+import { Equal, MoreThan, Repository } from 'typeorm';
 import * as jwt from '@nestjs/jwt';
 import * as sha256 from 'js-sha256';
+import { JwtUser } from './types/jwt-user.type';
 @Injectable()
 export class AuthService {
   constructor(
@@ -90,6 +91,71 @@ export class AuthService {
       access_token: access_token,
       // TODO: 将来的にcookieに保存する
       refresh_token: refresh_token,
+    };
+
+    return resData;
+  }
+
+  async refreshAuth(refresh_token: string) {
+    const refresh_token_hash = sha256.sha256(refresh_token);
+
+    // NOTE: 署名検証
+    let decoded: JwtUser;
+    try {
+      decoded = this.jwtService.verify<JwtUser>(refresh_token, {
+        secret: process.env.REFRESH_SECRET_KEY,
+      });
+    } catch {
+      throw new UnauthorizedException('不正なrefresh_tokenです');
+    }
+
+    const auth = await this.authRepository.findOne({
+      where: {
+        token: Equal(refresh_token_hash),
+        user_id: Equal(decoded.sub),
+        expire_at: MoreThan(new Date()),
+      },
+    });
+    if (!auth) {
+      throw new UnauthorizedException();
+    }
+
+    const userData = await this.userRepository.findOne({
+      where: {
+        id: Equal(auth.user_id),
+      },
+    });
+    if (!userData) {
+      throw new NotFoundException();
+    }
+
+    const payload = {
+      sub: userData.id,
+      name: userData.name,
+    };
+
+    const access_token = this.jwtService.sign(payload, {
+      expiresIn: '15m',
+      secret: process.env.ACCESS_SECRET_KEY,
+    });
+
+    const expire = new Date();
+    expire.setDate(expire.getDate() + 30);
+    const new_refresh_token = this.jwtService.sign(payload, {
+      expiresIn: '30d',
+      secret: process.env.REFRESH_SECRET_KEY,
+    });
+    const new_refresh_token_hash = sha256.sha256(new_refresh_token);
+
+    auth.token = new_refresh_token_hash;
+    auth.expire_at = expire;
+    await this.authRepository.update(auth.id, auth);
+
+    const resData = {
+      user_id: auth.user_id,
+      access_token: access_token,
+      // TODO: 将来的にcookieに保存する
+      refresh_token: new_refresh_token,
     };
 
     return resData;
