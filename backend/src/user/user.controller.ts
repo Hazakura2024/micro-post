@@ -60,7 +60,8 @@ export class UserController {
 
   @Get('me/icon')
   @UseGuards(AuthGuard('jwt'))
-  async getIcon(@Query('token') token: string) {
-    return this.userService.getIcon(token);
+  async getIcon(@Req() req: Request) {
+    const user = req.user as JwtUser;
+    return this.userService.getIcon(user);
   }
 }

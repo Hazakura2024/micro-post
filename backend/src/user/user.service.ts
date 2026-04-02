@@ -60,7 +60,6 @@ export class UserService {
 
   //NOTE: ユーザー取得
   async getUser(user: JwtUser) {
-
     // ユーザー取得
     const userData = await this.userRepository.findOne({
       where: {
@@ -159,29 +158,17 @@ export class UserService {
     };
   }
 
-  async getIcon(token: string) {
-    // ログイン済かチェック
-    const now = new Date();
-    const auth = await this.authRepository.findOne({
-      where: {
-        token: Equal(token),
-        expire_at: MoreThan(now),
-      },
-    });
-    if (!auth) {
-      throw new ForbiddenException();
-    }
-
+  async getIcon(user: JwtUser) {
     // ユーザー取得
-    const user = await this.userRepository.findOne({
+    const userData = await this.userRepository.findOne({
       where: {
-        id: Equal(auth.user_id),
+        id: Equal(user.sub),
       },
     });
-    if (!user) {
+    if (!userData) {
       throw new NotFoundException();
     }
 
-    return user.icon_path;
+    return userData.icon_path;
   }
 }
