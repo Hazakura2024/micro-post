@@ -1,14 +1,11 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Auth } from 'src/entities/auth';
 import { User } from 'src/entities/user.entity';
 import { Equal, Repository } from 'typeorm';
-
+import * as jwt from '@nestjs/jwt';
+import * as sha256 from 'js-sha256';
 @Injectable()
 export class AuthService {
   constructor(
@@ -16,6 +13,7 @@ export class AuthService {
     private userRepository: Repository<User>,
     @InjectRepository(Auth)
     private authRepository: Repository<Auth>,
+    private jwtService: jwt.JwtService,
   ) { }
 
   async getAuth(name: string, password: string) {
@@ -40,8 +38,7 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    // NOTE: authtableへのレコードの挿入
-
+    // レスポンスの作成
     const ret = {
       token: '',
       user_id: user.id,
@@ -49,7 +46,7 @@ export class AuthService {
 
     // NOTE: 認証レコード作成
     const expire = new Date();
-    expire.setDate(expire.getDate() + 1);
+    expire.setDate(expire.getDate() + 30);
 
     const auth = await this.authRepository.findOne({
       where: {
@@ -57,22 +54,39 @@ export class AuthService {
       },
     });
 
+    // NOTE: 挿入
+    // const token = crypto.randomUUID();
+    const payload = {
+      sub: user.id,
+      name: user.name,
+    };
+
+    const access_token = this.jwtService.sign(payload, {
+      expiresIn: '15m',
+      secret: process.env.ACCESS_SECRET_KEY,
+    });
+    const refresh_token = this.jwtService.sign(payload, {
+      expiresIn: '30d',
+      secret: process.env.REFRESH_SECRET_KEY,
+    });
+
+    // refresh_tokenのhashを作成
+    const refresh_token_hash = sha256.sha256(refresh_token);
+
+    const record = {
+      user_id: user.id,
+      token: refresh_token_hash,
+      expire_at: expire.toISOString(),
+    };
     if (auth) {
-      // NOTE: 更新
-      auth.expire_at = expire;
-      await this.authRepository.save(auth);
-      ret.token = auth.token;
+      await this.authRepository.update(auth.id, record);
     } else {
-      // NOTE: 挿入
-      const token = crypto.randomUUID();
-      const record = {
-        user_id: user.id,
-        token: token,
-        expire_at: expire.toISOString(),
-      };
       await this.authRepository.save(record);
-      ret.token = token;
     }
+
+    // レスポンス
+    ret.token = access_token;
+
     return ret;
   }
 }
