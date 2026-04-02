@@ -14,8 +14,6 @@ export class PostService {
   constructor(
     @InjectRepository(MicroPost)
     private microPostRepository: Repository<MicroPost>,
-    @InjectRepository(Auth)
-    private AuthRepository: Repository<Auth>,
   ) { }
 
   async createPost(message: string, user: JwtUser) {
