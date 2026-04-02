@@ -85,8 +85,13 @@ export class AuthService {
     }
 
     // レスポンス
-    ret.token = access_token;
+    const resData = {
+      user_id: ret.user_id,
+      access_token: access_token,
+      // TODO: 将来的にcookieに保存する
+      refresh_token: refresh_token,
+    };
 
-    return ret;
+    return resData;
   }
 }
