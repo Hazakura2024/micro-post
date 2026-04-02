@@ -6,15 +6,18 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDTO, PostQueryDto } from 'src/dto/create-post.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) { }
 
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   async createPost(
     @Body() createPostDto: CreatePostDTO,
     @Query() postQueryDto: PostQueryDto,
@@ -26,6 +29,7 @@ export class PostController {
   }
 
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   async getList(
     @Query('token') token: string,
     @Query('start') start: number,
@@ -43,6 +47,7 @@ export class PostController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
   async deletePost(@Param('id') id: number, @Query('token') token: string) {
     return await this.postService.deletePost(id, token);
   }

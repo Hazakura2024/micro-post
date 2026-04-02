@@ -8,6 +8,7 @@ import {
   Post,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -15,6 +16,7 @@ import { CreateUserDto } from 'src/dto/create-user.dto';
 import { EditNameDto } from 'src/dto/edit-name.dto';
 import type { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 export class UserController {
@@ -30,11 +32,13 @@ export class UserController {
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard('jwt'))
   async getUser(@Param('id') id: number, @Query('token') token: string) {
     return await this.userService.getUser(token, id);
   }
 
   @Patch('me')
+  @UseGuards(AuthGuard('jwt'))
   async editUser(
     @Query('token') token: string,
     @Body() editNameDto: EditNameDto,
@@ -44,6 +48,7 @@ export class UserController {
 
   @UseInterceptors(FileInterceptor('icon'))
   @Patch('me/icon')
+  @UseGuards(AuthGuard('jwt'))
   uploadIcon(
     @Query('token') token: string,
     @UploadedFile() file?: Express.Multer.File,
@@ -55,6 +60,7 @@ export class UserController {
   }
 
   @Get('me/icon')
+  @UseGuards(AuthGuard('jwt'))
   async getIcon(@Query('token') token: string) {
     return this.userService.getIcon(token);
   }
