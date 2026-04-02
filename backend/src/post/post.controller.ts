@@ -6,11 +6,14 @@ import {
   Param,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { PostService } from './post.service';
-import { CreatePostDTO, PostQueryDto } from 'src/dto/create-post.dto';
+import { CreatePostDTO } from 'src/dto/create-post.dto';
 import { AuthGuard } from '@nestjs/passport';
+import type { Request } from 'express';
+import { JwtUser } from 'src/auth/types/jwt-user.type';
 
 @Controller('post')
 export class PostController {
@@ -18,37 +21,27 @@ export class PostController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  async createPost(
-    @Body() createPostDto: CreatePostDTO,
-    @Query() postQueryDto: PostQueryDto,
-  ) {
-    return await this.postService.createPost(
-      createPostDto.message,
-      postQueryDto.token,
-    );
+  async createPost(@Body() createPostDto: CreatePostDTO, @Req() req: Request) {
+    const user = req.user as JwtUser;
+    return await this.postService.createPost(createPostDto.message, user);
   }
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
   async getList(
-    @Query('token') token: string,
+    @Req() req: Request,
     @Query('start') start: number,
     @Query('records') records: number,
     @Query('word') word?: string,
     @Query('user_name') user_name?: string,
   ) {
-    return await this.postService.getList(
-      token,
-      start,
-      records,
-      word,
-      user_name,
-    );
+    return await this.postService.getList(start, records, word, user_name);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
-  async deletePost(@Param('id') id: number, @Query('token') token: string) {
-    return await this.postService.deletePost(id, token);
+  async deletePost(@Param('id') id: number, @Req() req: Request) {
+    const user = req.user as JwtUser;
+    return await this.postService.deletePost(id, user);
   }
 }

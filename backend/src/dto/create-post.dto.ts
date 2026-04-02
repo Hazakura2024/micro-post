@@ -6,9 +6,3 @@ export class CreatePostDTO {
   @MaxLength(140)
   message: string;
 }
-
-export class PostQueryDto {
-  @IsString()
-  @IsNotEmpty()
-  token: string;
-}
