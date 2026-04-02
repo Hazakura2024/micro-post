@@ -42,11 +42,9 @@ export class UserController {
 
   @Patch('me')
   @UseGuards(AuthGuard('jwt'))
-  async editUser(
-    @Query('token') token: string,
-    @Body() editNameDto: EditNameDto,
-  ) {
-    return await this.userService.editName(token, editNameDto.name);
+  async editUser(@Body() editNameDto: EditNameDto, @Req() req: Request) {
+    const user = req.user as JwtUser;
+    return await this.userService.editName(user, editNameDto.name);
   }
 
   @UseInterceptors(FileInterceptor('icon'))

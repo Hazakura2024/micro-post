@@ -80,40 +80,29 @@ export class UserService {
   }
 
   // ユーザー名変更
-  async editName(token: string, name: string) {
-    // ログイン済かチェック
-    const now = new Date();
-    const auth = await this.authRepository.findOne({
-      where: {
-        token: Equal(token),
-        expire_at: MoreThan(now),
-      },
-    });
-    if (!auth) {
-      throw new ForbiddenException();
-    }
+  async editName(user: JwtUser, name: string) {
 
     // NOTE: ユーザー名の重複チェック
     const existingUserByName = await this.userRepository.findOne({
       where: { name: Equal(name) },
     });
-    if (existingUserByName && existingUserByName.id !== auth.user_id) {
+    if (existingUserByName && existingUserByName.id !== user.sub) {
       throw new ConflictException('このユーザー名は使用されています。');
     }
 
     // ユーザー取得
-    const user = await this.userRepository.findOne({
+    const userData = await this.userRepository.findOne({
       where: {
-        id: Equal(auth.user_id),
+        id: Equal(user.sub),
       },
     });
-    if (!user) {
+    if (!userData) {
       throw new NotFoundException();
     }
 
-    user.name = name;
+    userData.name = name;
 
-    const savedUser = await this.userRepository.save(user);
+    const savedUser = await this.userRepository.save(userData);
     return {
       id: savedUser.id,
       name: savedUser.name,
