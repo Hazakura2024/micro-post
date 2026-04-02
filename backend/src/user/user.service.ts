@@ -111,32 +111,19 @@ export class UserService {
     };
   }
 
-  async uploadImage(token: string, file: Express.Multer.File) {
-    // ログイン済かチェック
-    const now = new Date();
-    const auth = await this.authRepository.findOne({
-      where: {
-        token: Equal(token),
-        expire_at: MoreThan(now),
-      },
-    });
-
-    if (!auth) {
-      throw new ForbiddenException();
-    }
-
+  async uploadImage(user: JwtUser, file: Express.Multer.File) {
     // ユーザー取得
-    const user = await this.userRepository.findOne({
+    const userData = await this.userRepository.findOne({
       where: {
-        id: Equal(auth.user_id),
+        id: Equal(user.sub),
       },
     });
-    if (!user) {
+    if (!userData) {
       throw new NotFoundException();
     }
 
     // 保存先ディレクトリ
-    const userDir = join(process.cwd(), 'uploads', 'users', String(user.id));
+    const userDir = join(process.cwd(), 'uploads', 'users', String(user.sub));
     await promises.mkdir(userDir, { recursive: true });
 
     // ランダムファイル名を作成
@@ -148,12 +135,12 @@ export class UserService {
     await promises.writeFile(absPath, file.buffer);
 
     // DBに保存する相対パス
-    const nextIconPath = `/uploads/users/${user.id}/${filename}`;
+    const nextIconPath = `/uploads/users/${userData.id}/${filename}`;
 
     // DBに新URL保存
-    const prevIconPath = user.icon_path;
-    user.icon_path = nextIconPath;
-    await this.userRepository.save(user);
+    const prevIconPath = userData.icon_path;
+    userData.icon_path = nextIconPath;
+    await this.userRepository.save(userData);
 
     // 旧画像削除
     if (prevIconPath) {
@@ -166,9 +153,9 @@ export class UserService {
     }
 
     return {
-      id: user.id,
-      name: user.name,
-      icon_path: user.icon_path,
+      id: userData.id,
+      name: userData.name,
+      icon_path: userData.icon_path,
     };
   }
 

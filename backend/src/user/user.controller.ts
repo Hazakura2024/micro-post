@@ -50,14 +50,12 @@ export class UserController {
   @UseInterceptors(FileInterceptor('icon'))
   @Patch('me/icon')
   @UseGuards(AuthGuard('jwt'))
-  uploadIcon(
-    @Query('token') token: string,
-    @UploadedFile() file?: Express.Multer.File,
-  ) {
+  uploadIcon(@UploadedFile() file?: Express.Multer.File, @Req() req: Request) {
+    const user = req.user as JwtUser;
     if (!file) {
       throw new BadRequestException('画像ファイルを読み込めません')
     }
-    return this.userService.uploadImage(token, file);
+    return this.userService.uploadImage(user, file);
   }
 
   @Get('me/icon')
