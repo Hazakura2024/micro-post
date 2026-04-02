@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -14,9 +15,10 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from 'src/dto/create-user.dto';
 import { EditNameDto } from 'src/dto/edit-name.dto';
-import type { Express } from 'express';
+import type { Express, Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
+import type { JwtUser } from 'src/auth/types/jwt-user.type';
 
 @Controller('user')
 export class UserController {
@@ -31,10 +33,11 @@ export class UserController {
     );
   }
 
-  @Get(':id')
+  @Get('me')
   @UseGuards(AuthGuard('jwt'))
-  async getUser(@Param('id') id: number, @Query('token') token: string) {
-    return await this.userService.getUser(token, id);
+  async getUser(@Req() req: Request) {
+    const user = req.user as JwtUser;
+    return await this.userService.getUser(user);
   }
 
   @Patch('me')

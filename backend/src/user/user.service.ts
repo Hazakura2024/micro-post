@@ -12,6 +12,7 @@ import { extname, join } from 'path';
 import { Auth } from 'src/entities/auth';
 import { User } from 'src/entities/user.entity';
 import { Equal, MoreThan, Repository } from 'typeorm';
+import { JwtUser } from 'src/auth/types/jwt-user.type';
 
 @Injectable()
 export class UserService {
@@ -58,35 +59,23 @@ export class UserService {
   }
 
   //NOTE: ユーザー取得
-  async getUser(token: string, id: number) {
-    // ログイン済かチェック
-    const now = new Date();
-    const auth = await this.authRepository.findOne({
-      where: {
-        token: Equal(token),
-        expire_at: MoreThan(now),
-      },
-    });
-
-    if (!auth) {
-      throw new ForbiddenException();
-    }
+  async getUser(user: JwtUser) {
 
     // ユーザー取得
-    const user = await this.userRepository.findOne({
+    const userData = await this.userRepository.findOne({
       where: {
-        id: Equal(id),
+        id: Equal(user.sub),
       },
     });
-    if (!user) {
+    if (!userData) {
       throw new NotFoundException();
     }
     return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      icon_path: user.icon_path,
-      createdAt: user.created_at,
+      id: userData.id,
+      name: userData.name,
+      email: userData.email,
+      icon_path: userData.icon_path,
+      createdAt: userData.created_at,
     };
   }
 
