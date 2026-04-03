@@ -3,16 +3,10 @@ import { apiClient } from "../hooks/useAxiosIntercepter";
 
 export const getUser = async (
   id: number,
-  token: string,
 ): Promise<UserResponse> => {
 
   const url = `/user/${String(id)}`;
-  const res = await apiClient.get<UserResponse>(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      'any-header': token,
-    }
-  });
+  const res = await apiClient.get<UserResponse>(url);
   return res.data;
   // NOTE: エラーは自動的にthrowされコンポーネント側でextractErrorMessageを使う
 
@@ -34,7 +28,7 @@ export const createUser = async (
 
 };
 
-export const editUser = async (token: string, name: string) => {
+export const editUser = async (name: string) => {
 
   const url = `/user/me}`;
   const res = await apiClient.patch(url, {
@@ -44,7 +38,7 @@ export const editUser = async (token: string, name: string) => {
 
 }
 
-export const uploadIcon = async (token: string, file: File) => {
+export const uploadIcon = async (file: File) => {
 
   const formData = new FormData();
   formData.append("icon", file);
@@ -57,7 +51,7 @@ export const uploadIcon = async (token: string, file: File) => {
   return res.data;
 }
 
-export const getIcon = async (token: string) => {
+export const getIcon = async () => {
   const url = `/user/me/icon`;
 
   const res = await apiClient.get(url);

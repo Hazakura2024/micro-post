@@ -6,7 +6,7 @@ import { FaPen, FaRegUserCircle, FaUserCircle } from "react-icons/fa";
 import { editUser, uploadIcon } from "../api/User";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
-import { PostListContext } from "../providers/PostListProvider";
+import { PostListContext } from "../contexts/PostListContext.tsx";
 import { UserContext } from "../contexts/UserContext";
 import { stringToColor } from "../utils/stringToColor";
 
@@ -48,10 +48,10 @@ const Header = () => {
   const onClickSend = async () => {
     setIsSubmittingName(true)
     try {
-      await editUser(userInfo.token, editingName)
+      await editUser(editingName)
       setEditingName("")
 
-      await saveInfoWithName(userInfo.id, userInfo.token,)
+      await saveInfoWithName(userInfo.id)
       toast.success("名前の変更に成功しました！")
       setIsEditingName(false)
       refreshCurrent()
@@ -68,7 +68,7 @@ const Header = () => {
     setIsSubmittingImage(true)
     try {
       if (!selectedFile) return;
-      const res = await uploadIcon(userInfo.token, selectedFile);
+      const res = await uploadIcon(selectedFile);
       console.log(res)
       setUserInfo({ ...userInfo, icon_path: res.icon_path })
       toast.success("アイコンの変更に成功しました！")

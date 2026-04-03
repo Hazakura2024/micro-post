@@ -1,21 +1,19 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { createPost } from "../api/Post";
-import { PostListContext } from "../providers/PostListProvider";
+import { PostListContext } from "../contexts/PostListContext.tsx";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
-import { UserContext } from "../contexts/UserContext";
 
 const SideBar = () => {
   const [msg, setMsg] = useState("");
-  const { userInfo } = useContext(UserContext);
   const { refreshCurrent } = useContext(PostListContext);
   const [isPosting, setIsPosting] = useState(false);
   const onSendClick = async () => {
     if (isPosting) return;
     setIsPosting(true);
     try {
-      const res = await createPost(userInfo.token, msg);
+      const res = await createPost(msg);
       if (res.success) {
         toast.success("投稿しました！");
       }

@@ -13,6 +13,6 @@ export const UserContext = createContext(
         // (学習メモ): SetStateAction: データの更新方法を、値を直接入れる&関数で更新するの両方で許可
         // (学習メモ): Dispach: Reactにおいて、「状態を更新するために、新しい値をエンジンに送り込む関数」であることを示す
         setUserInfo: Dispatch<SetStateAction<UserInfo>>;
-        saveInfoWithName: (id: number, token: string) => Promise<void>;
+        saveInfoWithName: (id: number) => Promise<void>;
     },
 );

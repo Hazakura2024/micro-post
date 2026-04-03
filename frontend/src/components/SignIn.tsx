@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import signIn from "../api/Auth";
+import React, { useContext, useState } from "react";
+import { signIn } from "../api/Auth";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { toast } from "react-toastify";
@@ -24,7 +24,7 @@ const SignIn = () => {
         toast.error("ログインに失敗しました");
       }
 
-      await saveInfoWithName(ret.user_id, ret.token);
+      await saveInfoWithName(ret.user_id);
       navigate("/main");
     } catch (error: unknown) {
       const msg = extractErrorMessage(error, "ログインできません");

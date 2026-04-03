@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { PostListContext } from "../providers/PostListProvider";
+import { PostListContext } from "../contexts/PostListContext.tsx";
 import Post from "./Post";
 import styled from "styled-components";
 

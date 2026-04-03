@@ -3,7 +3,7 @@ import type { PostType } from "../types/Post";
 import styled from "styled-components";
 import { deletePost } from "../api/Post";
 import { FaUserCircle } from "react-icons/fa";
-import { PostListContext } from "../providers/PostListProvider";
+import { PostListContext } from "../contexts/PostListContext.tsx";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { toast } from "react-toastify";
 import { UserContext } from "../contexts/UserContext";
@@ -35,7 +35,7 @@ const Post = ({
     if (isDeleting) return;
     setIsDeleting(true);
     try {
-      await deletePost(post.id, userInfo.token);
+      await deletePost(post.id);
       await getPostList();
       toast.success("削除しました");
     } catch (error) {

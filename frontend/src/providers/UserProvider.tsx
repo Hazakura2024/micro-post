@@ -16,24 +16,24 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [userInfo, setUserInfo] = useState<UserInfo>({ id: 0, name: "", icon_path: null, token: "" });
   // (学習メモ): value 属性に渡したオブジェクトが、中に入っている全コンポーネントからアクセス可能に。
 
-  const saveInfoWithName = async (id: number, token: string) => {
+  const saveInfoWithName = async (id: number) => {
     try {
-      const user = await getUser(id, token);
-      setUserInfo({
+      const user = await getUser(id);
+      setUserInfo(prev => ({
+        ...prev,
         id: id,
         name: user.name,
         icon_path: user.icon_path,
-        token: token,
-      });
+      }));
     } catch (error: unknown) {
       const msg = extractErrorMessage(error, "ユーザー情報が取得できません");
       toast.error(msg);
-      setUserInfo({
+      setUserInfo(prev => ({
+        ...prev,
         id: id,
         name: "",
         icon_path: "",
-        token: token,
-      });
+      }));
     }
   };
 

@@ -2,7 +2,6 @@ import type { CreatePostResponse, PostType } from "../types/Post";
 import { apiClient } from "../hooks/useAxiosIntercepter";
 
 export const createPost = async (
-  token: string,
   msg: string,
 ): Promise<CreatePostResponse> => {
   // (学習メモ): ここのvoidはレスポンスボディの型を指定しているだけで、resオブジェクト全体の型ではない。
@@ -14,7 +13,7 @@ export const createPost = async (
 
 };
 
-export const deletePost = async (id: number, token: string) => {
+export const deletePost = async (id: number) => {
   // (学習メモ): ここのvoidはレスポンスボディの型を指定しているだけで、resオブジェクト全体の型ではない。
   // (学習メモ): axiosがジェネリクスパラメータでdataにその型をセットしてくれる
   const res = await apiClient.delete(`/post/${id}`);
@@ -23,7 +22,6 @@ export const deletePost = async (id: number, token: string) => {
 };
 
 export const getList = async (
-  token: string,
   start: number = 0,
   records: number = 10,
   word?: string,

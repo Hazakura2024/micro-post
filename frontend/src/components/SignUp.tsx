@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import signIn from "../api/Auth";
+import { useContext, useState } from "react";
+import { signIn } from "../api/Auth";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { createUser } from "../api/User";
@@ -28,9 +28,9 @@ const SignUp = () => {
     // (学習メモ): /^...$/正規表現
     // (学習メモ): 正規表現.test(文字列) この文字列から検索
     // (学習メモ): [^...]  ...の否定
-    // (学習メモ): [^\s@]+　\s(空白)か@以外の文字1文字以上
+    // (学習メモ): [^\s@]+\s(空白)か@以外の文字1文字以上
     // (学習メモ): @  @が入る
-    // (学習メモ): \.　.が入る
+    // (学習メモ): \..が入る
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) {
       toast.error("正しいメールアドレスを入力してください");
       return;
@@ -49,7 +49,7 @@ const SignUp = () => {
 
       const ret = await signIn(userId, pass);
       if (ret?.token) {
-        await saveInfoWithName(ret.user_id, ret.token);
+        await saveInfoWithName(ret.user_id);
 
         navigate("/main");
       }

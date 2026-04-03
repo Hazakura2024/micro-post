@@ -1,37 +1,17 @@
 import React, {
   useMemo,
   useState,
-  createContext,
-  useContext,
   useEffect,
 } from "react";
-import type {
-  Dispatch,
-  SetStateAction,
-} from "react";
+
 import type { PostType } from "../types/Post";
 import { getList } from "../api/Post";
 
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { toast } from "react-toastify";
-import { UserContext } from "../contexts/UserContext";
+import { PostListContext } from "../contexts/PostListContext";
 
-export const PostListContext = createContext(
-  {} as {
-    postList: PostType[];
-    searchWord: string
-    setSearchWord: React.Dispatch<React.SetStateAction<string>>
-    searchName: string
-    setSearchName: React.Dispatch<React.SetStateAction<string>>
-    page: number
-    setPage: React.Dispatch<React.SetStateAction<number>>
-    setPostList: Dispatch<SetStateAction<PostType[]>>;
-    getPostList: (start?: number, record?: number, word?: string, user_name?: string) => Promise<void>;
-    isLoading: boolean;
-    setIsLoading: Dispatch<React.SetStateAction<boolean>>;
-    refreshCurrent: () => void
-  },
-);
+
 
 export const PostListProvider = ({
   children,
@@ -45,13 +25,11 @@ export const PostListProvider = ({
   const [searchName, setSearchName] = useState("");
   const [page, setPage] = useState(1);
 
-  const { userInfo } = useContext(UserContext);
-
   const getPostList = async (start?: number, record?: number, word?: string, user_name?: string) => {
     if (isLoading) return;
     setIsLoading(true);
     try {
-      const posts = await getList(userInfo.token, start, record, word, user_name);
+      const posts = await getList(start, record, word, user_name);
 
       if (posts) {
         const formattedPosts = posts.map((p: PostType) => ({
