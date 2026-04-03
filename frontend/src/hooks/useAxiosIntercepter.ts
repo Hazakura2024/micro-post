@@ -21,7 +21,7 @@ export const useAxiosIntercepter = () => {
             (config) => {
                 if (config.url !== '/auth' && config.url !== '/auth/refresh') {
                     const headers = axios.AxiosHeaders.from(config.headers)
-                    headers.set("Authorization", "Bearer" + userInfo.token)
+                    headers.set("Authorization", "Bearer " + userInfo.token)
                     config.headers = headers;
                 }
                 return config;

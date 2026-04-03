@@ -13,7 +13,7 @@ const SignUp = () => {
   const [userId, setUserId] = useState("");
   const [mail, setMail] = useState("");
   const [pass, setPass] = useState("");
-  const { saveInfoWithName } = useContext(UserContext);
+  const { setUserInfo, saveInfoWithName } = useContext(UserContext);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -49,6 +49,10 @@ const SignUp = () => {
 
       const ret = await signIn(userId, pass);
       if (ret?.token) {
+        setUserInfo(prev => ({
+          ...prev,
+          token: ret.token,
+        }))
         await saveInfoWithName(ret.user_id);
 
         navigate("/main");

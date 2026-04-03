@@ -6,12 +6,13 @@ import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { UserContext } from "../contexts/UserContext";
 
+
 const SignIn = () => {
   const navigate = useNavigate();
 
   const [userId, setUserId] = useState("");
   const [pass, setPass] = useState("");
-  const { saveInfoWithName } = useContext(UserContext);
+  const { setUserInfo, saveInfoWithName } = useContext(UserContext);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -22,8 +23,12 @@ const SignIn = () => {
       const ret = await signIn(userId, pass);
       if (!ret?.token) {
         toast.error("ログインに失敗しました");
+        return;
       }
-
+      setUserInfo(prev => ({
+        ...prev,
+        token: ret.token,
+      }))
       await saveInfoWithName(ret.user_id);
       navigate("/main");
     } catch (error: unknown) {
