@@ -1,11 +1,9 @@
 import type { UserResponse } from "../types/User";
 import { apiClient } from "../hooks/useAxiosIntercepter";
 
-export const getUser = async (
-  id: number,
-): Promise<UserResponse> => {
+export const getUser = async (): Promise<UserResponse> => {
 
-  const url = `/user/${String(id)}`;
+  const url = `/user/me`;
   const res = await apiClient.get<UserResponse>(url);
   return res.data;
   // NOTE: エラーは自動的にthrowされコンポーネント側でextractErrorMessageを使う

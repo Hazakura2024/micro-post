@@ -18,7 +18,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   const saveInfoWithName = async (id: number) => {
     try {
-      const user = await getUser(id);
+      const user = await getUser();
       setUserInfo(prev => ({
         ...prev,
         id: id,

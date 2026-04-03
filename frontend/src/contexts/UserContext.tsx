@@ -1,4 +1,4 @@
-import { createContext, type Dispatch, type SetStateAction } from "react";
+import { createContext } from "react";
 import type { UserInfo } from "../types/User";
 
 // (学習メモ): データの共有バケツの実体
