@@ -4,7 +4,7 @@ import SignIn from "./pages/SignIn";
 import Main from "./pages/Main";
 import { UserProvider } from "./providers/UserProvider";
 import { ToastContainer } from "react-toastify";
-import { useAxiosIntercepter } from "./hooks/useAxiosInterCepter";
+import { useAxiosIntercepter } from "./hooks/useAxiosIntercepter";
 
 const AxiosIntercepterSetup = ({ children }: { children: React.ReactNode }) => {
   // (学習メモ):  ここでフックを呼び出すことで、アプリ全体にインターセプターが適用される

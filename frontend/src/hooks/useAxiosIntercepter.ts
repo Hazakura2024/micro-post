@@ -13,7 +13,7 @@ export const apiClient = axios.create({
 })
 
 export const useAxiosIntercepter = () => {
-    const { userInfo, setUserInfo } = useContext(UserContext);
+    const { setUserInfo } = useContext(UserContext);
 
     useEffect(() => {
         const responseIntercepter = apiClient.interceptors.response.use(
@@ -22,9 +22,10 @@ export const useAxiosIntercepter = () => {
 
                 const originalRequest = error.config;
 
-                if (error.response?.status == 401
+                if (error.response?.status === 401
                     && !originalRequest._retry
                     && originalRequest.url !== '/auth'
+                    && originalRequest.url !== '/auth/refresh'
                 ) {
                     originalRequest._retry = true;
 
@@ -32,10 +33,10 @@ export const useAxiosIntercepter = () => {
                         const res = await apiClient.post<AuthResponse>('/auth/refresh')
                         const newAccessToken = res.data.token;
 
-                        setUserInfo({
-                            ...userInfo,
+                        setUserInfo(prev => ({
+                            ...prev,
                             token: newAccessToken,
-                        });
+                        }));
 
                         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
@@ -51,6 +52,7 @@ export const useAxiosIntercepter = () => {
                         return Promise.reject(error);
                     }
                 }
+                return Promise.reject(error);
             }
         )
         return () => {
