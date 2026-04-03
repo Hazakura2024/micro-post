@@ -6,5 +6,7 @@ export const signIn = async (userId: string, pass: string): Promise<AuthResponse
     user_id: userId,
     password: pass,
   });
+  console.log("signIn")
+  console.log(res.data)
   return res.data;
 };

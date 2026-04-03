@@ -34,6 +34,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         name: "",
         icon_path: "",
       }));
+      throw error;
     }
   };
 

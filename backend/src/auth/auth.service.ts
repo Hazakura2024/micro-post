@@ -101,6 +101,9 @@ export class AuthService {
   }
 
   async refreshAuth(refresh_token: string) {
+    if (!refresh_token || typeof refresh_token !== 'string') {
+      throw new UnauthorizedException('refresh_token がありません');
+    }
     const refresh_token_hash = sha256.sha256(refresh_token);
 
     // NOTE: 署名検証

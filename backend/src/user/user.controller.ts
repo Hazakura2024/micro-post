@@ -24,7 +24,7 @@ import type { JwtUser } from 'src/auth/types/jwt-user.type';
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
-  @Post()
+  @Post('create')
   async createUser(@Body() createUserDto: CreateUserDto) {
     return await this.userService.createUser(
       createUserDto.name,
