@@ -19,7 +19,7 @@ export const useAxiosIntercepter = () => {
         // NOTE: access_tokenを自動でheaderに設定する処理
         const requestInterceptor = apiClient.interceptors.request.use(
             (config) => {
-                if (config.url !== '/auth' && config.url !== '/auth/refresh') {
+                if (config.url !== '/auth' && config.url !== '/auth/refresh' && config.url !== 'user') {
                     const headers = axios.AxiosHeaders.from(config.headers)
                     headers.set("Authorization", "Bearer " + userInfo.token)
                     config.headers = headers;
@@ -40,6 +40,7 @@ export const useAxiosIntercepter = () => {
                     && !originalRequest._retry
                     && originalRequest.url !== '/auth'
                     && originalRequest.url !== '/auth/refresh'
+                    && originalRequest.url !== 'user'
                 ) {
                     originalRequest._retry = true;
 
