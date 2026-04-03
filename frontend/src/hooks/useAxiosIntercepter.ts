@@ -13,9 +13,23 @@ export const apiClient = axios.create({
 })
 
 export const useAxiosIntercepter = () => {
-    const { setUserInfo } = useContext(UserContext);
+    const { userInfo, setUserInfo } = useContext(UserContext);
 
     useEffect(() => {
+        // NOTE: access_tokenを自動でheaderに設定する処理
+        const requestInterceptor = apiClient.interceptors.request.use(
+            (config) => {
+                if (config.url !== '/auth' && config.url !== '/auth/refresh') {
+                    const headers = axios.AxiosHeaders.from(config.headers)
+                    headers.set("Authorization", "Bearer" + userInfo.token)
+                    config.headers = headers;
+                }
+                return config;
+            },
+            (error) => Promise.reject(error),
+        )
+
+        // NOTE: access_token期限切れ時に一度だけrefreshAuthを飛ばす処理
         const responseIntercepter = apiClient.interceptors.response.use(
             (response) => response,
             async (error) => {
@@ -56,8 +70,9 @@ export const useAxiosIntercepter = () => {
             }
         )
         return () => {
+            apiClient.interceptors.request.eject(requestInterceptor);
             apiClient.interceptors.response.eject(responseIntercepter);
         }
-    }, [setUserInfo])
+    }, [userInfo.token, setUserInfo])
 }
 
