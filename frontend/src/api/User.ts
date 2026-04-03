@@ -30,7 +30,7 @@ export const createUser = async (
 
 export const editUser = async (name: string) => {
 
-  const url = `/user/me}`;
+  const url = `/user/me`;
   const res = await apiClient.patch(url, {
     name: name,
   });
