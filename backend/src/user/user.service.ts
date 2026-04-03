@@ -1,6 +1,5 @@
 import {
   ConflictException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -11,7 +10,7 @@ import { promises } from 'fs';
 import { extname, join } from 'path';
 import { Auth } from 'src/entities/auth';
 import { User } from 'src/entities/user.entity';
-import { Equal, MoreThan, Repository } from 'typeorm';
+import { Equal, Repository } from 'typeorm';
 import { JwtUser } from 'src/auth/types/jwt-user.type';
 
 @Injectable()
@@ -80,7 +79,6 @@ export class UserService {
 
   // ユーザー名変更
   async editName(user: JwtUser, name: string) {
-
     // NOTE: ユーザー名の重複チェック
     const existingUserByName = await this.userRepository.findOne({
       where: { name: Equal(name) },
