@@ -168,7 +168,7 @@ export class AuthService {
     return resData;
   }
 
-  async logout() {
-
+  async logout(user: JwtUser) {
+    await this.authRepository.delete({ user_id: user.sub });
   }
 }

@@ -1,6 +1,7 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import type { Request, Response } from 'express';
+import { JwtUser } from './types/jwt-user.type';
 
 @Controller('auth')
 export class AuthController {
@@ -48,5 +49,11 @@ export class AuthController {
       userid: tokens.user_id,
       token: tokens.access_token,
     };
+  }
+
+  @Delete('logout')
+  async logout(@Req() req: Request) {
+    const user = req.user as JwtUser;
+    return await this.authService.logout(user);
   }
 }
