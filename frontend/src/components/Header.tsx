@@ -9,6 +9,7 @@ import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { PostListContext } from "../contexts/PostListContext.tsx";
 import { UserContext } from "../contexts/UserContext";
 import { stringToColor } from "../utils/stringToColor";
+import { logout } from "../api/Auth.ts";
 
 const Header = () => {
   const { userInfo, setUserInfo, saveInfoWithName } = useContext(UserContext);
@@ -24,9 +25,15 @@ const Header = () => {
 
   const navigate = useNavigate();
 
-  const onClickLogout = () => {
-    setUserInfo({ id: 0, name: "", icon_path: null, token: "" });
-    navigate("/");
+  const onClickLogout = async () => {
+    try {
+      await logout();
+    } catch {
+      // NOTE: ユーザー情報を消すことを優先
+    } finally {
+      setUserInfo({ id: 0, name: "", icon_path: null, token: "" });
+      navigate("/");
+    }
   };
 
   const onClickEdit = () => {

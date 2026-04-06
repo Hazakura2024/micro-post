@@ -12,5 +12,5 @@ export const signIn = async (userId: string, pass: string): Promise<AuthResponse
 };
 
 export const logout = async () => {
-  await apiClient.delete('/logout')
+  await apiClient.delete('/auth/logout')
 }
