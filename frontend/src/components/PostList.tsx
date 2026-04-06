@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { PostListContext } from "../contexts/PostListContext.tsx";
 import Post from "./Post";
 import styled from "styled-components";
@@ -33,6 +33,9 @@ const PostList = () => {
   //   return () => clearTimeout(t)
   // }, [wordText, userText])
 
+  const [localSearchWord, setLocalSearchWord] = useState("");
+  const [localSearchName, setLocalSearchName] = useState("");
+
   // 初表示時の取得
   useEffect(() => {
     getPostList(0, undefined, searchWord, searchName);
@@ -53,6 +56,8 @@ const PostList = () => {
     setSearchName("")
     setSearchWord("")
     setPage(1)
+    setLocalSearchName("")
+    setLocalSearchWord("")
   }
 
   const onClickNext = () => {
@@ -64,13 +69,17 @@ const PostList = () => {
   }
 
   const onChangeSerachWord = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
-    setPage(1)
-    setSearchWord(e.target.value)
+    setLocalSearchWord(e.target.value)
 
   }
   const onChangeSerachName = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
+    setLocalSearchName(e.target.value)
+  }
+
+  const onClickSearch = () => {
     setPage(1)
-    setSearchName(e.target.value)
+    setSearchName(localSearchName)
+    setSearchWord(localSearchWord)
   }
 
 
@@ -82,9 +91,10 @@ const PostList = () => {
         <SReloadButton disabled={isLoading} onClick={onClickReload}>
           更新
         </SReloadButton>
-        <input type="text" value={searchWord} onChange={(e) => onChangeSerachWord(e)} placeholder="内容を検索" />
-        <input type="text" value={searchName} onChange={(e) => onChangeSerachName(e)} placeholder="ユーザーの投稿を検索" />
-        <SClearButton onClick={onClickClear}>クリア</SClearButton>
+        <input type="text" value={localSearchWord} onChange={(e) => onChangeSerachWord(e)} placeholder="内容を検索" />
+        <input type="text" value={localSearchName} onChange={(e) => onChangeSerachName(e)} placeholder="ユーザーの投稿を検索" />
+        <SMiniButton onClick={onClickSearch}>検索</SMiniButton>
+        <SMiniButton onClick={onClickClear}>クリア</SMiniButton>
       </SHeader>
       {isLoading && <div>読込み中...</div>}
 
@@ -157,11 +167,11 @@ const SPageButton = styled.button`
   }
 `;
 
-const SClearButton = styled.button`
+const SMiniButton = styled.button`
   background-color: #00a3af;
   border-color: #eeeeee;
   padding: 4px;
-  margin: 16px;
+  margin: 6px;
   border-radius: 8px;
   color: #fafafa;
   width: 54px;
