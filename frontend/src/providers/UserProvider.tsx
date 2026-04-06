@@ -41,15 +41,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  // (学習メモ): レンダリングへの影響を考慮し、メモ化する
-  const value = useMemo(
-    () => ({ userInfo, setUserInfo, saveInfoWithName }),
-    [userInfo],
-  );
-
-
   const [authLoading, setAuthLoading] = useState(true);
-
 
   const bootstrappedRef = useRef<Promise<void> | null>(null);
 
@@ -77,7 +69,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             icon_path: user.icon_path,
           }))
         } catch {
-
           delete apiClient.defaults.headers.common.Authorization;
           setUserInfo({ id: 0, name: "", icon_path: null, token: "" });
         }
@@ -88,6 +79,12 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       setAuthLoading(false);
     })
   }, [])
+
+  // (学習メモ): レンダリングへの影響を考慮し、メモ化する
+  const value = useMemo(
+    () => ({ authLoading, userInfo, setUserInfo, saveInfoWithName }),
+    [userInfo, authLoading],
+  );
 
   if (authLoading) {
     return <div>Loading...</div>
