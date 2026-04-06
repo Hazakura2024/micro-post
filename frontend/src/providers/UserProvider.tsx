@@ -10,6 +10,7 @@ import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { toast } from "react-toastify";
 import { UserContext } from "../contexts/UserContext";
 import { apiClient } from "../hooks/useAxiosIntercepter";
+import { useNavigate } from "react-router-dom";
 
 // (学習メモ): Providerコンポーネント:アプリ全体を包み込むための部品。
 // (学習メモ): propsはany となっているが、Provider の中身（children）が入ってくる。
@@ -41,12 +42,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  // (学習メモ): レンダリングへの影響を考慮し、メモ化する
-  const value = useMemo(
-    () => ({ userInfo, setUserInfo, saveInfoWithName }),
-    [userInfo],
-  );
 
+  const navigate = useNavigate()
 
   const [authLoading, setAuthLoading] = useState(true);
 
@@ -76,6 +73,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             name: user.name,
             icon_path: user.icon_path,
           }))
+          if (window.location.pathname !== "/main") {
+            navigate("main", { replace: true })
+          }
         } catch {
 
           delete apiClient.defaults.headers.common.Authorization;
@@ -88,6 +88,12 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       setAuthLoading(false);
     })
   }, [])
+
+  // (学習メモ): レンダリングへの影響を考慮し、メモ化する
+  const value = useMemo(
+    () => ({ authLoading, userInfo, setUserInfo, saveInfoWithName }),
+    [userInfo, authLoading],
+  );
 
   if (authLoading) {
     return <div>Loading...</div>

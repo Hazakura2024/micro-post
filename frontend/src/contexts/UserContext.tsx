@@ -8,6 +8,7 @@ export const UserContext = createContext(
     // (学習メモ): asは型強制
     // (学習メモ): 最初は実体がないので無理やり教えておく
     {} as {
+        authLoading: boolean
         userInfo: UserInfo;
         // (学習メモ): 以下はsetUserInfoにカーソルを当てたら分かるもの。
         // (学習メモ): SetStateAction: データの更新方法を、値を直接入れる&関数で更新するの両方で許可
