@@ -47,11 +47,11 @@ const PostList = () => {
     setPage(page - 1)
   }
 
-  const onChangeSerachWord = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
+  const onChangeSearchWord = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
     setLocalSearchWord(e.target.value)
 
   }
-  const onChangeSerachName = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
+  const onChangeSearchName = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
     setLocalSearchName(e.target.value)
   }
 
@@ -70,8 +70,8 @@ const PostList = () => {
         <SReloadButton disabled={isLoading} onClick={onClickReload}>
           更新
         </SReloadButton>
-        <input type="text" value={localSearchWord} onChange={(e) => onChangeSerachWord(e)} placeholder="内容を検索" />
-        <input type="text" value={localSearchName} onChange={(e) => onChangeSerachName(e)} placeholder="ユーザーの投稿を検索" />
+        <input type="text" value={localSearchWord} onChange={(e) => onChangeSearchWord(e)} placeholder="内容を検索" />
+        <input type="text" value={localSearchName} onChange={(e) => onChangeSearchName(e)} placeholder="ユーザーの投稿を検索" />
         <SMiniButton onClick={onClickSearch}>検索</SMiniButton>
         <SMiniButton onClick={onClickClear}>クリア</SMiniButton>
       </SHeader>
