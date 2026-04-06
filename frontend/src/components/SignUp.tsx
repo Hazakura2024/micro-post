@@ -6,6 +6,7 @@ import { createUser } from "../api/User";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { UserContext } from "../contexts/UserContext";
+import { apiClient } from "../hooks/useAxiosIntercepter";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ const SignUp = () => {
       await createUser(userId, mail, pass);
 
       const ret = await signIn(userId, pass);
+      apiClient.defaults.headers.common.Authorization = "Bearer " + ret.token;
       if (ret?.token) {
         setUserInfo(prev => ({
           ...prev,

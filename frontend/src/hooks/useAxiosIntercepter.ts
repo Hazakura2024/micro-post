@@ -48,6 +48,7 @@ export const useAxiosIntercepter = () => {
 
                     try {
                         const res = await apiClient.post<AuthResponse>('/auth/refresh')
+                        console.log('refreshされました。')
                         const newAccessToken = res.data.token;
 
                         setUserInfo(prev => ({

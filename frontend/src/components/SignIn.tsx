@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { UserContext } from "../contexts/UserContext";
+import { apiClient } from "../hooks/useAxiosIntercepter";
 
 
 const SignIn = () => {
@@ -25,6 +26,8 @@ const SignIn = () => {
         toast.error("ログインに失敗しました");
         return;
       }
+      apiClient.defaults.headers.common.Authorization = "Bearer " + ret.token;
+
       setUserInfo(prev => ({
         ...prev,
         token: ret.token,
