@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaPen, FaRegUserCircle, FaUserCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { editUser, uploadIcon } from "../../api/User.ts";
-import { logout } from "../../api/Auth.ts";
 import { UserContext } from "../../contexts/UserContext.tsx";
 import { PostListContext } from "../../contexts/PostListContext.tsx";
 import { extractErrorMessage } from "../../utils/extractErrorMessage.ts";
 import { stringToColor } from "../../utils/stringToColor.ts";
+import LogoutButton from "./parts/LogoutButton.tsx";
 
 const Header = () => {
   const { userInfo, setUserInfo, saveInfoWithName } = useContext(UserContext);
@@ -22,18 +21,9 @@ const Header = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>()
   const [isSubmittingImage, setIsSubmittingImage] = useState(false)
 
-  const navigate = useNavigate();
 
-  const onClickLogout = async () => {
-    try {
-      await logout();
-    } catch {
-      // NOTE: ユーザー情報を消すことを優先
-    } finally {
-      setUserInfo({ id: 0, name: "", icon_path: null, token: "" });
-      navigate("/");
-    }
-  };
+
+
 
   const onClickEdit = () => {
     setIsEditingName((prev) => !prev)
@@ -143,7 +133,7 @@ const Header = () => {
           <FaRegUserCircle />
         </SIconButton>
 
-        <SLogout onClick={onClickLogout}>ログアウト</SLogout>
+        <LogoutButton />
 
       </SRightItem>
     </SHeader>
@@ -184,15 +174,7 @@ const SName = styled.div`
   margin-right: 8px;
 `;
 
-const SLogout = styled.button`
-  background-color: transparent;
-  color: white;
-  border: none;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  text-align: center;
-  cursor: pointer;
-`;
+
 
 const SIconButton = styled.button`
   background-color: transparent;
