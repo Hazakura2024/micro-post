@@ -51,49 +51,42 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [authLoading, setAuthLoading] = useState(true);
 
 
-  const bootstrappedRef = useRef(false);
+  const bootstrappedRef = useRef<Promise<void> | null>(null);
 
   useEffect(() => {
-    if (bootstrappedRef.current) {
-      setAuthLoading(false)
-      return
+    if (!bootstrappedRef.current) {
+      bootstrappedRef.current = (async () => {
+        try {
+          const res = await apiClient.post('/auth/refresh');
+          const token = res.data.token;
+
+          apiClient.defaults.headers.common.Authorization = "Bearer " + token;
+
+
+          setUserInfo(prev => ({
+            ...prev,
+            token,
+          }))
+
+          const user = await getUser();
+
+          setUserInfo((prev) => ({
+            ...prev,
+            id: user.id,
+            name: user.name,
+            icon_path: user.icon_path,
+          }))
+        } catch {
+
+          delete apiClient.defaults.headers.common.Authorization;
+          setUserInfo({ id: 0, name: "", icon_path: null, token: "" });
+        }
+      })()
     };
-    bootstrappedRef.current = true;
-    let mounted = true;
 
-    const bootstrapAuth = async () => {
-      try {
-        const res = await apiClient.post('/auth/refresh');
-        const token = res.data.token;
-
-        apiClient.defaults.headers.common.Authorization = "Bearer " + token;
-
-        if (!mounted) return;
-        setUserInfo(prev => ({
-          ...prev,
-          token,
-        }))
-
-        const user = await getUser();
-        if (!mounted) return;
-        setUserInfo((prev) => ({
-          ...prev,
-          id: user.id,
-          name: user.name,
-          icon_path: user.icon_path,
-        }))
-      } catch {
-        if (!mounted) return;
-        delete apiClient.defaults.headers.common.Authorization;
-        setUserInfo({ id: 0, name: "", icon_path: null, token: "" });
-      } finally {
-        if (mounted) setAuthLoading(false);
-      }
-    }
-    void bootstrapAuth();
-    return () => {
-      mounted = false;
-    }
+    bootstrappedRef.current.finally(() => {
+      setAuthLoading(false);
+    })
   }, [])
 
   if (authLoading) {

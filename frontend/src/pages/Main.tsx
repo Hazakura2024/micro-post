@@ -10,9 +10,10 @@ const Main = () => {
   const loggedIn = userInfo.token !== "";
 
   return (
-    <PostListProvider>
-      {loggedIn ? <Layout></Layout> : <Navigate replace to="/" />}
-    </PostListProvider>
+    <>
+      {loggedIn ? <PostListProvider><Layout></Layout ></PostListProvider > : <Navigate replace to="/" />
+      }
+    </>
   );
 };
 

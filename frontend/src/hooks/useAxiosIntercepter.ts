@@ -26,24 +26,27 @@ export const useAxiosIntercepter = () => {
         const requestInterceptor = apiClient.interceptors.request.use(
             (config) => {
 
+                const isPublic =
+                    config.url === "/auth" ||
+                    config.url === "/auth/refresh" ||
+                    config.url === "/user/create";
 
-                if (userInfo.token) {
-                    if (config.url !== '/auth' && config.url !== '/auth/refresh' && config.url !== '/user/create') {
-                        const headers = axios.AxiosHeaders.from(config.headers)
-                        const already = headers.get("Authorization");
-                        if (already) {
-                            config.headers = headers;
-                            return config;
-                        }
-
-                        if (tokenRef.current && config.url !== "/auth" && config.url !== "/auth/refresh" && config.url !== "/user/create") {
-                            headers.set("Authorization", "Bearer " + tokenRef.current)
-                            config.headers = headers;
-                        }
-
-
+                if (!isPublic) {
+                    const headers = axios.AxiosHeaders.from(config.headers)
+                    const already = headers.get("Authorization");
+                    if (already) {
+                        config.headers = headers;
+                        return config;
                     }
+
+                    if (tokenRef.current) {
+                        headers.set("Authorization", "Bearer " + tokenRef.current)
+                        config.headers = headers;
+                    }
+
+
                 }
+
                 return config;
             },
             (error) => Promise.reject(error),
