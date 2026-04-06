@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { AuthResponse } from "../types/Auth";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { UserContext } from "../contexts/UserContext";
 
 
@@ -15,15 +15,33 @@ export const apiClient = axios.create({
 export const useAxiosIntercepter = () => {
     const { userInfo, setUserInfo } = useContext(UserContext);
 
+    const tokenRef = useRef(userInfo.token);
+    useEffect(() => {
+        tokenRef.current = userInfo.token;
+    }, [userInfo.token])
+
+
     useEffect(() => {
         // NOTE: access_tokenを自動でheaderに設定する処理
         const requestInterceptor = apiClient.interceptors.request.use(
             (config) => {
+
+
                 if (userInfo.token) {
                     if (config.url !== '/auth' && config.url !== '/auth/refresh' && config.url !== '/user/create') {
                         const headers = axios.AxiosHeaders.from(config.headers)
-                        headers.set("Authorization", "Bearer " + userInfo.token)
-                        config.headers = headers;
+                        const already = headers.get("Authorization");
+                        if (already) {
+                            config.headers = headers;
+                            return config;
+                        }
+
+                        if (tokenRef.current && config.url !== "/auth" && config.url !== "/auth/refresh" && config.url !== "/user/create") {
+                            headers.set("Authorization", "Bearer " + tokenRef.current)
+                            config.headers = headers;
+                        }
+
+
                     }
                 }
                 return config;
@@ -53,6 +71,7 @@ export const useAxiosIntercepter = () => {
                         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
                         apiClient.defaults.headers.common.Authorization = "Bearer " + newAccessToken;
+                        tokenRef.current = newAccessToken;
 
                         setUserInfo(prev => ({
                             ...prev,
