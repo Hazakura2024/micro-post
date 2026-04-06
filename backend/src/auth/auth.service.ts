@@ -167,4 +167,8 @@ export class AuthService {
 
     return resData;
   }
+
+  async logout() {
+
+  }
 }
