@@ -16,23 +16,6 @@ const PostList = () => {
     setSearchName,
   } = useContext(PostListContext);
 
-  // const [page, setPage] = useState(1);
-  // const [wordText, setWordText] = useState("");
-  // const [userText, setUserText] = useState("");
-
-  // FIX: 入力即時api発火で良くないので修正する必要あり
-
-  // // 入力を遅くする
-  // const [debouncedWord, setDebouncedWord] = useState(wordText)
-  // const [debouncedUser, setDebouncedUser] = useState(userText)
-  // useEffect(() => {
-  //   const t = setTimeout(() => {
-  //     setDebouncedUser(userText)
-  //     setDebouncedWord(wordText)
-  //   }, 400);
-  //   return () => clearTimeout(t)
-  // }, [wordText, userText])
-
   const [localSearchWord, setLocalSearchWord] = useState("");
   const [localSearchName, setLocalSearchName] = useState("");
 
@@ -41,10 +24,6 @@ const PostList = () => {
     getPostList(0, undefined, searchWord, searchName);
     setPage(1)
   }, []);
-
-  // useEffect(() => {
-  //   getPostList((page - 1) * 10, undefined, wordText, userText);
-  // }, [page]);
 
   // 更新ボタンはこのままで良さそう
   const onClickReload = () => {
