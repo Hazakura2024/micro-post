@@ -10,3 +10,7 @@ export const signIn = async (userId: string, pass: string): Promise<AuthResponse
   console.log(res.data)
   return res.data;
 };
+
+export const logout = async () => {
+  await apiClient.delete('/logout')
+}
