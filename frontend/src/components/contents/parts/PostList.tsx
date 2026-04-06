@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { PostListContext } from "../contexts/PostListContext.tsx";
-import Post from "./Post";
+import { PostListContext } from "../../../contexts/PostListContext.tsx";
+import Post from "./Post.tsx";
 import styled from "styled-components";
 
 const PostList = () => {

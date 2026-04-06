@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
-import { signIn } from "../api/Auth";
+import { signIn } from "../../api/Auth";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { toast } from "react-toastify";
-import { extractErrorMessage } from "../utils/extractErrorMessage";
-import { UserContext } from "../contexts/UserContext";
-import { apiClient } from "../hooks/useAxiosIntercepter";
+import { extractErrorMessage } from "../../utils/extractErrorMessage";
+import { UserContext } from "../../contexts/UserContext";
+import { apiClient } from "../../hooks/useAxiosIntercepter";
 
 
 const SignIn = () => {

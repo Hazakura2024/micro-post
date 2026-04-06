@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
-import { createPost } from "../api/Post";
-import { PostListContext } from "../contexts/PostListContext.tsx";
+import { createPost } from "../../api/Post.ts";
+import { PostListContext } from "../../contexts/PostListContext.tsx";
 import styled from "styled-components";
 import { toast } from "react-toastify";
-import { extractErrorMessage } from "../utils/extractErrorMessage";
+import { extractErrorMessage } from "../../utils/extractErrorMessage.ts";
 
 const SideBar = () => {
   const [msg, setMsg] = useState("");

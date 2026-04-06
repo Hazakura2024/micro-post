@@ -1,15 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaPen, FaRegUserCircle, FaUserCircle } from "react-icons/fa";
-import { editUser, uploadIcon } from "../api/User";
 import { toast } from "react-toastify";
-import { extractErrorMessage } from "../utils/extractErrorMessage";
-import { PostListContext } from "../contexts/PostListContext.tsx";
-import { UserContext } from "../contexts/UserContext";
-import { stringToColor } from "../utils/stringToColor";
-import { logout } from "../api/Auth.ts";
+import { editUser, uploadIcon } from "../../api/User.ts";
+import { logout } from "../../api/Auth.ts";
+import { UserContext } from "../../contexts/UserContext.tsx";
+import { PostListContext } from "../../contexts/PostListContext.tsx";
+import { extractErrorMessage } from "../../utils/extractErrorMessage.ts";
+import { stringToColor } from "../../utils/stringToColor.ts";
 
 const Header = () => {
   const { userInfo, setUserInfo, saveInfoWithName } = useContext(UserContext);
@@ -105,19 +104,20 @@ const Header = () => {
 
   }, [selectedFile])
 
-
-
-
-
-
   return (
     <SHeader>
       <SLogo>MicroPost</SLogo>
       <SRightItem>
         {isEditingName
           ? <div>
-            <SInput type="text" placeholder="名前を編集..." value={editingName} onChange={e => setEditingName(e.target.value)} />
-            <SSubmitButton onClick={onClickSend} disabled={isSubmittingName || editingName.length > 20}>変更</SSubmitButton>
+            <SInput
+              type="text"
+              placeholder="名前を編集..."
+              value={editingName}
+              onChange={e => setEditingName(e.target.value)} />
+            <SSubmitButton
+              onClick={onClickSend}
+              disabled={isSubmittingName || editingName.length > 20}>変更</SSubmitButton>
           </div>
           : <SName>{userInfo.name}さん</SName>}
 
@@ -127,7 +127,9 @@ const Header = () => {
             {previewUrl ? <SImage src={previewUrl} alt="選択中の画像プレビュー" /> : <div>画像未選択</div>}
             <SSubmitButton onClick={onClickSubmitImage} disabled={isSubmittingImage}>送信</SSubmitButton>
           </div>
-          : (userInfo.icon_path ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${userInfo.icon_path}`} /> : <FaUserCircle color={stringToColor(userInfo.name)} />)}
+          : (userInfo.icon_path
+            ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${userInfo.icon_path}`} />
+            : <FaUserCircle color={stringToColor(userInfo.name)} />)}
 
 
 

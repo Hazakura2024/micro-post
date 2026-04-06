@@ -1,13 +1,13 @@
 import { useContext, useState } from "react";
-import type { PostType } from "../types/Post";
+import type { PostType } from "../../../types/Post.ts";
 import styled from "styled-components";
-import { deletePost } from "../api/Post";
+import { deletePost } from "../../../api/Post.ts";
 import { FaUserCircle } from "react-icons/fa";
-import { PostListContext } from "../contexts/PostListContext.tsx";
-import { extractErrorMessage } from "../utils/extractErrorMessage";
+import { PostListContext } from "../../../contexts/PostListContext.tsx";
+import { extractErrorMessage } from "../../../utils/extractErrorMessage.ts";
 import { toast } from "react-toastify";
-import { UserContext } from "../contexts/UserContext";
-import { stringToColor } from "../utils/stringToColor";
+import { UserContext } from "../../../contexts/UserContext.tsx";
+import { stringToColor } from "../../../utils/stringToColor.ts";
 
 // (学習メモ): propsはオブジェクトになるので、左側に分割代入
 const Post = ({
