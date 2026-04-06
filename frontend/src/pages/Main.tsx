@@ -6,13 +6,8 @@ import { Navigate } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
 
 const Main = () => {
-  const { authLoading, userInfo } = useContext(UserContext);
+  const { userInfo } = useContext(UserContext);
   const loggedIn = userInfo.token !== "";
-
-  if (authLoading) {
-    console.log('authLoading')
-    return <div>Loading...</div>
-  }
 
   return (
     <>
