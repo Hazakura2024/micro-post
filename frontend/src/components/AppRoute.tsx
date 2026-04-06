@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Main from '../pages/Main'
 import { UserContext } from '../contexts/UserContext'
-import SignIn from './SignIn'
+import SignIn from '../pages/SignIn'
 
 const AppRoute = () => {
     const { userInfo, authLoading } = useContext(UserContext)
