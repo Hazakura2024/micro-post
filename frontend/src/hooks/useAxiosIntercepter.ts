@@ -50,13 +50,16 @@ export const useAxiosIntercepter = () => {
                         const res = await apiClient.post<AuthResponse>('/auth/refresh')
                         console.log('refreshされました。')
                         const newAccessToken = res.data.token;
+                        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+                        apiClient.defaults.headers.common.Authorization = "Bearer " + newAccessToken;
 
                         setUserInfo(prev => ({
                             ...prev,
                             token: newAccessToken,
                         }));
 
-                        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
 
                         return apiClient(originalRequest)
 
