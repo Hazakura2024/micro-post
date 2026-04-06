@@ -7,20 +7,24 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from 'src/dto/create-user.dto';
 import { EditNameDto } from 'src/dto/edit-name.dto';
-import type { Express } from 'express';
+import type { Express, Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '@nestjs/passport';
+import type { JwtUser } from 'src/auth/types/jwt-user.type';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
-  @Post()
+  @Post('create')
   async createUser(@Body() createUserDto: CreateUserDto) {
     return await this.userService.createUser(
       createUserDto.name,
@@ -29,33 +33,35 @@ export class UserController {
     );
   }
 
-  @Get(':id')
-  async getUser(@Param('id') id: number, @Query('token') token: string) {
-    return await this.userService.getUser(token, id);
+  @Get('me')
+  @UseGuards(AuthGuard('jwt'))
+  async getUser(@Req() req: Request) {
+    const user = req.user as JwtUser;
+    return await this.userService.getUser(user);
   }
 
   @Patch('me')
-  async editUser(
-    @Query('token') token: string,
-    @Body() editNameDto: EditNameDto,
-  ) {
-    return await this.userService.editName(token, editNameDto.name);
+  @UseGuards(AuthGuard('jwt'))
+  async editUser(@Body() editNameDto: EditNameDto, @Req() req: Request) {
+    const user = req.user as JwtUser;
+    return await this.userService.editName(user, editNameDto.name);
   }
 
   @UseInterceptors(FileInterceptor('icon'))
   @Patch('me/icon')
-  uploadIcon(
-    @Query('token') token: string,
-    @UploadedFile() file?: Express.Multer.File,
-  ) {
+  @UseGuards(AuthGuard('jwt'))
+  uploadIcon(@Req() req: Request, @UploadedFile() file?: Express.Multer.File) {
+    const user = req.user as JwtUser;
     if (!file) {
-      throw new BadRequestException('画像ファイルを読み込めません')
+      throw new BadRequestException('画像ファイルを読み込めません');
     }
-    return this.userService.uploadImage(token, file);
+    return this.userService.uploadImage(user, file);
   }
 
   @Get('me/icon')
-  async getIcon(@Query('token') token: string) {
-    return this.userService.getIcon(token);
+  @UseGuards(AuthGuard('jwt'))
+  async getIcon(@Req() req: Request) {
+    const user = req.user as JwtUser;
+    return this.userService.getIcon(user);
   }
 }

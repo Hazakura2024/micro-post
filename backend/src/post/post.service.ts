@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { JwtUser } from 'src/auth/types/jwt-user.type';
 import { Auth } from 'src/entities/auth';
 import { MicroPost } from 'src/entities/micropost';
 import { Equal, MoreThan, Repository } from 'typeorm';
@@ -13,26 +14,12 @@ export class PostService {
   constructor(
     @InjectRepository(MicroPost)
     private microPostRepository: Repository<MicroPost>,
-    @InjectRepository(Auth)
-    private AuthRepository: Repository<Auth>,
   ) { }
 
-  async createPost(message: string, token: string) {
-    // NOTE: ログイン済みかチェック
-    const now = new Date();
-    const auth = await this.AuthRepository.findOne({
-      where: {
-        token: Equal(token),
-        expire_at: MoreThan(now),
-      },
-    });
-    if (!auth) {
-      throw new ForbiddenException();
-    }
-
+  async createPost(message: string, user: JwtUser) {
     // NOTE: レコードを作成
     const record = {
-      user_id: auth.user_id,
+      user_id: user.sub,
       content: message,
     };
     const savedPost = await this.microPostRepository.save(record);
@@ -43,18 +30,7 @@ export class PostService {
     };
   }
 
-  async deletePost(id: number, token: string) {
-    // NOTE: ログイン済かチェック
-    const now = new Date();
-    const auth = await this.AuthRepository.findOne({
-      where: {
-        token: Equal(token),
-        expire_at: MoreThan(now),
-      },
-    });
-    if (!auth) {
-      throw new ForbiddenException();
-    }
+  async deletePost(id: number, user: JwtUser) {
 
     // 対象ポストを取得
     const post = await this.microPostRepository.findOne({
@@ -64,7 +40,7 @@ export class PostService {
       throw new NotFoundException('投稿が見つかりません');
     }
 
-    if (auth.user_id !== post.user_id) {
+    if (user.sub !== post.user_id) {
       throw new ForbiddenException('自分以外の投稿は削除できません');
     }
 
@@ -73,24 +49,11 @@ export class PostService {
   }
 
   async getList(
-    token: string,
     start: number = 0,
     nr_records: number = 1,
     word?: string,
     user_name?: string,
   ) {
-    // NOTE: ログイン済かチェック
-    const now = new Date();
-    const auth = await this.AuthRepository.findOne({
-      where: {
-        token: Equal(token),
-        expire_at: MoreThan(now),
-      },
-    });
-    if (!auth) {
-      throw new ForbiddenException();
-    }
-
     let qb = this.microPostRepository
       // (学習メモ): 以下、学習用メモ
       // 1. クエリビルダーの開始

@@ -1,4 +1,4 @@
-import { createContext, type Dispatch, type SetStateAction } from "react";
+import { createContext } from "react";
 import type { UserInfo } from "../types/User";
 
 // (学習メモ): データの共有バケツの実体
@@ -12,7 +12,7 @@ export const UserContext = createContext(
         // (学習メモ): 以下はsetUserInfoにカーソルを当てたら分かるもの。
         // (学習メモ): SetStateAction: データの更新方法を、値を直接入れる&関数で更新するの両方で許可
         // (学習メモ): Dispach: Reactにおいて、「状態を更新するために、新しい値をエンジンに送り込む関数」であることを示す
-        setUserInfo: Dispatch<SetStateAction<UserInfo>>;
-        saveInfoWithName: (id: number, token: string) => Promise<void>;
+        setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
+        saveInfoWithName: (id: number) => Promise<void>;
     },
 );

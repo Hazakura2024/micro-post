@@ -1,6 +1,5 @@
 import {
   ConflictException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -11,7 +10,8 @@ import { promises } from 'fs';
 import { extname, join } from 'path';
 import { Auth } from 'src/entities/auth';
 import { User } from 'src/entities/user.entity';
-import { Equal, MoreThan, Repository } from 'typeorm';
+import { Equal, Repository } from 'typeorm';
+import { JwtUser } from 'src/auth/types/jwt-user.type';
 
 @Injectable()
 export class UserService {
@@ -58,73 +58,48 @@ export class UserService {
   }
 
   //NOTE: ユーザー取得
-  async getUser(token: string, id: number) {
-    // ログイン済かチェック
-    const now = new Date();
-    const auth = await this.authRepository.findOne({
-      where: {
-        token: Equal(token),
-        expire_at: MoreThan(now),
-      },
-    });
-
-    if (!auth) {
-      throw new ForbiddenException();
-    }
-
+  async getUser(user: JwtUser) {
     // ユーザー取得
-    const user = await this.userRepository.findOne({
+    const userData = await this.userRepository.findOne({
       where: {
-        id: Equal(id),
+        id: Equal(user.sub),
       },
     });
-    if (!user) {
+    if (!userData) {
       throw new NotFoundException();
     }
     return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      icon_path: user.icon_path,
-      createdAt: user.created_at,
+      id: userData.id,
+      name: userData.name,
+      email: userData.email,
+      icon_path: userData.icon_path,
+      createdAt: userData.created_at,
     };
   }
 
   // ユーザー名変更
-  async editName(token: string, name: string) {
-    // ログイン済かチェック
-    const now = new Date();
-    const auth = await this.authRepository.findOne({
-      where: {
-        token: Equal(token),
-        expire_at: MoreThan(now),
-      },
-    });
-    if (!auth) {
-      throw new ForbiddenException();
-    }
-
+  async editName(user: JwtUser, name: string) {
     // NOTE: ユーザー名の重複チェック
     const existingUserByName = await this.userRepository.findOne({
       where: { name: Equal(name) },
     });
-    if (existingUserByName && existingUserByName.id !== auth.user_id) {
+    if (existingUserByName && existingUserByName.id !== user.sub) {
       throw new ConflictException('このユーザー名は使用されています。');
     }
 
     // ユーザー取得
-    const user = await this.userRepository.findOne({
+    const userData = await this.userRepository.findOne({
       where: {
-        id: Equal(auth.user_id),
+        id: Equal(user.sub),
       },
     });
-    if (!user) {
+    if (!userData) {
       throw new NotFoundException();
     }
 
-    user.name = name;
+    userData.name = name;
 
-    const savedUser = await this.userRepository.save(user);
+    const savedUser = await this.userRepository.save(userData);
     return {
       id: savedUser.id,
       name: savedUser.name,
@@ -133,32 +108,19 @@ export class UserService {
     };
   }
 
-  async uploadImage(token: string, file: Express.Multer.File) {
-    // ログイン済かチェック
-    const now = new Date();
-    const auth = await this.authRepository.findOne({
-      where: {
-        token: Equal(token),
-        expire_at: MoreThan(now),
-      },
-    });
-
-    if (!auth) {
-      throw new ForbiddenException();
-    }
-
+  async uploadImage(user: JwtUser, file: Express.Multer.File) {
     // ユーザー取得
-    const user = await this.userRepository.findOne({
+    const userData = await this.userRepository.findOne({
       where: {
-        id: Equal(auth.user_id),
+        id: Equal(user.sub),
       },
     });
-    if (!user) {
+    if (!userData) {
       throw new NotFoundException();
     }
 
     // 保存先ディレクトリ
-    const userDir = join(process.cwd(), 'uploads', 'users', String(user.id));
+    const userDir = join(process.cwd(), 'uploads', 'users', String(user.sub));
     await promises.mkdir(userDir, { recursive: true });
 
     // ランダムファイル名を作成
@@ -170,12 +132,12 @@ export class UserService {
     await promises.writeFile(absPath, file.buffer);
 
     // DBに保存する相対パス
-    const nextIconPath = `/uploads/users/${user.id}/${filename}`;
+    const nextIconPath = `/uploads/users/${userData.id}/${filename}`;
 
     // DBに新URL保存
-    const prevIconPath = user.icon_path;
-    user.icon_path = nextIconPath;
-    await this.userRepository.save(user);
+    const prevIconPath = userData.icon_path;
+    userData.icon_path = nextIconPath;
+    await this.userRepository.save(userData);
 
     // 旧画像削除
     if (prevIconPath) {
@@ -188,35 +150,23 @@ export class UserService {
     }
 
     return {
-      id: user.id,
-      name: user.name,
-      icon_path: user.icon_path,
+      id: userData.id,
+      name: userData.name,
+      icon_path: userData.icon_path,
     };
   }
 
-  async getIcon(token: string) {
-    // ログイン済かチェック
-    const now = new Date();
-    const auth = await this.authRepository.findOne({
-      where: {
-        token: Equal(token),
-        expire_at: MoreThan(now),
-      },
-    });
-    if (!auth) {
-      throw new ForbiddenException();
-    }
-
+  async getIcon(user: JwtUser) {
     // ユーザー取得
-    const user = await this.userRepository.findOne({
+    const userData = await this.userRepository.findOne({
       where: {
-        id: Equal(auth.user_id),
+        id: Equal(user.sub),
       },
     });
-    if (!user) {
+    if (!userData) {
       throw new NotFoundException();
     }
 
-    return user.icon_path;
+    return userData.icon_path;
   }
 }

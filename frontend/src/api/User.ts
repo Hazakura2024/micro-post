@@ -1,13 +1,12 @@
-import axios from "axios";
 import type { UserResponse } from "../types/User";
+import { apiClient } from "../hooks/useAxiosIntercepter";
 
-export const getUser = async (
-  id: number,
-  token: string,
-): Promise<UserResponse> => {
-  const API_URL = import.meta.env.VITE_API_URL;
-  const url = `${API_URL}/user/${String(id)}?token=${token}`;
-  const res = await axios.get<UserResponse>(url);
+export const getUser = async (): Promise<UserResponse> => {
+
+  const url = `/user/me`;
+  const res = await apiClient.get<UserResponse>(url);
+  console.log("getUser")
+  console.log(res.data)
   return res.data;
   // NOTE: エラーは自動的にthrowされコンポーネント側でextractErrorMessageを使う
 
@@ -19,46 +18,49 @@ export const createUser = async (
   password: string,
 ): Promise<UserResponse> => {
 
-  const API_URL = import.meta.env.VITE_API_URL;
-  const url = `${API_URL}/user`;
-  const res = await axios.post<UserResponse>(url, {
+  const url = `/user/create`;
+  const res = await apiClient.post<UserResponse>(url, {
     name: name,
     email: email,
     password: password,
   });
+  console.log("createUser")
+  console.log(res.data)
   return res.data;
 
 };
 
-export const editUser = async (token: string, name: string) => {
+export const editUser = async (name: string) => {
 
-  const API_URL = import.meta.env.VITE_API_URL;
-  const url = `${API_URL}/user/me?token=${token}`;
-  const res = await axios.patch(url, {
+  const url = `/user/me`;
+  const res = await apiClient.patch(url, {
     name: name,
   });
+  console.log("editUser")
+  console.log(res.data)
   return res.data;
 
 }
 
-export const uploadIcon = async (token: string, file: File) => {
+export const uploadIcon = async (file: File) => {
 
   const formData = new FormData();
   formData.append("icon", file);
 
-  const API_URL = import.meta.env.VITE_API_URL;
-  const url = `${API_URL}/user/me/icon?token=${token}`;
-  const res = await axios.patch(url, formData, {
+  const url = `/user/me/icon`;
+  const res = await apiClient.patch(url, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   })
-
+  console.log("uploadIcon")
+  console.log(res.data)
   return res.data;
 }
 
-export const getIcon = async (token: string) => {
-  const API_URL = import.meta.env.VITE_API_URL;
-  const url = `${API_URL}/user/me/icon?token=${token}`;
+export const getIcon = async () => {
+  const url = `/user/me/icon`;
 
-  const res = await axios.get(url);
+  const res = await apiClient.get(url);
+  console.log("getIcon")
+  console.log(res.data)
   return res.data;
 }

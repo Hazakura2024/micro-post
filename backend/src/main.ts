@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -21,8 +22,10 @@ async function bootstrap() {
       ? [frontendOrigin, 'http://localhost:3001', 'http://127.0.0.1:3001']
       : ['http://localhost:3001', 'http://127.0.0.1:3001'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
+    credentials: true, // (学習メモ): これをtrueにしないとcookieが弾かれる
   });
+
+  app.use(cookieParser());
 
   await app.listen(process.env.PORT ?? 3000);
 }

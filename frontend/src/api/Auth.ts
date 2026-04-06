@@ -1,16 +1,12 @@
-import axios from "axios";
+import { apiClient } from "../hooks/useAxiosIntercepter";
 import type { AuthResponse } from "../types/Auth";
 
-const signIn = async (userId: string, pass: string): Promise<AuthResponse> => {
-
-  const API_URL = import.meta.env.VITE_API_URL;
-  const url = `${API_URL}/auth`;
-  const res = await axios.post<AuthResponse>(url, {
+export const signIn = async (userId: string, pass: string): Promise<AuthResponse> => {
+  const res = await apiClient.post<AuthResponse>('/auth', {
     user_id: userId,
     password: pass,
   });
+  console.log("signIn")
+  console.log(res.data)
   return res.data;
-
 };
-
-export default signIn;
