@@ -92,6 +92,7 @@ export const useAxiosIntercepter = () => {
                             icon_path: null,
                             token: "",
                         });
+                        // (学習メモ): throw errorと同じだが、axiosの公式ドキュメントではこっちで書いている
                         return Promise.reject(error);
                     }
                 }
