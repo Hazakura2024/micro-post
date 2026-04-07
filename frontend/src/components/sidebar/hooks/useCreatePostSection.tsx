@@ -8,6 +8,9 @@ export const useCreatePostSection = () => {
     const [msg, setMsg] = useState("");
     const { refreshCurrent } = useContext(PostListContext);
     const [isPosting, setIsPosting] = useState(false);
+
+    const MAX_MESSAGE_LENGTH = 140;
+
     const onSendClick = async () => {
         if (isPosting) return;
         setIsPosting(true);
@@ -30,11 +33,22 @@ export const useCreatePostSection = () => {
         }
     };
 
+    const onChangeMessage = (message: string) => {
+        setMsg(message);
+    }
+
+    const trimmedMessage = msg.trim()
+
+    const canSubmitMessage =
+        msg.length <= MAX_MESSAGE_LENGTH
+        && trimmedMessage !== ""
+        && !isPosting;
+
     return {
         msg,
-        setMsg,
-        isPosting,
-        onSendClick
+        onChangeMessage,
+        onSendClick,
+        canSubmitMessage
     }
 
 }

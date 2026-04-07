@@ -5,9 +5,9 @@ export const CreatePostSection = () => {
 
     const {
         msg,
-        setMsg,
-        isPosting,
-        onSendClick
+        onChangeMessage,
+        onSendClick,
+        canSubmitMessage
     } = useCreatePostSection()
 
     return (
@@ -15,10 +15,10 @@ export const CreatePostSection = () => {
             <SSideBarTextArea
                 rows={4}
                 value={msg}
-                onChange={(e) => setMsg(e.target.value)}
+                onChange={(e) => onChangeMessage(e.target.value)}
             ></SSideBarTextArea>
             <SSideBarButton
-                disabled={msg === "" || msg.length > 140 || isPosting ? true : false}
+                disabled={!canSubmitMessage}
                 onClick={onSendClick}
             >
                 送信
