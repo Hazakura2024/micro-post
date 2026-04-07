@@ -36,5 +36,7 @@ export const useEditNameSection = () => {
         }
     }
 
-    return { isEditingName, editingName, setEditingName, onClickSend, isSubmittingName, userInfo, onClickEdit }
+    const displayName = userInfo.name;
+
+    return { isEditingName, editingName, setEditingName, onClickSend, isSubmittingName, displayName, onClickEdit }
 }
