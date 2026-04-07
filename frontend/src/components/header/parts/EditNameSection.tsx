@@ -38,7 +38,7 @@ const EditNameSection = () => {
         }
     }
     return (
-        <SEditName>
+        <SEditSection>
             {isEditingName
                 ? <div>
                     <SInput
@@ -54,11 +54,11 @@ const EditNameSection = () => {
             <SIconButton onClick={onClickEdit} >
                 <FaPen />
             </SIconButton>
-        </SEditName>
+        </SEditSection>
     )
 }
 
-const SEditName = styled.div`
+const SEditSection = styled.div`
     display: flex;
     align-items: center;
 `
