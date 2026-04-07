@@ -57,10 +57,14 @@ export const useEditNameSection = () => {
 
     const displayName = userInfo.name;
 
+    const onChangeEditingName = (newName: string) => {
+        setEditingName(newName);
+    }
+
     return {
         isEditingName,
         editingName,
-        setEditingName,
+        onChangeEditingName,
         onClickSend,
         displayName,
         onClickEdit,

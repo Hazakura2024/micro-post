@@ -7,7 +7,7 @@ const EditNameSection = () => {
     const {
         isEditingName,
         editingName,
-        setEditingName,
+        onChangeEditingName,
         onClickSend,
         displayName,
         onClickEdit,
@@ -22,7 +22,7 @@ const EditNameSection = () => {
                         type="text"
                         placeholder="名前を編集..."
                         value={editingName}
-                        onChange={e => setEditingName(e.target.value)} />
+                        onChange={e => onChangeEditingName(e.target.value)} />
                     <SSubmitButton
                         onClick={onClickSend}
                         disabled={!canSubmittingName}>変更</SSubmitButton>
