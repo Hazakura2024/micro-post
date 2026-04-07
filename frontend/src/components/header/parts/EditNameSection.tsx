@@ -1,42 +1,11 @@
-import React, { useContext, useState } from 'react'
 import styled from 'styled-components';
-import { editUser } from '../../../api/User';
-import { toast } from 'react-toastify';
-import { PostListContext } from '../../../contexts/PostListContext';
-import { UserContext } from '../../../contexts/UserContext';
-import { extractErrorMessage } from '../../../utils/extractErrorMessage';
 import { FaPen } from 'react-icons/fa';
+import { useEditNameSection } from '../hooks/useEditNameSection';
 
 const EditNameSection = () => {
-    const [isEditingName, setIsEditingName] = useState(false);
-    const [editingName, setEditingName] = useState("")
-    const [isSubmittingName, setIsSubmittingName] = useState(false)
-    const { refreshCurrent } = useContext(PostListContext)
-    const { userInfo, saveInfoWithName } = useContext(UserContext);
 
+    const { isEditingName, editingName, setEditingName, onClickSend, isSubmittingName, userInfo, onClickEdit } = useEditNameSection();
 
-    const onClickEdit = () => {
-        setIsEditingName((prev) => !prev)
-        setEditingName("")
-    }
-    const onClickSend = async () => {
-        setIsSubmittingName(true)
-        try {
-            await editUser(editingName)
-            setEditingName("")
-
-            await saveInfoWithName(userInfo.id)
-            toast.success("名前の変更に成功しました！")
-            setIsEditingName(false)
-            refreshCurrent()
-
-        } catch (error) {
-            const msg = extractErrorMessage(error, "名前の変更に失敗しました")
-            toast.error(msg)
-        } finally {
-            setIsSubmittingName(false)
-        }
-    }
     return (
         <SEditSection>
             {isEditingName

@@ -3,8 +3,6 @@ import type { AuthResponse } from "../types/Auth";
 import { useContext, useEffect, useRef } from "react";
 import { UserContext } from "../contexts/UserContext";
 
-
-
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const apiClient = axios.create({
