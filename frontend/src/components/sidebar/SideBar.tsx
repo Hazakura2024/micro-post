@@ -1,54 +1,12 @@
-import { useContext, useState } from "react";
-import { createPost } from "../../api/Post.ts";
-import { PostListContext } from "../../contexts/PostListContext.tsx";
 import styled from "styled-components";
-import { toast } from "react-toastify";
-import { extractErrorMessage } from "../../utils/extractErrorMessage.ts";
+import { CreatePostSection } from "./parts/createPostSection.tsx";
 
 const SideBar = () => {
-  const [msg, setMsg] = useState("");
-  const { refreshCurrent } = useContext(PostListContext);
-  const [isPosting, setIsPosting] = useState(false);
-  const onSendClick = async () => {
-    if (isPosting) return;
-    setIsPosting(true);
-    try {
-      const res = await createPost(msg);
-      if (res.success) {
-        toast.success("投稿しました！");
-      }
-
-      // (学習メモ): ここに到達するということは、成功したということ
-      setMsg("");
-
-      refreshCurrent();
-      // (学習メモ): createPost 成功 → setMsg → getPostList の順番が保証されている
-    } catch (error: unknown) {
-      const msg = extractErrorMessage(error, "投稿に失敗しました。");
-      toast.error(msg);
-    } finally {
-      setIsPosting(false);
-    }
-  };
 
   return (
     <SSideBar>
       <SSideBarRow>新規投稿</SSideBarRow>
-      <SSideBarRow>
-        <SSideBarTextArea
-          rows={4}
-          value={msg}
-          onChange={(e) => setMsg(e.target.value)}
-        ></SSideBarTextArea>
-      </SSideBarRow>
-      <SSideBarRow>
-        <SSideBarButton
-          disabled={msg === "" || msg.length > 140 || isPosting ? true : false}
-          onClick={onSendClick}
-        >
-          送信
-        </SSideBarButton>
-      </SSideBarRow>
+      <CreatePostSection />
     </SSideBar>
   );
 };
@@ -65,22 +23,3 @@ const SSideBarRow = styled.div`
   text-align: left;
 `;
 
-const SSideBarTextArea = styled.textarea`
-  border-radius: 4px;
-  width: 96%;
-  box-shadow: inset 0 2px 4px #cccccc;
-`;
-
-const SSideBarButton = styled.button`
-  background-color: #00a3af;
-  border-color: #eeeeee;
-  padding: 4px;
-  border-radius: 8px;
-  color: #fafafa;
-  width: 100%;
-  cursor: pointer;
-  &:disabled {
-    background-color: #8491c3;
-    cursor: not-allowed;
-  }
-`;
