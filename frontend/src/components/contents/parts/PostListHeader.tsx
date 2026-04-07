@@ -1,19 +1,24 @@
 import styled from "styled-components";
-import { usePostList } from "../hooks/usePostList";
 
-
-export const PostListHeader = () => {
-
-  const {
-    isLoading,
-    onClickReload,
-    localSearchWord,
-    onChangeSearchWord,
-    localSearchName,
-    onChangeSearchName,
-    onClickSearch,
-    onClickClear,
-  } = usePostList()
+export const PostListHeader = ({
+  isLoading,
+  onClickReload,
+  localSearchWord,
+  onChangeSearchWord,
+  localSearchName,
+  onChangeSearchName,
+  onClickSearch,
+  onClickClear,
+}: {
+  isLoading: boolean,
+  onClickReload: () => void,
+  localSearchWord: string,
+  onChangeSearchWord: () => void,
+  localSearchName: string,
+  onChangeSearchName: (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => void,
+  onClickSearch: () => void,
+  onClickClear: () => void,
+}) => {
 
   return (
     <SHeader>

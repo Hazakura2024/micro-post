@@ -1,15 +1,21 @@
 import styled from "styled-components";
-import { usePostList } from "../hooks/usePostList";
+import type { PostType } from "../../../types/Post";
 
-export const PostListFooter = () => {
-
-    const {
+export const PostListFooter = (
+    {
         onClickBack,
         isLoading,
         page,
         onClickNext,
         postList,
-    } = usePostList()
+    }: {
+        onClickBack: () => void,
+        isLoading: boolean,
+        page: number,
+        onClickNext: () => void,
+        postList: PostType[],
+    }) => {
+
 
     return (
         <SFooter>

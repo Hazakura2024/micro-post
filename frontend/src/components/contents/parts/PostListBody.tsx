@@ -1,10 +1,8 @@
 import Post from "./Post.tsx";
 import styled from "styled-components";
-import { usePostList } from "../hooks/usePostList.tsx";
+import type { PostType } from "../../../types/Post.ts";
 
-export const PostListBody = () => {
-
-  const { isLoading, postList } = usePostList()
+export const PostListBody = ({ isLoading, postList }: { isLoading: boolean, postList: PostType[] }) => {
 
   return (
     <SPostListBody>
