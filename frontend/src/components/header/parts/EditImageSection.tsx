@@ -10,7 +10,8 @@ const EditImageSection = () => {
         previewUrl,
         onClickSubmitImage,
         isSubmittingImage,
-        userInfo,
+        iconPath,
+        userName,
         onClickEditImage,
         onChangeInputImage,
     } = useEditImageSection()
@@ -23,9 +24,9 @@ const EditImageSection = () => {
                     {previewUrl ? <SImage src={previewUrl} alt="選択中の画像プレビュー" /> : <div></div>}
                     <SSubmitButton onClick={onClickSubmitImage} disabled={isSubmittingImage}>送信</SSubmitButton>
                 </SEditSection>
-                : (userInfo.icon_path
-                    ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${userInfo.icon_path}`} />
-                    : <FaUserCircle color={stringToColor(userInfo.name)} />)}
+                : (iconPath
+                    ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${iconPath}`} />
+                    : <FaUserCircle color={stringToColor(userName)} />)}
             <SIconButton onClick={onClickEditImage}>
                 <FaRegUserCircle />
             </SIconButton>

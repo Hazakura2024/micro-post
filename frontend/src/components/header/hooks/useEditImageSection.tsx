@@ -59,12 +59,16 @@ export const useEditImageSection = () => {
 
     }, [selectedFile])
 
+    const iconPath = userInfo.icon_path;
+    const userName = userInfo.name;
+
     return {
         isEditingImage,
         previewUrl,
         onClickSubmitImage,
         isSubmittingImage,
-        userInfo,
+        iconPath,
+        userName,
         onClickEditImage,
         onChangeInputImage
     }
