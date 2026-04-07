@@ -4,7 +4,15 @@ import { useEditNameSection } from '../hooks/useEditNameSection';
 
 const EditNameSection = () => {
 
-    const { isEditingName, editingName, setEditingName, onClickSend, isSubmittingName, displayName, onClickEdit } = useEditNameSection();
+    const {
+        isEditingName,
+        editingName,
+        setEditingName,
+        onClickSend,
+        displayName,
+        onClickEdit,
+        canSubmittingName
+    } = useEditNameSection();
 
     return (
         <SEditSection>
@@ -17,7 +25,7 @@ const EditNameSection = () => {
                         onChange={e => setEditingName(e.target.value)} />
                     <SSubmitButton
                         onClick={onClickSend}
-                        disabled={isSubmittingName || editingName.length > 20}>変更</SSubmitButton>
+                        disabled={!canSubmittingName}>変更</SSubmitButton>
                 </div>
                 : <SName>{displayName}さん</SName>}
             <SIconButton onClick={onClickEdit} >

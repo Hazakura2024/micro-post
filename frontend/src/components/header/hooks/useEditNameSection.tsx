@@ -12,15 +12,34 @@ export const useEditNameSection = () => {
     const { refreshCurrent } = useContext(PostListContext)
     const { userInfo, saveInfoWithName } = useContext(UserContext);
 
+    const MAX_NAME_LENGTH = 20;
+
+    const trimmedName = editingName.trim()
+
+    const canSubmittingName =
+        !isSubmittingName &&
+        trimmedName.length > 0 &&
+        trimmedName.length < MAX_NAME_LENGTH;
 
     const onClickEdit = () => {
         setIsEditingName((prev) => !prev)
         setEditingName("")
     }
     const onClickSend = async () => {
+
+        if (isSubmittingName) return;
+
+        if (!trimmedName) {
+            toast.error("名前を入力して下さい")
+        }
+
+        if (trimmedName.length > MAX_NAME_LENGTH) {
+            toast.error(`名前は${MAX_NAME_LENGTH}文字以下で入力してください`)
+        }
+
         setIsSubmittingName(true)
         try {
-            await editUser(editingName)
+            await editUser(trimmedName)
             setEditingName("")
 
             await saveInfoWithName(userInfo.id)
@@ -38,5 +57,13 @@ export const useEditNameSection = () => {
 
     const displayName = userInfo.name;
 
-    return { isEditingName, editingName, setEditingName, onClickSend, isSubmittingName, displayName, onClickEdit }
+    return {
+        isEditingName,
+        editingName,
+        setEditingName,
+        onClickSend,
+        displayName,
+        onClickEdit,
+        canSubmittingName
+    };
 }
