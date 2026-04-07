@@ -8,14 +8,12 @@ import { PostListContext } from "../../contexts/PostListContext.tsx";
 import { extractErrorMessage } from "../../utils/extractErrorMessage.ts";
 import { stringToColor } from "../../utils/stringToColor.ts";
 import LogoutButton from "./parts/LogoutButton.tsx";
+import EditNameSection from "./parts/EditNameSection.tsx";
 
 const Header = () => {
   const { userInfo, setUserInfo, saveInfoWithName } = useContext(UserContext);
-  const { refreshCurrent } = useContext(PostListContext)
 
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [editingName, setEditingName] = useState("")
-  const [isSubmittingName, setIsSubmittingName] = useState(false)
+
 
   const [isEditingImage, setIsEditingImage] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>()
@@ -25,10 +23,6 @@ const Header = () => {
 
 
 
-  const onClickEdit = () => {
-    setIsEditingName((prev) => !prev)
-    setEditingName("")
-  }
 
   const onClickEditImage = () => {
     setIsEditingImage((prev) => !prev)
@@ -41,24 +35,7 @@ const Header = () => {
   }
 
 
-  const onClickSend = async () => {
-    setIsSubmittingName(true)
-    try {
-      await editUser(editingName)
-      setEditingName("")
 
-      await saveInfoWithName(userInfo.id)
-      toast.success("名前の変更に成功しました！")
-      setIsEditingName(false)
-      refreshCurrent()
-
-    } catch (error) {
-      const msg = extractErrorMessage(error, "名前の変更に失敗しました")
-      toast.error(msg)
-    } finally {
-      setIsSubmittingName(false)
-    }
-  }
 
   const onClickSubmitImage = async () => {
     setIsSubmittingImage(true)
@@ -98,18 +75,8 @@ const Header = () => {
     <SHeader>
       <SLogo>MicroPost</SLogo>
       <SRightItem>
-        {isEditingName
-          ? <div>
-            <SInput
-              type="text"
-              placeholder="名前を編集..."
-              value={editingName}
-              onChange={e => setEditingName(e.target.value)} />
-            <SSubmitButton
-              onClick={onClickSend}
-              disabled={isSubmittingName || editingName.length > 20}>変更</SSubmitButton>
-          </div>
-          : <SName>{userInfo.name}さん</SName>}
+        <EditNameSection />
+
 
         {isEditingImage
           ? <div>
@@ -125,9 +92,7 @@ const Header = () => {
 
 
 
-        <SIconButton onClick={onClickEdit} >
-          <FaPen />
-        </SIconButton>
+
 
         <SIconButton onClick={onClickEditImage}>
           <FaRegUserCircle />
@@ -167,12 +132,7 @@ const SRightItem = styled.div`
   justify-content: end;
 `;
 
-const SName = styled.div`
-  padding-top: 8px;
-  padding-bottom: 8px;
-  text-align: center;
-  margin-right: 8px;
-`;
+
 
 
 
