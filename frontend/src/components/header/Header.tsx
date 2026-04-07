@@ -5,17 +5,13 @@ import EditImageSection from "./parts/EditImageSection.tsx";
 
 const Header = () => {
 
-
-
   return (
     <SHeader>
       <SLogo>MicroPost</SLogo>
       <SRightItem>
         <EditNameSection />
         <EditImageSection />
-
         <LogoutButton />
-
       </SRightItem>
     </SHeader>
   );

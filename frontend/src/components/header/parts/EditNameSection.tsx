@@ -70,7 +70,6 @@ const SInput = styled.input`
 
 const SSubmitButton = styled.button`
   background-color: #b8d200;
-  margin-top: 4px;
   color: white;
   border-color: #eeeeee;
   border-radius: 4px;
@@ -94,8 +93,7 @@ const SIconButton = styled.button`
   background-color: transparent;
   color: white;
   border: none;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 6px;
   text-align: center;
   cursor: pointer;
 `;

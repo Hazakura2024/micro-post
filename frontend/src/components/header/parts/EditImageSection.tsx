@@ -6,18 +6,16 @@ import { toast } from 'react-toastify';
 import { extractErrorMessage } from '../../../utils/extractErrorMessage';
 import { FaRegUserCircle, FaUserCircle } from 'react-icons/fa';
 import { stringToColor } from '../../../utils/stringToColor';
+import { PostListContext } from '../../../contexts/PostListContext';
 
 const EditImageSection = () => {
-
 
     const [isEditingImage, setIsEditingImage] = useState(false)
     const [selectedFile, setSelectedFile] = useState<File | null>()
     const [isSubmittingImage, setIsSubmittingImage] = useState(false)
 
     const { userInfo, setUserInfo } = useContext(UserContext);
-
-
-
+    const { refreshCurrent } = useContext(PostListContext)
 
 
     const onClickEditImage = () => {
@@ -30,9 +28,6 @@ const EditImageSection = () => {
         setSelectedFile(file);
     }
 
-
-
-
     const onClickSubmitImage = async () => {
         setIsSubmittingImage(true)
         try {
@@ -41,6 +36,7 @@ const EditImageSection = () => {
             console.log(res)
             setUserInfo({ ...userInfo, icon_path: res.icon_path })
             toast.success("アイコンの変更に成功しました！")
+            refreshCurrent()
         } catch (error) {
             console.log(error);
             const msg = extractErrorMessage(error, "アイコンの変更に失敗しました")
@@ -94,8 +90,7 @@ const SIconButton = styled.button`
   background-color: transparent;
   color: white;
   border: none;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 6px;
   text-align: center;
   cursor: pointer;
 `;
@@ -107,7 +102,6 @@ const SInput = styled.input`
 
 const SSubmitButton = styled.button`
   background-color: #b8d200;
-  margin-top: 4px;
   color: white;
   border-color: #eeeeee;
   border-radius: 4px;
