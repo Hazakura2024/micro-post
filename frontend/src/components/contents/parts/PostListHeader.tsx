@@ -13,7 +13,7 @@ export const PostListHeader = ({
   isLoading: boolean,
   onClickReload: () => void,
   localSearchWord: string,
-  onChangeSearchWord: () => void,
+  onChangeSearchWord: (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => void,
   localSearchName: string,
   onChangeSearchName: (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => void,
   onClickSearch: () => void,

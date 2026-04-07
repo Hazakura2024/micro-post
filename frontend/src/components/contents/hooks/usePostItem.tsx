@@ -4,8 +4,6 @@ import { PostListContext } from "../../../contexts/PostListContext";
 import { deletePost } from "../../../api/Post";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../../../utils/extractErrorMessage";
-import type { PostType } from "../../../types/Post";
-
 
 export const usePostItem = () => {
     const { userInfo } = useContext(UserContext);
