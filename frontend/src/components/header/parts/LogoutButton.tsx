@@ -1,25 +1,9 @@
-import { useContext } from 'react'
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { logout } from '../../../api/Auth';
-import { UserContext } from '../../../contexts/UserContext';
+import { useLogoutButton } from '../hooks/useLogoutButton';
 
 const LogoutButton = () => {
 
-    const { setUserInfo } = useContext(UserContext);
-
-    const navigate = useNavigate();
-
-    const onClickLogout = async () => {
-        try {
-            await logout();
-        } catch {
-            // NOTE: ユーザー情報を消すことを優先
-        } finally {
-            setUserInfo({ id: 0, name: "", icon_path: null, token: "" });
-            navigate("/");
-        }
-    };
+    const { onClickLogout } = useLogoutButton()
 
     return (
         <SLogout onClick={onClickLogout}>ログアウト</SLogout>
