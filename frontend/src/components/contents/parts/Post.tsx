@@ -1,13 +1,8 @@
-import { useContext, useState } from "react";
 import type { PostType } from "../../../types/Post.ts";
 import styled from "styled-components";
-import { deletePost } from "../../../api/Post.ts";
 import { FaUserCircle } from "react-icons/fa";
-import { PostListContext } from "../../../contexts/PostListContext.tsx";
-import { extractErrorMessage } from "../../../utils/extractErrorMessage.ts";
-import { toast } from "react-toastify";
-import { UserContext } from "../../../contexts/UserContext.tsx";
 import { stringToColor } from "../../../utils/stringToColor.ts";
+import { usePostItem } from "../hooks/usePostItem.tsx";
 
 // (学習メモ): propsはオブジェクトになるので、左側に分割代入
 const Post = ({
@@ -15,52 +10,28 @@ const Post = ({
 }: {
   post: PostType;
 }) => {
-  const { userInfo } = useContext(UserContext);
-  const { getPostList } = useContext(PostListContext);
 
-  // const isMyPost =  userName === userInfo.id;
-
-  // FIX: localhostだとUTCになってrenderだとJTCになるっぽい？
-  // NOTE: サーバーがZをつけて、UTCであるという指定をしていないので、ここでつける
-  // const dateString = post.created_at.toString().endsWith("Z")
-  //   ? post.created_at
-  //   : `${post.created_at.toString().replace(" ", "T")}Z`;
-  const date = new Date(post.created_at);
-  const getDateString = (dateObj: Date) => {
-    return dateObj.toLocaleString();
-  };
-
-  const [isDeleting, setIsDeleting] = useState(false);
-  const onClickDelete = async () => {
-    if (isDeleting) return;
-    setIsDeleting(true);
-    try {
-      await deletePost(post.id);
-      await getPostList();
-      toast.success("削除しました");
-    } catch (error) {
-      const msg = extractErrorMessage(error, "削除に失敗しました。");
-      toast.error(msg);
-    } finally {
-      setIsDeleting(false);
-    }
-  };
+  const {
+    getDateString,
+    userInfo,
+    isDeleting,
+    onClickDelete,
+  } = usePostItem()
 
   return (
     <SPost>
-
       {post.user_icon
         ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${post.user_icon}`} alt="" />
         : <FaUserCircle size={40} color={stringToColor(post.user_name)} />}
 
       <SPostMain>
         <div>
-          <SDate>{getDateString(date)}</SDate>
+          <SDate>{getDateString(post.created_at)}</SDate>
           <SName>{post.user_name}</SName>
           <SDeleteButton
             hidden={userInfo.id !== post.user_id}
             disabled={isDeleting}
-            onClick={onClickDelete}
+            onClick={() => onClickDelete(post.id)}
           >
             delete
           </SDeleteButton>
@@ -90,12 +61,13 @@ const SImage = styled.img`
 `
 
 const SName = styled.span`
+  margin-left: 8px;
   font-size: small;
   color: #000044;
 `;
 
 const SDate = styled.span`
-  margin-left: 8px;
+
   font-size: small;
   color: #000044;
 `;
