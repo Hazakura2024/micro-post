@@ -1,5 +1,9 @@
 import { create } from "zustand";
 import type { UserInfo } from "../types/User";
+import { apiClient } from "../hooks/useAxiosIntercepter";
+import { getUser } from "../api/User";
+import { extractErrorMessage } from "../utils/extractErrorMessage";
+import { toast } from "react-toastify";
 
 interface AuthState {
     userInfo: UserInfo;
@@ -8,6 +12,8 @@ interface AuthState {
     setUserInfo: (info: Partial<UserInfo>) => void;
     setAuthLoading: (isLoading: boolean) => void;
     logout: () => void;
+    initializeAuth: () => Promise<void>;
+    saveInfoWithName: () => Promise<void>
 }
 
 const initialUserInfo: UserInfo = {
@@ -31,5 +37,55 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     logout: () =>
         set({ userInfo: initialUserInfo }),
+
+    initializeAuth: async () => {
+        try {
+            const res = await apiClient.post('/auth/refresh');
+            set((state) => ({
+                userInfo: {
+                    ...state.userInfo,
+                    token: res.data.token,
+                }
+            }))
+            const user = await getUser();
+            set((state) => ({
+                userInfo: {
+                    ...state.userInfo,
+                    id: user.id,
+                    name: user.name,
+                    icon_path: user.icon_path,
+                }
+            }))
+
+        } catch {
+            set({ userInfo: initialUserInfo });
+        }
+    },
+
+    saveInfoWithName: async () => {
+        try {
+            const user = await getUser();
+            set((state) => ({
+                userInfo: {
+                    ...state.userInfo,
+                    id: user.id,
+                    name: user.name,
+                    icon_path: user.icon_path,
+                },
+            }));
+        } catch (error: unknown) {
+            const msg = extractErrorMessage(error, "ユーザー情報が取得できません");
+            toast.error(msg);
+            set(state => ({
+                userInfo: {
+                    ...state.userInfo,
+                    id: 0,
+                    name: "",
+                    icon_path: "",
+                },
+            }));
+            throw error;
+        }
+    }
 
 }));
