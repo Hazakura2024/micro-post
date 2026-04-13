@@ -23,7 +23,6 @@ export const useSignUp = () => {
             toast.error("すべてのフィールドを入力してください");
             return;
         }
-
         // (学習メモ): /^...$/正規表現
         // (学習メモ): 正規表現.test(文字列) この文字列から検索
         // (学習メモ): [^...]  ...の否定
@@ -34,7 +33,6 @@ export const useSignUp = () => {
             toast.error("正しいメールアドレスを入力してください");
             return;
         }
-
         if (pass.length < 6) {
             toast.error("パスワードは6文字以上です");
             return;

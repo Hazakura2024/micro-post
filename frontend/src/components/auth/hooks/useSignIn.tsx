@@ -17,6 +17,15 @@ export const useSignIn = () => {
     const { handleAuthSuccess } = useAuthSuccessFlow()
 
     const onSignClick = async () => {
+        if (!userId.trim() || !pass.trim()) {
+            toast.error("すべてのフィールドを入力してください");
+            return;
+        }
+        if (pass.length < 6) {
+            toast.error("パスワードは6文字以上です");
+            return;
+        }
+
         setIsSubmitting(true);
         try {
             setErrorMessage("");
