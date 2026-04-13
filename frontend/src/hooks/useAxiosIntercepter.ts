@@ -32,10 +32,12 @@ export const useAxiosIntercepter = () => {
                     config.url === "/auth/refresh" ||
                     config.url === "/user/create";
 
-                if (!isPublic && token) {
+                if (!isPublic) {
+
+                    const latestToken = useAuthStore.getState().userInfo.token;
                     const headers = axios.AxiosHeaders.from(config.headers)
                     if (!headers.get("Authorization")) {
-                        headers.set("Authorization", "Bearer " + token)
+                        headers.set("Authorization", "Bearer " + latestToken)
                         config.headers = headers;
                     }
                 }
@@ -84,7 +86,7 @@ export const useAxiosIntercepter = () => {
                             refreshPromiseRef.current = apiClient.post<AuthResponse>("/auth/refresh")
                                 .then((res) => {
                                     const newToken = res.data.token;
-                                    setUserInfo({ token: newToken });
+                                    useAuthStore.getState().setUserInfo({ token: newToken });
                                     return newToken;
                                 })
                                 .finally(() => {

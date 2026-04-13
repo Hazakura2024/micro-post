@@ -34,9 +34,9 @@ export const useSignIn = () => {
                 toast.error("ログインに失敗しました");
                 return;
             }
-            handleAuthSuccess(ret.token, ret.user_id)
+            await handleAuthSuccess(ret.token)
         } catch (error: unknown) {
-            handleAuthError(error, "ログインできませんでした。")
+            await handleAuthError(error, "ログインできませんでした。")
         } finally {
             setIsSubmitting(false);
         }

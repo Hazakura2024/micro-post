@@ -6,10 +6,11 @@ import { useAuthStore } from '../store/useAuthStore'
 
 const AppRoute = () => {
     const userInfo = useAuthStore((state) => state.userInfo)
+    const authLoading = useAuthStore((state) => state.authLoading)
     const loggedIn = userInfo.token !== "";
-    // if (authLoading) {
-    //     return <div>Loading...</div>
-    // }
+    if (authLoading) {
+        return <div>Loading...</div>
+    }
     return (
         <Routes>
             <Route path="/" element={loggedIn ? <Navigate replace to="/main" /> : <SignIn />} />

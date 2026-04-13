@@ -4,6 +4,7 @@ import { apiClient } from "../hooks/useAxiosIntercepter";
 import { getUser } from "../api/User";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { toast } from "react-toastify";
+import { logout } from "../api/Auth";
 
 interface AuthState {
     userInfo: UserInfo;
@@ -35,10 +36,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     setAuthLoading: (isLoading) =>
         set({ authLoading: isLoading }),
 
-    logout: () =>
-        set({ userInfo: initialUserInfo }),
+    logout: () => {
+        logout()
+        set({ userInfo: initialUserInfo })
+    },
 
     initializeAuth: async () => {
+        set({ authLoading: true })
         try {
             const res = await apiClient.post('/auth/refresh');
             set((state) => ({
@@ -59,6 +63,8 @@ export const useAuthStore = create<AuthState>((set) => ({
 
         } catch {
             set({ userInfo: initialUserInfo });
+        } finally {
+            set({ authLoading: false })
         }
     },
 

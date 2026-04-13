@@ -50,12 +50,12 @@ export const useSignUp = () => {
                 toast.error("ログインに失敗しました");
                 return;
             }
-            handleAuthSuccess(ret.token, ret.user_id);
+            handleAuthSuccess(ret.token);
 
         } catch (error: unknown) {
-            handleAuthError(error, "登録に失敗しました。")
+            await handleAuthError(error, "登録に失敗しました。")
         } finally {
-            setIsSubmitting(false);
+            await setIsSubmitting(false);
         }
     };
 
