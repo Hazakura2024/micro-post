@@ -2,6 +2,7 @@ import axios from "axios";
 import type { AuthResponse } from "../types/Auth";
 import { useContext, useEffect, useRef } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { useAuthStore } from "../store/useAuthStore";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -11,13 +12,16 @@ export const apiClient = axios.create({
 })
 
 export const useAxiosIntercepter = () => {
-    const { userInfo, setUserInfo } = useContext(UserContext);
+    // const { userInfo, setUserInfo } = useContext(UserContext);
 
-    const tokenRef = useRef(userInfo.token);
-    useEffect(() => {
-        tokenRef.current = userInfo.token;
-    }, [userInfo.token])
+    // const tokenRef = useRef(userInfo.token);
+    // useEffect(() => {
+    //     tokenRef.current = userInfo.token;
+    // }, [userInfo.token])
 
+    const userInfo = useAuthStore((state) => state.userInfo);
+    const setUserInfo = useAuthStore((state) => state.setUserInfo);
+    const initializeAuth = useAuthStore((state) => state.initializeAuth);
 
     useEffect(() => {
         // NOTE: access_tokenを自動でheaderに設定する処理
@@ -37,14 +41,11 @@ export const useAxiosIntercepter = () => {
                         return config;
                     }
 
-                    if (tokenRef.current) {
-                        headers.set("Authorization", "Bearer " + tokenRef.current)
+                    if (userInfo) {
+                        headers.set("Authorization", "Bearer " + userInfo.token)
                         config.headers = headers;
                     }
-
-
                 }
-
                 return config;
             },
             (error) => Promise.reject(error),
@@ -69,27 +70,18 @@ export const useAxiosIntercepter = () => {
                         const res = await apiClient.post<AuthResponse>('/auth/refresh')
                         console.log('refreshされました。')
                         const newAccessToken = res.data.token;
-                        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                        // originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
-                        apiClient.defaults.headers.common.Authorization = "Bearer " + newAccessToken;
-                        tokenRef.current = newAccessToken;
+                        // apiClient.defaults.headers.common.Authorization = "Bearer " + newAccessToken;
 
-                        setUserInfo(prev => ({
-                            ...prev,
+                        setUserInfo({
                             token: newAccessToken,
-                        }));
-
-
+                        });
 
                         return apiClient(originalRequest)
 
                     } catch (error) {
-                        setUserInfo({
-                            id: 0,
-                            name: "",
-                            icon_path: null,
-                            token: "",
-                        });
+                        initializeAuth();
                         // (学習メモ): throw errorと同じだが、axiosの公式ドキュメントではこっちで書いている
                         return Promise.reject(error);
                     }
