@@ -1,8 +1,9 @@
 
 import styled from "styled-components";
-import Header from "./Header";
-import SideBar from "./SideBar";
-import Contents from "./Contents";
+import Header from "./header/Header";
+import SideBar from "./sidebar/SideBar";
+import Contents from "./contents/Contents"
+
 
 const Layout = () => {
   return (
