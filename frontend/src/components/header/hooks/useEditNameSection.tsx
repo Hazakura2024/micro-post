@@ -1,16 +1,17 @@
 import { useContext, useState } from "react";
 import { PostListContext } from "../../../contexts/PostListContext";
-import { UserContext } from "../../../contexts/UserContext";
 import { editUser } from "../../../api/User";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../../../utils/extractErrorMessage";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 export const useEditNameSection = () => {
     const [isEditingName, setIsEditingName] = useState(false);
     const [editingName, setEditingName] = useState("")
     const [isSubmittingName, setIsSubmittingName] = useState(false)
     const { refreshCurrent } = useContext(PostListContext)
-    const { userInfo, saveInfoWithName } = useContext(UserContext);
+    const userInfo = useAuthStore((state) => state.userInfo);
+    const saveInfoWithName = useAuthStore((state) => state.saveInfoWithName)
 
     const MAX_NAME_LENGTH = 20;
 
@@ -42,7 +43,7 @@ export const useEditNameSection = () => {
             await editUser(trimmedName)
             setEditingName("")
 
-            await saveInfoWithName(userInfo.id)
+            await saveInfoWithName()
             toast.success("名前の変更に成功しました！")
             setIsEditingName(false)
             refreshCurrent()

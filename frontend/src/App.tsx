@@ -1,5 +1,4 @@
 import "./App.css";
-import { UserProvider } from "./providers/UserProvider";
 import { ToastContainer } from "react-toastify";
 import { useAxiosIntercepter } from "./hooks/useAxiosIntercepter";
 
@@ -20,11 +19,11 @@ function App() {
   return (
     <div className="App">
       <ToastContainer position="top-right" />
-      <UserProvider>
-        <AxiosIntercepterSetup>
-          <AppRoute></AppRoute>
-        </AxiosIntercepterSetup>
-      </UserProvider>
+
+      <AxiosIntercepterSetup>
+        <AppRoute></AppRoute>
+      </AxiosIntercepterSetup>
+
     </div>
   );
 }

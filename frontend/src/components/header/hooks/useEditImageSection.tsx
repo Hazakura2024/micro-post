@@ -1,16 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { UserContext } from '../../../contexts/UserContext';
 import { uploadIcon } from '../../../api/User';
 import { toast } from 'react-toastify';
 import { extractErrorMessage } from '../../../utils/extractErrorMessage';
 import { PostListContext } from '../../../contexts/PostListContext';
+import { useAuthStore } from '../../../store/useAuthStore';
 
 export const useEditImageSection = () => {
     const [isEditingImage, setIsEditingImage] = useState(false)
     const [selectedFile, setSelectedFile] = useState<File | null>()
     const [isSubmittingImage, setIsSubmittingImage] = useState(false)
 
-    const { userInfo, setUserInfo } = useContext(UserContext);
+    const userInfo = useAuthStore((state) => state.userInfo);
+    const setUserInfo = useAuthStore((state) => state.setUserInfo);
+
     const { refreshCurrent } = useContext(PostListContext)
 
 
@@ -30,7 +32,7 @@ export const useEditImageSection = () => {
             if (!selectedFile) return;
             const res = await uploadIcon(selectedFile);
             console.log(res)
-            setUserInfo({ ...userInfo, icon_path: res.icon_path })
+            setUserInfo({ icon_path: res.icon_path })
             toast.success("アイコンの変更に成功しました！")
             refreshCurrent()
         } catch (error) {

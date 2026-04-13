@@ -1,12 +1,12 @@
 import { useContext, useState } from "react";
-import { UserContext } from "../../../contexts/UserContext";
 import { PostListContext } from "../../../contexts/PostListContext";
 import { deletePost } from "../../../api/Post";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../../../utils/extractErrorMessage";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 export const usePostItem = () => {
-    const { userInfo } = useContext(UserContext);
+    const userInfo = useAuthStore((state) => state.userInfo);
     const { getPostList } = useContext(PostListContext);
 
     // const isMyPost =  userName === userInfo.id;

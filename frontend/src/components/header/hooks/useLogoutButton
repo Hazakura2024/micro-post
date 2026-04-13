@@ -1,10 +1,11 @@
 import { useContext } from "react";
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../../api/Auth';
-import { UserContext } from '../../../contexts/UserContext';
+import { useAuthStore } from "../../../store/useAuthStore";
 
 export const useLogoutButton = () => {
-    const { setUserInfo } = useContext(UserContext);
+    const setUserInfo = useAuthStore((state) => state.setUserInfo)
+    const logout = useAuthStore((state) => state.logout)
 
     const navigate = useNavigate();
 
@@ -14,7 +15,6 @@ export const useLogoutButton = () => {
         } catch {
             // NOTE: ユーザー情報を消すことを優先
         } finally {
-            setUserInfo({ id: 0, name: "", icon_path: null, token: "" });
             navigate("/");
         }
     };
