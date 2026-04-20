@@ -1,78 +1,61 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { PostType } from "../../../types/Post";
 import { getList } from "../../../api/Post";
-import { extractErrorMessage } from "../../../utils/extractErrorMessage";
-import { toast } from "react-toastify";
-
-
+import { useQuery } from "@tanstack/react-query";
 
 export const usePostList = () => {
 
     const [searchParams, setSearchParams] = useSearchParams()
+    const page = Number(searchParams.get("page") ?? "1");
+    const searchName = searchParams.get("name") ?? "";
+    const searchWord = searchParams.get("word") ?? "";
 
-    const [postList, setPostList] = useState<PostType[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [localSearchWord, setLocalSearchWord] = useState(searchWord);
+    const [localSearchName, setLocalSearchName] = useState(searchName);
 
-    const getPostList = async (start?: number, record?: number, word?: string, user_name?: string) => {
-        if (isLoading) return;
-        setIsLoading(true);
-        try {
-            const posts = await getList(start, record, word, user_name);
+    const {
+        data: postList = [],
+        isLoading,
+        refetch,
+    } = useQuery({
+        queryKey: ["post", { page, searchName, searchWord }],
+        queryFn: async () => {
+            const posts = await getList((page - 1) * 10, undefined, searchWord, searchName);
 
-            if (posts) {
-                const formattedPosts = posts.map((p: PostType) => ({
-                    id: p.id,
-                    user_id: p.user_id,
-                    user_name: p.user_name,
-                    user_icon: p.user_icon,
-                    content: p.content,
-                    created_at: new Date(p.created_at),
-                }));
-                setPostList(formattedPosts);
-            }
-        } catch (error: unknown) {
-            const msg = extractErrorMessage(error, "投稿が取得できません");
-            toast.error(msg);
-        } finally {
-            setIsLoading(false);
+            if (!posts) return [];
+
+            return posts.map((p: PostType) => ({
+                id: p.id,
+                user_id: p.user_id,
+                user_name: p.user_name,
+                user_icon: p.user_icon,
+                content: p.content,
+                created_at: new Date(p.created_at),
+            }));
         }
-    };
+    });
 
-    // const refreshCurrent = () => {
-    //     const page = Number(searchParams.get("page") ?? "1");
-    //     const searchName = searchParams.get("name") ?? undefined;
-    //     const searchWord = searchParams.get("word") ?? undefined;
-    //     getPostList((page - 1) * 10, undefined, searchWord, searchName)
-    // }
-
-    useEffect(() => {
-        const page = Number(searchParams.get("page") ?? "1");
-        const searchName = searchParams.get("name") ?? undefined;
-        const searchWord = searchParams.get("word") ?? undefined;
-        getPostList((page - 1) * 10, undefined, searchWord, searchName)
-    }, [searchParams])
-
-    const [localSearchWord, setLocalSearchWord] = useState("");
-    const [localSearchName, setLocalSearchName] = useState("");
 
     const onClickReload = () => {
-
+        refetch()
     };
 
     const onClickClear = () => {
-        setSearchParams();
+        setSearchParams({});
         setLocalSearchName("")
         setLocalSearchWord("")
     }
 
     const onClickNext = () => {
+        if (isLoading || postList.length < 10) return;
         const currentPage = Number(searchParams.get("page") ?? "1");
         searchParams.set("page", `${currentPage + 1}`);
         setSearchParams(searchParams)
     }
 
     const onClickBack = () => {
+        if (isLoading || page < 2) return;
         const currentPage = Number(searchParams.get("page") ?? "1");
         searchParams.set("page", `${currentPage - 1}`);
         setSearchParams(searchParams)
@@ -88,7 +71,7 @@ export const usePostList = () => {
 
     const onClickSearch = () => {
         const params: Record<string, string> = {};
-
+        params.page = "1";
         if (localSearchName.trim()) params.name = localSearchName.trim();
         if (localSearchWord.trim()) params.word = localSearchWord.trim();
         setSearchParams(params);
@@ -96,7 +79,7 @@ export const usePostList = () => {
     }
 
     const isDisableNextButton = isLoading || postList.length < 10;
-    const isDisableBackButton = isLoading || searchParams.get("page") || Number(searchParams.get("page")) < 2;
+    const isDisableBackButton = isLoading || page < 2;
     return {
         isLoading,
         onClickReload,
@@ -112,5 +95,4 @@ export const usePostList = () => {
         onClickNext,
         postList,
     }
-
 }
