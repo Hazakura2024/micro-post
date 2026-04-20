@@ -15,8 +15,6 @@ export const setupAxiosIntercepters = () => {
     const requestInterceptor = apiClient.interceptors.request.use(
 
         (config) => {
-            console.log("requestIntercepterです")
-            console.log(useAuthStore.getState().userInfo.token);
             const isPublic =
                 config.url === "/auth" ||
                 config.url === "/auth/refresh" ||
