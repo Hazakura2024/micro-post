@@ -1,5 +1,4 @@
 import Layout from "../components/Layout";
-import { PostListProvider } from "../providers/PostListProvider";
 
 import { Navigate } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
@@ -11,7 +10,7 @@ const Main = () => {
 
   return (
     <>
-      {loggedIn ? <PostListProvider><Layout></Layout ></PostListProvider > : <Navigate replace to="/" />
+      {loggedIn ? <Layout></Layout > : <Navigate replace to="/" />
       }
     </>
   );

@@ -4,14 +4,13 @@ import type { PostType } from "../../../types/Post";
 export const PostListFooter = (
     {
         onClickBack,
-        isLoading,
-        page,
+        isDisableBackButton,
+        isDisableNextButton,
         onClickNext,
-        postList,
     }: {
         onClickBack: () => void,
-        isLoading: boolean,
-        page: number,
+        isDisableBackButton: boolean,
+        isDisableNextButton: boolean,
         onClickNext: () => void,
         postList: PostType[],
     }) => {
@@ -21,13 +20,13 @@ export const PostListFooter = (
         <SFooter>
             <SPageButton
                 onClick={onClickBack}
-                disabled={isLoading || page <= 1}
+                disabled={isDisableBackButton}
             >
                 前へ
             </SPageButton>
             <SPageButton
                 onClick={onClickNext}
-                disabled={isLoading || postList.length < 10}
+                disabled={isDisableNextButton}
             >
                 次へ
             </SPageButton>

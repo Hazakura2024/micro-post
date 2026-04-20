@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { uploadIcon } from '../../../api/User';
 import { toast } from 'react-toastify';
 import { extractErrorMessage } from '../../../utils/extractErrorMessage';
-import { PostListContext } from '../../../contexts/PostListContext';
 import { useAuthStore } from '../../../store/useAuthStore';
 
 export const useEditImageSection = () => {
@@ -12,8 +11,6 @@ export const useEditImageSection = () => {
 
     const userInfo = useAuthStore((state) => state.userInfo);
     const setUserInfo = useAuthStore((state) => state.setUserInfo);
-
-    const { refreshCurrent } = useContext(PostListContext)
 
 
     const onClickEditImage = () => {
@@ -34,7 +31,6 @@ export const useEditImageSection = () => {
             console.log(res)
             setUserInfo({ icon_path: res.icon_path })
             toast.success("アイコンの変更に成功しました！")
-            refreshCurrent()
         } catch (error) {
             console.log(error);
             const msg = extractErrorMessage(error, "アイコンの変更に失敗しました")

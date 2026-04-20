@@ -1,5 +1,4 @@
-import { useContext, useState } from "react";
-import { PostListContext } from "../../../contexts/PostListContext";
+import { useState } from "react";
 import { editUser } from "../../../api/User";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../../../utils/extractErrorMessage";
@@ -9,7 +8,7 @@ export const useEditNameSection = () => {
     const [isEditingName, setIsEditingName] = useState(false);
     const [editingName, setEditingName] = useState("")
     const [isSubmittingName, setIsSubmittingName] = useState(false)
-    const { refreshCurrent } = useContext(PostListContext)
+
     const userInfo = useAuthStore((state) => state.userInfo);
     const saveInfoWithName = useAuthStore((state) => state.saveInfoWithName)
 
@@ -46,7 +45,6 @@ export const useEditNameSection = () => {
             await saveInfoWithName()
             toast.success("名前の変更に成功しました！")
             setIsEditingName(false)
-            refreshCurrent()
 
         } catch (error) {
             const msg = extractErrorMessage(error, "名前の変更に失敗しました")

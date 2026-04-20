@@ -1,6 +1,9 @@
-import { useContext, useEffect, useState } from "react";
-import { PostListContext } from "../../../contexts/PostListContext";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import type { PostType } from "../../../types/Post";
+import { getList } from "../../../api/Post";
+import { extractErrorMessage } from "../../../utils/extractErrorMessage";
+import { toast } from "react-toastify";
 
 
 
@@ -8,31 +11,53 @@ export const usePostList = () => {
 
     const [searchParams, setSearchParams] = useSearchParams()
 
-    const {
-        postList,
-        getPostList,
-        isLoading,
-        page,
-        setPage,
-        searchWord,
-        setSearchWord,
-        searchName,
-        setSearchName,
-    } = useContext(PostListContext);
+    const [postList, setPostList] = useState<PostType[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const getPostList = async (start?: number, record?: number, word?: string, user_name?: string) => {
+        if (isLoading) return;
+        setIsLoading(true);
+        try {
+            const posts = await getList(start, record, word, user_name);
+
+            if (posts) {
+                const formattedPosts = posts.map((p: PostType) => ({
+                    id: p.id,
+                    user_id: p.user_id,
+                    user_name: p.user_name,
+                    user_icon: p.user_icon,
+                    content: p.content,
+                    created_at: new Date(p.created_at),
+                }));
+                setPostList(formattedPosts);
+            }
+        } catch (error: unknown) {
+            const msg = extractErrorMessage(error, "投稿が取得できません");
+            toast.error(msg);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const refreshCurrent = () => {
+        const page = Number(searchParams.get("page") ?? "1");
+        const searchName = searchParams.get("name") ?? undefined;
+        const searchWord = searchParams.get("word") ?? undefined;
+        getPostList((page - 1) * 10, undefined, searchWord, searchName)
+    }
+
+    useEffect(() => {
+        const page = Number(searchParams.get("page") ?? "1");
+        const searchName = searchParams.get("name") ?? undefined;
+        const searchWord = searchParams.get("word") ?? undefined;
+        getPostList((page - 1) * 10, undefined, searchWord, searchName)
+    }, [searchParams])
 
     const [localSearchWord, setLocalSearchWord] = useState("");
     const [localSearchName, setLocalSearchName] = useState("");
 
-    // 初表示時の取得
-    useEffect(() => {
-        getPostList(0, undefined, searchWord, searchName);
-        setPage(1)
-    }, []);
-
-
     const onClickReload = () => {
-        getPostList(0, undefined, searchWord, searchName);
-        setPage(1)
+
     };
 
     const onClickClear = () => {
@@ -69,6 +94,9 @@ export const usePostList = () => {
         setSearchParams(params);
 
     }
+
+    const isDisableNextButton = false;
+    const isDisableBackButton = false;
     return {
         isLoading,
         onClickReload,
@@ -79,7 +107,8 @@ export const usePostList = () => {
         onClickSearch,
         onClickClear,
         onClickBack,
-        page,
+        isDisableBackButton,
+        isDisableNextButton,
         onClickNext,
         postList,
     }
