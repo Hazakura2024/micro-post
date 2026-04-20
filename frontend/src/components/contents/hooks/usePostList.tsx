@@ -1,48 +1,66 @@
-import { useContext, useEffect, useState } from "react";
-import { PostListContext } from "../../../contexts/PostListContext";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import type { PostType } from "../../../types/Post";
+import { getList } from "../../../api/Post";
+import { useQuery } from "@tanstack/react-query";
 
 export const usePostList = () => {
+
+    const [searchParams, setSearchParams] = useSearchParams()
+    const page = Number(searchParams.get("page") ?? "1");
+    const searchName = searchParams.get("name") ?? "";
+    const searchWord = searchParams.get("word") ?? "";
+
+    const [localSearchWord, setLocalSearchWord] = useState(searchWord);
+    const [localSearchName, setLocalSearchName] = useState(searchName);
+
     const {
-        postList,
-        getPostList,
+        data: postList = [],
         isLoading,
-        page,
-        setPage,
-        searchWord,
-        setSearchWord,
-        searchName,
-        setSearchName,
-    } = useContext(PostListContext);
+        refetch,
+    } = useQuery({
+        queryKey: ["post", { page, searchName, searchWord }],
+        queryFn: async () => {
+            const posts = await getList((page - 1) * 10, undefined, searchWord, searchName);
 
-    const [localSearchWord, setLocalSearchWord] = useState("");
-    const [localSearchName, setLocalSearchName] = useState("");
+            if (!posts) return [];
 
-    // 初表示時の取得
-    useEffect(() => {
-        getPostList(0, undefined, searchWord, searchName);
-        setPage(1)
-    }, []);
+            return posts.map((p: PostType) => ({
+                id: p.id,
+                user_id: p.user_id,
+                user_name: p.user_name,
+                user_icon: p.user_icon,
+                content: p.content,
+                created_at: new Date(p.created_at),
+            }));
+        }
+    });
 
-    // 更新ボタンはこのままで良さそう
+
     const onClickReload = () => {
-        getPostList(0, undefined, searchWord, searchName);
-        setPage(1)
+        refetch()
     };
 
     const onClickClear = () => {
-        setSearchName("")
-        setSearchWord("")
-        setPage(1)
+        setSearchParams({});
         setLocalSearchName("")
         setLocalSearchWord("")
     }
 
     const onClickNext = () => {
-        setPage(page + 1)
+        if (isLoading || postList.length < 10) return;
+        const currentPage = Number(searchParams.get("page") ?? "1");
+        const nextParams = new URLSearchParams(searchParams)
+        nextParams.set("page", `${currentPage + 1}`);
+        setSearchParams(nextParams)
     }
 
     const onClickBack = () => {
-        setPage(page - 1)
+        if (isLoading || page < 2) return;
+        const currentPage = Number(searchParams.get("page") ?? "1");
+        const nextParams = new URLSearchParams(searchParams)
+        nextParams.set("page", `${currentPage - 1}`);
+        setSearchParams(nextParams)
     }
 
     const onChangeSearchWord = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
@@ -54,10 +72,16 @@ export const usePostList = () => {
     }
 
     const onClickSearch = () => {
-        setPage(1)
-        setSearchName(localSearchName)
-        setSearchWord(localSearchWord)
+        const params: Record<string, string> = {};
+        params.page = "1";
+        if (localSearchName.trim()) params.name = localSearchName.trim();
+        if (localSearchWord.trim()) params.word = localSearchWord.trim();
+        setSearchParams(params);
+
     }
+
+    const isDisableNextButton = isLoading || postList.length < 10;
+    const isDisableBackButton = isLoading || page < 2;
     return {
         isLoading,
         onClickReload,
@@ -68,9 +92,9 @@ export const usePostList = () => {
         onClickSearch,
         onClickClear,
         onClickBack,
-        page,
+        isDisableBackButton,
+        isDisableNextButton,
         onClickNext,
         postList,
     }
-
 }

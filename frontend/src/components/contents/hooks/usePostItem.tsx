@@ -1,13 +1,14 @@
-import { useContext, useState } from "react";
-import { PostListContext } from "../../../contexts/PostListContext";
+import { useState } from "react";
 import { deletePost } from "../../../api/Post";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../../../utils/extractErrorMessage";
 import { useAuthStore } from "../../../store/useAuthStore";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const usePostItem = () => {
     const userInfo = useAuthStore((state) => state.userInfo);
-    const { getPostList } = useContext(PostListContext);
+
+    const queryClient = useQueryClient()
 
     // const isMyPost =  userName === userInfo.id;
 
@@ -27,12 +28,12 @@ export const usePostItem = () => {
         setIsDeleting(true);
         try {
             await deletePost(postId);
-            await getPostList();
             toast.success("削除しました");
         } catch (error) {
             const msg = extractErrorMessage(error, "削除に失敗しました。");
             toast.error(msg);
         } finally {
+            queryClient.invalidateQueries({ queryKey: ["post"] })
             setIsDeleting(false);
         }
     };

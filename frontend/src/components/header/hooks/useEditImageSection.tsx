@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { uploadIcon } from '../../../api/User';
 import { toast } from 'react-toastify';
 import { extractErrorMessage } from '../../../utils/extractErrorMessage';
-import { PostListContext } from '../../../contexts/PostListContext';
 import { useAuthStore } from '../../../store/useAuthStore';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const useEditImageSection = () => {
     const [isEditingImage, setIsEditingImage] = useState(false)
@@ -13,8 +13,7 @@ export const useEditImageSection = () => {
     const userInfo = useAuthStore((state) => state.userInfo);
     const setUserInfo = useAuthStore((state) => state.setUserInfo);
 
-    const { refreshCurrent } = useContext(PostListContext)
-
+    const queryClient = useQueryClient();
 
     const onClickEditImage = () => {
         setIsEditingImage((prev) => !prev)
@@ -34,12 +33,12 @@ export const useEditImageSection = () => {
             console.log(res)
             setUserInfo({ icon_path: res.icon_path })
             toast.success("アイコンの変更に成功しました！")
-            refreshCurrent()
         } catch (error) {
             console.log(error);
             const msg = extractErrorMessage(error, "アイコンの変更に失敗しました")
             toast.error(msg)
         } finally {
+            queryClient.invalidateQueries({ queryKey: ["post"] })
             setSelectedFile(null)
             setIsSubmittingImage(false)
             setIsEditingImage(false)

@@ -18,7 +18,8 @@ const Contents = () => {
     onClickSearch,
     onClickClear,
     onClickBack,
-    page,
+    isDisableBackButton,
+    isDisableNextButton,
     onClickNext,
     postList,
   } = usePostList()
@@ -41,8 +42,8 @@ const Contents = () => {
       }} />
       <PostListFooter {...{
         onClickBack,
-        isLoading,
-        page,
+        isDisableBackButton,
+        isDisableNextButton,
         onClickNext,
         postList,
       }} />
