@@ -39,12 +39,12 @@ export const usePostList = () => {
         }
     };
 
-    const refreshCurrent = () => {
-        const page = Number(searchParams.get("page") ?? "1");
-        const searchName = searchParams.get("name") ?? undefined;
-        const searchWord = searchParams.get("word") ?? undefined;
-        getPostList((page - 1) * 10, undefined, searchWord, searchName)
-    }
+    // const refreshCurrent = () => {
+    //     const page = Number(searchParams.get("page") ?? "1");
+    //     const searchName = searchParams.get("name") ?? undefined;
+    //     const searchWord = searchParams.get("word") ?? undefined;
+    //     getPostList((page - 1) * 10, undefined, searchWord, searchName)
+    // }
 
     useEffect(() => {
         const page = Number(searchParams.get("page") ?? "1");
@@ -95,8 +95,8 @@ export const usePostList = () => {
 
     }
 
-    const isDisableNextButton = false;
-    const isDisableBackButton = false;
+    const isDisableNextButton = isLoading || postList.length < 10;
+    const isDisableBackButton = isLoading || searchParams.get("page") || Number(searchParams.get("page")) < 2;
     return {
         isLoading,
         onClickReload,
