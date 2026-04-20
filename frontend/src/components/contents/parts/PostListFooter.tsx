@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import type { PostType } from "../../../types/Post";
 
 export const PostListFooter = (
     {
@@ -12,7 +11,6 @@ export const PostListFooter = (
         isDisableBackButton: boolean,
         isDisableNextButton: boolean,
         onClickNext: () => void,
-        postList: PostType[],
     }) => {
 
 
