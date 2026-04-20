@@ -58,6 +58,7 @@ export const setupAxiosIntercepters = () => {
             originalRequest._retry = true;
 
             try {
+                // NOTE: refresh実行中なら何もしない
                 if (!refreshPromise) {
                     refreshPromise = apiClient
                         .post<AuthResponse>("/auth/refresh")
@@ -70,6 +71,14 @@ export const setupAxiosIntercepters = () => {
                             refreshPromise = null;
                         })
                 }
+
+                const newToken = await refreshPromise;
+
+                const headers = axios.AxiosHeaders.from(originalRequest.headers);
+                headers.set("Authorization", "Bearer " + newToken);
+                originalRequest.headers = headers;
+
+                return apiClient(originalRequest);
             } catch (error) {
                 useAuthStore.getState().setUserInfo({
                     id: 0,
