@@ -1,12 +1,12 @@
-import { useContext } from "react";
 import Layout from "../components/Layout";
 import { PostListProvider } from "../providers/PostListProvider";
 
 import { Navigate } from "react-router-dom";
-import { UserContext } from "../contexts/UserContext";
+import { useAuthStore } from "../store/useAuthStore";
+
 
 const Main = () => {
-  const { userInfo } = useContext(UserContext);
+  const userInfo = useAuthStore((state) => state.userInfo)
   const loggedIn = userInfo.token !== "";
 
   return (

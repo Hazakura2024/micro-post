@@ -1,5 +1,6 @@
 import type { UserResponse } from "../types/User";
-import { apiClient } from "../hooks/useAxiosIntercepter";
+import { apiClient } from "./axiosIntercepter";
+
 
 export const getUser = async (): Promise<UserResponse> => {
 

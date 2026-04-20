@@ -1,23 +1,19 @@
 import axios from "axios";
 import type { AuthResponse } from "../types/Auth";
-import { useContext, useEffect, useRef } from "react";
-import { UserContext } from "../contexts/UserContext";
+import { useEffect, useRef } from "react";
+import { useAuthStore } from "../store/useAuthStore";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const apiClient = axios.create({
-    baseURL: API_URL,
-    withCredentials: true,
-})
 
-export const useAxiosIntercepter = () => {
-    const { userInfo, setUserInfo } = useContext(UserContext);
 
-    const tokenRef = useRef(userInfo.token);
-    useEffect(() => {
-        tokenRef.current = userInfo.token;
-    }, [userInfo.token])
+const useAxiosIntercepter = () => {
 
+    // const token = useAuthStore((state) => state.userInfo.token);
+    const setUserInfo = useAuthStore((state) => state.setUserInfo);
+    const initializeAuth = useAuthStore((state) => state.initializeAuth);
+
+    const refreshPromiseRef = useRef<Promise<string> | null>(null)
 
     useEffect(() => {
         // NOTE: access_tokenを自動でheaderに設定する処理
@@ -30,27 +26,20 @@ export const useAxiosIntercepter = () => {
                     config.url === "/user/create";
 
                 if (!isPublic) {
+
+                    const latestToken = useAuthStore.getState().userInfo.token;
                     const headers = axios.AxiosHeaders.from(config.headers)
-                    const already = headers.get("Authorization");
-                    if (already) {
-                        config.headers = headers;
-                        return config;
-                    }
-
-                    if (tokenRef.current) {
-                        headers.set("Authorization", "Bearer " + tokenRef.current)
+                    if (!headers.get("Authorization")) {
+                        headers.set("Authorization", "Bearer " + latestToken)
                         config.headers = headers;
                     }
-
-
                 }
-
                 return config;
             },
             (error) => Promise.reject(error),
         )
 
-        // NOTE: access_token期限切れ時に一度だけrefreshAuthを飛ばす処理
+        NOTE: access_token期限切れ時に一度だけrefreshAuthを飛ばす処理
         const responseIntercepter = apiClient.interceptors.response.use(
             (response) => response,
             async (error) => {
@@ -66,30 +55,24 @@ export const useAxiosIntercepter = () => {
                     originalRequest._retry = true;
 
                     try {
-                        const res = await apiClient.post<AuthResponse>('/auth/refresh')
-                        console.log('refreshされました。')
-                        const newAccessToken = res.data.token;
-                        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
-                        apiClient.defaults.headers.common.Authorization = "Bearer " + newAccessToken;
-                        tokenRef.current = newAccessToken;
-
-                        setUserInfo(prev => ({
-                            ...prev,
-                            token: newAccessToken,
-                        }));
-
-
-
+                        if (!refreshPromiseRef.current) {
+                            refreshPromiseRef.current = apiClient.post<AuthResponse>("/auth/refresh")
+                                .then((res) => {
+                                    const newToken = res.data.token;
+                                    useAuthStore.getState().setUserInfo({ token: newToken });
+                                    return newToken;
+                                })
+                                .finally(() => {
+                                    refreshPromiseRef.current = null;
+                                });
+                        }
+                        const newToken = await refreshPromiseRef.current;
+                        originalRequest.headers.Authorization = `Bearer ${newToken}`;
                         return apiClient(originalRequest)
 
                     } catch (error) {
-                        setUserInfo({
-                            id: 0,
-                            name: "",
-                            icon_path: null,
-                            token: "",
-                        });
+                        await initializeAuth();
                         // (学習メモ): throw errorと同じだが、axiosの公式ドキュメントではこっちで書いている
                         return Promise.reject(error);
                     }
@@ -101,6 +84,6 @@ export const useAxiosIntercepter = () => {
             apiClient.interceptors.request.eject(requestInterceptor);
             apiClient.interceptors.response.eject(responseIntercepter);
         }
-    }, [userInfo.token, setUserInfo])
+    }, [setUserInfo, initializeAuth])
 }
 

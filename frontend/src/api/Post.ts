@@ -1,5 +1,6 @@
 import type { CreatePostResponse, PostType } from "../types/Post";
-import { apiClient } from "../hooks/useAxiosIntercepter";
+import { apiClient } from "./axiosIntercepter";
+
 
 export const createPost = async (
   msg: string,

@@ -1,7 +1,0 @@
-
-
-export const useAuthCommon = () => {
-
-
-    return {};
-}

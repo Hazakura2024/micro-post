@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import { useAuthError } from "./useAuthError";
 import { useAuthSuccessFlow } from "./useAuthSuccessFlow";
 
-
 export const useSignIn = () => {
 
 
@@ -34,9 +33,9 @@ export const useSignIn = () => {
                 toast.error("ログインに失敗しました");
                 return;
             }
-            handleAuthSuccess(ret.token, ret.user_id)
+            await handleAuthSuccess(ret.token)
         } catch (error: unknown) {
-            handleAuthError(error, "ログインできませんでした。")
+            await handleAuthError(error, "ログインできませんでした。")
         } finally {
             setIsSubmitting(false);
         }

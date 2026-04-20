@@ -1,22 +1,20 @@
-import { useCallback, useContext } from 'react'
-import { apiClient } from '../../../hooks/useAxiosIntercepter';
-import { UserContext } from '../../../contexts/UserContext';
+import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../../store/useAuthStore';
 
 export const useAuthSuccessFlow = () => {
 
     const navigate = useNavigate();
 
-    const { setUserInfo, saveInfoWithName } = useContext(UserContext);
 
-    const handleAuthSuccess = useCallback(async (token: string, userId: number) => {
-        apiClient.defaults.headers.common.Authorization = "Bearer " + token;
+    const setUserInfo = useAuthStore((state) => state.setUserInfo);
+    const saveInfoWithName = useAuthStore((state) => state.saveInfoWithName)
 
-        setUserInfo(prev => ({
-            ...prev,
-            token,
-        }))
-        await saveInfoWithName(userId);
+    const handleAuthSuccess = useCallback(async (token: string) => {
+
+
+        setUserInfo({ token: token })
+        await saveInfoWithName();
         navigate("/main");
     },
         [navigate, saveInfoWithName, setUserInfo]
