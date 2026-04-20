@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createPost } from "../../../api/Post";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../../../utils/extractErrorMessage";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useCreatePostSection = () => {
     const [msg, setMsg] = useState("");
@@ -9,6 +10,8 @@ export const useCreatePostSection = () => {
     const [isPosting, setIsPosting] = useState(false);
 
     const MAX_MESSAGE_LENGTH = 140;
+
+    const queryClient = useQueryClient();
 
     const onSendClick = async () => {
         if (isPosting) return;
@@ -26,6 +29,7 @@ export const useCreatePostSection = () => {
             const msg = extractErrorMessage(error, "投稿に失敗しました。");
             toast.error(msg);
         } finally {
+            queryClient.invalidateQueries({ queryKey: ["post"] })
             setIsPosting(false);
         }
     };

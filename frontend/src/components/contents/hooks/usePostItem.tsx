@@ -3,9 +3,12 @@ import { deletePost } from "../../../api/Post";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../../../utils/extractErrorMessage";
 import { useAuthStore } from "../../../store/useAuthStore";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const usePostItem = () => {
     const userInfo = useAuthStore((state) => state.userInfo);
+
+    const queryClient = useQueryClient()
 
     // const isMyPost =  userName === userInfo.id;
 
@@ -30,6 +33,7 @@ export const usePostItem = () => {
             const msg = extractErrorMessage(error, "削除に失敗しました。");
             toast.error(msg);
         } finally {
+            queryClient.invalidateQueries({ queryKey: ["post"] })
             setIsDeleting(false);
         }
     };

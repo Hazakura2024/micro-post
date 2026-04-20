@@ -3,6 +3,7 @@ import { uploadIcon } from '../../../api/User';
 import { toast } from 'react-toastify';
 import { extractErrorMessage } from '../../../utils/extractErrorMessage';
 import { useAuthStore } from '../../../store/useAuthStore';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const useEditImageSection = () => {
     const [isEditingImage, setIsEditingImage] = useState(false)
@@ -12,6 +13,7 @@ export const useEditImageSection = () => {
     const userInfo = useAuthStore((state) => state.userInfo);
     const setUserInfo = useAuthStore((state) => state.setUserInfo);
 
+    const queryClient = useQueryClient();
 
     const onClickEditImage = () => {
         setIsEditingImage((prev) => !prev)
@@ -36,6 +38,7 @@ export const useEditImageSection = () => {
             const msg = extractErrorMessage(error, "アイコンの変更に失敗しました")
             toast.error(msg)
         } finally {
+            queryClient.invalidateQueries({ queryKey: ["post"] })
             setSelectedFile(null)
             setIsSubmittingImage(false)
             setIsEditingImage(false)
