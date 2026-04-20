@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { useAuthStore } from "../store/useAuthStore";
+import type { AuthResponse } from "../types/Auth";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -35,12 +36,49 @@ export const setupAxiosIntercepters = () => {
         (error) => Promise.reject(error),
     )
 
+    // 現在進行中の refresh 処理
+    let refreshPromise: Promise<string> | null = null;
+
     // NOTE: access_token期限切れ時に一度だけrefreshAuthを飛ばす処理
     const responseIntercepter = apiClient.interceptors.response.use(
         (response) => response,
         async (error) => {
+            const originalRequest = error.config;
 
-            return Promise.reject(error);
+            if (error.response?.status !== 401) return Promise.reject(error);
+
+            if (!originalRequest || originalRequest._retry) return Promise.reject(error);
+
+            const isPublic =
+                originalRequest.url === "/auth" ||
+                originalRequest.url === "/auth/refresh" ||
+                originalRequest.url === "/user/create";
+            if (isPublic) return Promise.reject(error);
+
+            originalRequest._retry = true;
+
+            try {
+                if (!refreshPromise) {
+                    refreshPromise = apiClient
+                        .post<AuthResponse>("/auth/refresh")
+                        .then((res) => {
+                            const newToken = res.data.token;
+                            useAuthStore.getState().setUserInfo({ token: newToken });
+                            return newToken;
+                        })
+                        .finally(() => {
+                            refreshPromise = null;
+                        })
+                }
+            } catch (error) {
+                useAuthStore.getState().setUserInfo({
+                    id: 0,
+                    name: "",
+                    icon_path: null,
+                    token: "",
+                })
+                return Promise.reject(error);
+            }
         }
     )
     return () => {

@@ -39,7 +39,7 @@ const useAxiosIntercepter = () => {
             (error) => Promise.reject(error),
         )
 
-        // NOTE: access_token期限切れ時に一度だけrefreshAuthを飛ばす処理
+        NOTE: access_token期限切れ時に一度だけrefreshAuthを飛ばす処理
         const responseIntercepter = apiClient.interceptors.response.use(
             (response) => response,
             async (error) => {
