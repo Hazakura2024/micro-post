@@ -50,15 +50,17 @@ export const usePostList = () => {
     const onClickNext = () => {
         if (isLoading || postList.length < 10) return;
         const currentPage = Number(searchParams.get("page") ?? "1");
-        searchParams.set("page", `${currentPage + 1}`);
-        setSearchParams(searchParams)
+        const nextParams = new URLSearchParams(searchParams)
+        nextParams.set("page", `${currentPage + 1}`);
+        setSearchParams(nextParams)
     }
 
     const onClickBack = () => {
         if (isLoading || page < 2) return;
         const currentPage = Number(searchParams.get("page") ?? "1");
-        searchParams.set("page", `${currentPage - 1}`);
-        setSearchParams(searchParams)
+        const nextParams = new URLSearchParams(searchParams)
+        nextParams.set("page", `${currentPage - 1}`);
+        setSearchParams(nextParams)
     }
 
     const onChangeSearchWord = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
