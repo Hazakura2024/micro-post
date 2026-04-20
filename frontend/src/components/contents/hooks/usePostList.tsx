@@ -1,7 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { PostListContext } from "../../../contexts/PostListContext";
+import { useSearchParams } from "react-router-dom";
+
+
 
 export const usePostList = () => {
+
+    const [searchParams, setSearchParams] = useSearchParams()
+
     const {
         postList,
         getPostList,
@@ -23,26 +29,28 @@ export const usePostList = () => {
         setPage(1)
     }, []);
 
-    // 更新ボタンはこのままで良さそう
+
     const onClickReload = () => {
         getPostList(0, undefined, searchWord, searchName);
         setPage(1)
     };
 
     const onClickClear = () => {
-        setSearchName("")
-        setSearchWord("")
-        setPage(1)
+        setSearchParams();
         setLocalSearchName("")
         setLocalSearchWord("")
     }
 
     const onClickNext = () => {
-        setPage(page + 1)
+        const currentPage = Number(searchParams.get("page") ?? "1");
+        searchParams.set("page", `${currentPage + 1}`);
+        setSearchParams(searchParams)
     }
 
     const onClickBack = () => {
-        setPage(page - 1)
+        const currentPage = Number(searchParams.get("page") ?? "1");
+        searchParams.set("page", `${currentPage - 1}`);
+        setSearchParams(searchParams)
     }
 
     const onChangeSearchWord = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
@@ -54,9 +62,12 @@ export const usePostList = () => {
     }
 
     const onClickSearch = () => {
-        setPage(1)
-        setSearchName(localSearchName)
-        setSearchWord(localSearchWord)
+        const params: Record<string, string> = {};
+
+        if (localSearchName.trim()) params.name = localSearchName.trim();
+        if (localSearchWord.trim()) params.word = localSearchWord.trim();
+        setSearchParams(params);
+
     }
     return {
         isLoading,
