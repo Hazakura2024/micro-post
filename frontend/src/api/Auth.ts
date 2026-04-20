@@ -1,5 +1,6 @@
-import { apiClient } from "../hooks/useAxiosIntercepter";
+
 import type { AuthResponse } from "../types/Auth";
+import { apiClient } from "./axiosIntercepter";
 
 export const signIn = async (userId: string, pass: string): Promise<AuthResponse> => {
   const res = await apiClient.post<AuthResponse>('/auth', {

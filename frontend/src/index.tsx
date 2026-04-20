@@ -4,7 +4,9 @@ import "./index.css";
 import App from "./App";
 // import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-
+import { setupAxiosIntercepters } from "./api/axiosIntercepter";
+setupAxiosIntercepters()
+console.log("呼び出せてる？")
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );

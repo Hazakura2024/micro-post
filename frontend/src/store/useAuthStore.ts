@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import type { UserInfo } from "../types/User";
-import { apiClient } from "../hooks/useAxiosIntercepter";
+
 import { getUser } from "../api/User";
 import { extractErrorMessage } from "../utils/extractErrorMessage";
 import { toast } from "react-toastify";
 import { logout } from "../api/Auth";
+import { apiClient } from "../api/axiosIntercepter";
 
 interface AuthState {
     userInfo: UserInfo;

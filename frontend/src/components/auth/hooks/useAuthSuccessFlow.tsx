@@ -12,7 +12,10 @@ export const useAuthSuccessFlow = () => {
 
     const handleAuthSuccess = useCallback(async (token: string) => {
 
+
         setUserInfo({ token: token })
+        console.log("useSuccessFlowです")
+        console.log(useAuthStore.getState().userInfo.token);
         await saveInfoWithName();
         navigate("/main");
     },

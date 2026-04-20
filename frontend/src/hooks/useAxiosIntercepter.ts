@@ -5,18 +5,11 @@ import { useAuthStore } from "../store/useAuthStore";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const apiClient = axios.create({
-    baseURL: API_URL,
-    withCredentials: true,
-})
-
-export const useAxiosIntercepter = () => {
-    // const { userInfo, setUserInfo } = useContext(UserContext);
-
-    // const tokenRef = useRef(userInfo.token);
 
 
-    const token = useAuthStore((state) => state.userInfo.token);
+const useAxiosIntercepter = () => {
+
+    // const token = useAuthStore((state) => state.userInfo.token);
     const setUserInfo = useAuthStore((state) => state.setUserInfo);
     const initializeAuth = useAuthStore((state) => state.initializeAuth);
 
@@ -62,26 +55,7 @@ export const useAxiosIntercepter = () => {
                     originalRequest._retry = true;
 
                     try {
-                        /** 
-                        if (!refreshPromiseRef.current)
-                        まだ refresh 中ではないなら、refresh を始めるという判定です
 
-                        refreshPromiseRef.current = apiClient.post("/auth/refresh")...
-                        refresh の処理そのものを Promise として保存しています。
-                        これで「今走っている refresh の結果」を他の処理も共有できます
-
-                        .then((res) => { ... })
-                        refresh が成功したら、新しい token を取り出して setUserInfo({ token: newToken }) で Store を更新します。
-                        ここで更新しておくと、次のリクエストから新 token を使えます
-
-                        return newToken
-                        Promise の最終的な結果を token 文字列にしています。
-                        だから後で await refreshPromiseRef.current した側は、新 token を受け取れます
-
-                        .finally(() => { refreshPromiseRef.current = null; })
-                        成功しても失敗しても、refresh 中フラグを必ず解除します。
-                        これがないと、二度と refresh できなくなります
-                        */
                         if (!refreshPromiseRef.current) {
                             refreshPromiseRef.current = apiClient.post<AuthResponse>("/auth/refresh")
                                 .then((res) => {
@@ -110,6 +84,6 @@ export const useAxiosIntercepter = () => {
             apiClient.interceptors.request.eject(requestInterceptor);
             apiClient.interceptors.response.eject(responseIntercepter);
         }
-    }, [token, setUserInfo, initializeAuth])
+    }, [setUserInfo, initializeAuth])
 }
 
