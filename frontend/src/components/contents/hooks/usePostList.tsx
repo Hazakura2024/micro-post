@@ -36,7 +36,6 @@ export const usePostList = () => {
         }
     });
 
-
     const onClickReload = () => {
         refetch()
     };
@@ -65,7 +64,6 @@ export const usePostList = () => {
 
     const onChangeSearchWord = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
         setLocalSearchWord(e.target.value)
-
     }
     const onChangeSearchName = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
         setLocalSearchName(e.target.value)
@@ -77,7 +75,6 @@ export const usePostList = () => {
         if (localSearchName.trim()) params.name = localSearchName.trim();
         if (localSearchWord.trim()) params.word = localSearchWord.trim();
         setSearchParams(params);
-
     }
 
     const isDisableNextButton = isLoading || postList.length < 10;
