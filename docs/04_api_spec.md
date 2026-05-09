@@ -3,114 +3,142 @@
 ## 1. 前提
 
 - Base URL: `http://localhost:3000`
-- 認証方式: `auth` テーブルで発行したトークンをクエリ文字列で送信
-- 日時形式: `created_at` はISO 8601文字列（例: `2026-03-23T12:34:56.000Z`）
+- 認証方式
+  - access token: `Authorization: Bearer <token>`
+  - refresh token: Cookie (`refresh_token`)
+- CORS
+  - `credentials: true`
+  - Origin: `http://localhost:3001`, `http://127.0.0.1:3001`
+- 日時形式
+  - `created_at` は ISO 8601 文字列
 
-## 2. ログイン
+## 2. 認証
 
-- Method/Path: `GET /auth`
-- Query
-  - `user_id` (string, 必須): 実装上は「ユーザー名」を渡す
+### 2-1. ログイン
+
+- Method/Path: `POST /auth`
+- Body (JSON)
+  - `user_id` (string, 必須): 実装上はユーザー名
   - `password` (string, 必須)
 
-### リクエスト例
-
-`GET /auth?user_id=taro&password=secret123`
-
-### レスポンス（200）
+#### レスポンス（200）
 
 ```json
 {
-  "token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-  "user_id": 1
+  "user_id": 1,
+  "token": "<access_token>"
 }
 ```
 
-### エラー
+補足
 
-- `401 Unauthorized`: パスワード未指定、または認証失敗
+- refresh token は `Set-Cookie` で返却
 
-## 3. ユーザー作成
+### 2-2. トークン再発行
 
-- Method/Path: `POST /user`
+- Method/Path: `POST /auth/refresh`
+- Body: なし
+- Cookie: `refresh_token` が必要
+
+#### レスポンス（200）
+
+```json
+{
+  "userid": 1,
+  "token": "<new_access_token>"
+}
+```
+
+### 2-3. ログアウト
+
+- Method/Path: `DELETE /auth/logout`
+- 認証: Bearer 必須
+- レスポンス: `200`（ボディなし）
+
+## 3. ユーザー
+
+### 3-1. ユーザー作成
+
+- Method/Path: `POST /user/create`
 - Body (JSON)
   - `name` (string, 必須)
   - `email` (string, 必須, email形式)
   - `password` (string, 必須, 最小6文字)
 
-### リクエスト例
-
-```json
-{
-  "name": "taro",
-  "email": "taro@example.com",
-  "password": "secret123"
-}
-```
-
-### レスポンス（201相当）
+#### レスポンス（201相当）
 
 ```json
 {
   "id": 1,
   "name": "taro",
   "email": "taro@example.com",
-  "createdAt": "2026-03-23T12:34:56.000Z"
+  "createdAt": "2026-04-20T12:34:56.000Z"
 }
 ```
 
-### エラー
+### 3-2. 自分情報取得
 
-- `400 Bad Request`: バリデーションエラー
-- `409 Conflict`: メールアドレス重複、またはユーザー名重複
+- Method/Path: `GET /user/me`
+- 認証: Bearer 必須
 
-## 4. ユーザー情報取得
-
-- Method/Path: `GET /user/:id`
-- Path Parameter
-  - `id` (number, 必須)
-- Query
-  - `token` (string, 必須)
-
-### リクエスト例
-
-`GET /user/1?token=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
-
-### レスポンス（200）
+#### レスポンス（200）
 
 ```json
 {
   "id": 1,
   "name": "taro",
   "email": "taro@example.com",
-  "createdAt": "2026-03-23T12:34:56.000Z"
+  "icon_path": "/uploads/users/1/icon.png",
+  "createdAt": "2026-04-20T12:34:56.000Z"
 }
 ```
 
-### エラー
+### 3-3. ユーザー名更新
 
-- `403 Forbidden`: トークン不正、または期限切れ
-- `404 Not Found`: 対象ユーザーが存在しない
+- Method/Path: `PATCH /user/me`
+- 認証: Bearer 必須
+- Body (JSON)
+  - `name` (string, 必須, 最大50文字)
 
-## 5. ポスト投稿
+### 3-4. アイコン更新
+
+- Method/Path: `PATCH /user/me/icon`
+- 認証: Bearer 必須
+- Content-Type: `multipart/form-data`
+- Form field
+  - `icon` (file, 必須)
+
+#### レスポンス（200）
+
+```json
+{
+  "id": 1,
+  "name": "taro",
+  "icon_path": "/uploads/users/1/<filename>.png"
+}
+```
+
+### 3-5. アイコン取得
+
+- Method/Path: `GET /user/me/icon`
+- 認証: Bearer 必須
+
+#### レスポンス（200）
+
+```json
+"/uploads/users/1/<filename>.png"
+```
+
+## 4. 投稿
+
+### 4-1. 投稿作成
 
 - Method/Path: `POST /post`
-- Query
-  - `token` (string, 必須)
+- 認証: Bearer 必須
 - Body (JSON)
-  - `message` (string, 必須, 1〜140文字)
+  - `message` (string, 必須, 最大140文字)
 
-### リクエスト例
-
-`POST /post?token=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
-
-```json
-{
-  "message": "こんにちは"
-}
-```
-
-### レスポンス（201相当）
+#### レスポンス（201相当）
 
 ```json
 {
@@ -119,24 +147,17 @@
 }
 ```
 
-### エラー
-
-- `400 Bad Request`: `message` または `token` のバリデーションエラー
-- `403 Forbidden`: トークン不正、または期限切れ
-
-## 6. ポスト一覧取得
+### 4-2. 投稿一覧取得
 
 - Method/Path: `GET /post`
+- 認証: Bearer 必須
 - Query
-  - `token` (string, 必須)
   - `start` (number, 任意, default: `0`)
   - `records` (number, 任意, default: `1`)
+  - `word` (string, 任意): 投稿本文検索
+  - `user_name` (string, 任意): 投稿者名検索
 
-### リクエスト例
-
-`GET /post?token=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&start=0&records=10`
-
-### レスポンス（200）
+#### レスポンス（200）
 
 ```json
 [
@@ -144,51 +165,28 @@
     "id": 3,
     "user_id": 1,
     "user_name": "taro",
+    "user_icon": "/uploads/users/1/icon.png",
     "content": "投稿内容",
-    "created_at": "2026-03-23T12:34:56.000Z"
+    "created_at": "2026-04-20T12:34:56.000Z"
   }
 ]
 ```
 
-### エラー
+### 4-3. 投稿削除
 
-- `403 Forbidden`: トークン不正、または期限切れ
-
-## 7. ポスト削除
-
-- Method/Path: `DELETE /post/:post_id`
+- Method/Path: `DELETE /post/:id`
+- 認証: Bearer 必須
 - Path Parameter
-  - `post_id` (number, 必須)
-- Query
-  - `token` (string, 必須)
+  - `id` (number, 必須)
 
-### リクエスト例
+#### レスポンス
 
-`DELETE /post/1?token=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
+- `200`（ボディなし）
 
-### レスポンス（204 No Content）
+## 5. エラー概要
 
-- Body: なし
-
-### エラー
-
-- `400 Bad Request`: id 不正
-- `403 Forbidden`: トークン不正、または期限切れ
-
-## 8. アイコン登録
-
-- Method/Path: `PATCH /user/me/icon`
-- Path Parameter
-  - `token` (string, 必須)
-
-### リクエスト例
-
-`PATCH /user/me/icon?token=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
-
-### レスポンス（204 No Content）
-
-- Body: なし
-
-### エラー
-
-- `403 Forbidden`: トークン不正、または期限切れ
+- `400 Bad Request`: バリデーションエラー
+- `401 Unauthorized`: 認証失敗、トークン不正、refresh失敗
+- `403 Forbidden`: 権限不足（自分以外の投稿削除など）
+- `404 Not Found`: 対象データなし
+- `409 Conflict`: 重複（ユーザー名/メール）
