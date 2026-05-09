@@ -6,14 +6,13 @@
 
 - 目的: ログインと新規登録
 - 構成
-  - `SignIn`（ログインフォーム）
-  - `SignUp`（新規登録フォーム）
-- 実装: `SignInLayout` で `SignIn` と `SignUp` を縦並び表示
+  - `SignIn`
+  - `SignUp`
 
 ### 1-2. メイン画面 (`/main`)
 
 - 目的: 投稿作成と投稿一覧閲覧
-- 認可要件: `UserContext.userInfo.token` が空文字でないこと
+- 認可要件: `useAuthStore().userInfo.token` が空でないこと
 - 構成
   - `Header`（ロゴ、ユーザー名、ログアウト）
   - `SideBar`（新規投稿フォーム）
@@ -23,128 +22,100 @@
 
 ```mermaid
 flowchart TD
-    A["/ (SignInLayout)"] -->|ログイン成功| B["/main (Layout)"]
-        A -->|新規登録成功 + 自動ログイン成功| B
-        B -->|ログアウト| A
-        B -->|token未設定| A
+    A["/ (SignIn)"] -->|ログイン成功| B["/main (Layout)"]
+    A -->|新規登録成功 + 自動ログイン成功| B
+    B -->|ログアウト| A
+    B -->|token未設定| A
 ```
 
 ## 3. ルーティング設計
 
-- `App.tsx`
-  - `path="/"` -> `SignIn`
-  - `path="/main"` -> `Main`
-- `Main.tsx`
-  - `userInfo.token !== ""` の場合のみ `Layout` を表示
-  - 未ログイン時は `Navigate replace to="/"`
+- `AppRoute.tsx`
+  - `path="/"` -> ログイン済なら `/main` へリダイレクト
+  - `path="/main"` -> 未ログインなら `/` へリダイレクト
+- `authLoading` 中は `Loading...` を表示して判定を保留
 
-## 4. UIコンポーネント設計
+## 4. 認証UX設計
 
-### 4-1. SignIn
+- 初回起動
+  - `App.tsx` で `initializeAuth()` を実行
+  - `/auth/refresh` -> `/user/me` で復元
+- API呼び出し
+  - interceptor が Authorization を自動付与
+  - 401時は refresh 後に元リクエストを再送
 
-- 入力項目
-  - `ID`（実装上はユーザー名）
-  - `Password`
-- 操作
-  - `Login` ボタン押下で `GET /auth`
-  - 成功時に `UserContext` へ `id/token` 保存し `/main` へ遷移
-- 表示
-  - 失敗時はエラーメッセージ表示 + トースト表示
-  - 送信中はボタン無効化
+## 5. 投稿一覧UX設計
 
-### 4-2. SignUp
+- データ取得
+  - TanStack Query (`useQuery`) で一覧を取得
+  - queryKey は `page`, `name`, `word` を含む
+- 検索条件
+  - URL クエリ (`useSearchParams`) を正本として管理
+  - 例: `?page=1&name=taro&word=hello`
+- ページング
+  - `page` クエリで前へ/次へを制御
+  - 1ページ目では「前へ」ボタンを無効化
+- 更新
+  - 削除後は `invalidateQueries({ queryKey: ["post"] })` で再取得
 
-- 入力項目
-  - ユーザー名
-  - メールアドレス
-  - Password
-- フロントバリデーション
-  - 全項目必須
-  - メール形式チェック
-  - パスワード6文字以上
-- 操作
-  - `POST /user` で新規登録
-  - 続けて `GET /auth` で自動ログイン
-  - 成功時 `/main` へ遷移
-- 表示
-  - 失敗時はエラーメッセージ表示 + トースト表示
-  - 送信中はボタン無効化
+## 6. UIコンポーネント設計
 
-### 4-3. Header
+### 6-1. SignIn
 
-- 表示
-  - 左: `MicroPost` ロゴ
-  - 右: `<ユーザー名>さん` と `ログアウト` ボタン
-- 初期処理
-  - `getUser(userInfo.id, userInfo.token)` で表示名取得
-- ログアウト
-  - `UserContext` を `{ id: 0, token: "" }` にリセット
-  - `/` へ遷移
+- 入力項目: ユーザー名、パスワード
+- 動作: `POST /auth`
+- 成功時: token を store に保存し `/main` へ遷移
 
-### 4-4. SideBar
+### 6-2. SignUp
 
-- 入力項目
-  - 投稿テキスト（`textarea`）
-- ボタン制御
-  - 以下いずれかで `送信` 無効化
-    - 本文が空
-    - 140文字超過
-    - 投稿リクエスト中
-- 操作
-  - `POST /post?token=...` を実行
-  - 成功時は入力クリア後、投稿一覧再取得
+- 入力項目: ユーザー名、メール、パスワード
+- バリデーション: 必須、メール形式、パスワード6文字以上
+- 動作: `POST /user/create` -> `POST /auth`
 
-### 4-5. PostList / Post
+### 6-3. Header
 
-- 初期表示時に投稿一覧取得 (`getPostList`)
-- `更新` ボタンで再取得
-- 読み込み中は `読込み中...` を表示
-- 一覧項目表示
-  - 投稿日時
-  - 投稿者名
-  - 投稿内容
+- 表示: ロゴ、`<ユーザー名>さん`、ログアウト
+- ログアウト: `DELETE /auth/logout` -> 未ログイン状態へ遷移
 
-## 5. 状態管理
+### 6-4. SideBar
 
-### 5-1. UserContext (`UserProvider`)
+- 投稿作成フォーム
+- 入力検証: 空文字/140文字超過を制御
 
-- 共有状態: `userInfo`
-  - `id: number`
-  - `token: string`
+### 6-5. PostList
 
-### 5-2. PostListContext (`PostListProvider`)
+- フィルタ（投稿本文、投稿者名）
+- ページング（前へ/次へ）
+- `更新` ボタンで手動再取得
 
-- 共有状態
-  - `postList: PostType[]`
-  - `isloading: boolean`
-- 共有処理
-  - `getPostList()`
+## 7. 状態管理
 
-## 6. API連携ポイント
+### 7-1. グローバル状態（Zustand）
 
-- `signIn(userId, pass)` -> `GET /auth?user_id=...&password=...`
-- `createUser(name, email, password)` -> `POST /user`
-- `getUser(id, token)` -> `GET /user/:id?token=...`
-- `createPost(token, msg)` -> `POST /post?token=...`
-- `getList(token)` -> `GET /post?records=20&token=...`
+- `useAuthStore`
+  - `userInfo`
+  - `authLoading`
+  - `initializeAuth`, `logout`, `setUserInfo`
 
-## 7. エラー表示方針
+### 7-2. サーバー状態（TanStack Query）
+
+- 投稿一覧 (`useQuery`)
+- 投稿削除後の再取得 (`invalidateQueries`)
+
+## 8. エラー表示方針
 
 - APIエラーは `extractErrorMessage` で文字列化
-- 画面表示
-  - 一部コンポーネントではインライン表示（SignIn/SignUp）
-  - 全体でトースト通知（`react-toastify`）を併用
+- トースト通知（`react-toastify`）を共通利用
 
-## 8. レイアウト方針
+## 9. レイアウト方針
 
-- メイン画面は2カラム固定レイアウト
-  - 左30%: 投稿入力
-  - 右70%: 投稿一覧
-- ヘッダー固定高さ: `32px`
+- メイン画面は2カラム構成
+  - 左: 投稿入力
+  - 右: 投稿一覧
 - 投稿一覧は縦スクロール (`overflow-y: scroll`)
 
-## 9. 今後の改善候補
+## 10. 今後の改善候補
 
-- モバイル向けレスポンシブ対応（現在はPC向け固定比率）
-- ルートガードの共通化
-- エラーメッセージの文言統一
+- Query key の定数化
+- 投稿作成/ユーザー更新処理の Mutation 化の統一
+- モバイル向けレスポンシブ改善
