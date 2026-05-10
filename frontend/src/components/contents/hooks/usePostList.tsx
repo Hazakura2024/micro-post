@@ -15,7 +15,7 @@ export const usePostList = () => {
     const [localSearchName, setLocalSearchName] = useState(searchName);
 
     const {
-        data: postList = [],
+        data: postList = [], // data: のところに成功した戻り値が自動で入る
         isLoading,
         refetch,
     } = useQuery({
