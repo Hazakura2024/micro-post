@@ -5,28 +5,29 @@ import { useEditNameSection } from '../hooks/useEditNameSection';
 const EditNameSection = () => {
 
     const {
+        register, //inputとの紐づけ用
+        handleSubmit,
         isEditingName,
-        editingName,
-        onChangeEditingName,
-        onClickSend,
         displayName,
         onClickEdit,
-        canSubmittingName
+        errors,
+        isSubmitting
     } = useEditNameSection();
 
     return (
         <SEditSection>
             {isEditingName
-                ? <div>
+                ? <SForm onSubmit={handleSubmit}>
                     <SInput
                         type="text"
                         placeholder="名前を編集..."
-                        value={editingName}
-                        onChange={e => onChangeEditingName(e.target.value)} />
+                        {...register("name")}
+                    />
                     <SSubmitButton
-                        onClick={onClickSend}
-                        disabled={!canSubmittingName}>変更</SSubmitButton>
-                </div>
+                        type='submit'
+                        disabled={isSubmitting}>変更</SSubmitButton>
+                    {errors.name && <div>{errors.name.message}</div>}
+                </SForm>
                 : <SName>{displayName}さん</SName>}
             <SIconButton onClick={onClickEdit} >
                 <FaPen />
@@ -36,44 +37,47 @@ const EditNameSection = () => {
 }
 
 const SEditSection = styled.div`
-    display: flex;
-    align-items: center;
-`
+            display: flex;
+            align-items: center;
+            `
 
 const SInput = styled.input`
-  height: 24px;
-  box-sizing: border-box;
-`
+            height: 24px;
+            box-sizing: border-box;
+            `
 
 const SSubmitButton = styled.button`
-  background-color: #b8d200;
-  color: white;
-  border-color: #eeeeee;
-  border-radius: 4px;
-  color: #fafafa;
-  box-sizing: border-box;
-  cursor: pointer;
-  &:disabled {
-    background-color: #d8e698;
-    cursor: not-allowed;
+            background-color: #b8d200;
+            color: white;
+            border-color: #eeeeee;
+            border-radius: 4px;
+            color: #fafafa;
+            box-sizing: border-box;
+            cursor: pointer;
+            &:disabled {
+                background-color: #d8e698;
+            cursor: not-allowed;
   }
-`;
+            `;
 
 const SName = styled.div`
-  padding-top: 8px;
-  padding-bottom: 8px;
-  text-align: center;
-  margin-right: 8px;
-`;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            text-align: center;
+            margin-right: 8px;
+            `;
 
 const SIconButton = styled.button`
-  background-color: transparent;
-  color: white;
-  border: none;
-  padding-top: 6px;
-  text-align: center;
-  cursor: pointer;
-`;
+            background-color: transparent;
+            color: white;
+            border: none;
+            padding-top: 6px;
+            text-align: center;
+            cursor: pointer;
+            `;
 
-
+const SForm = styled.form`
+  display: flex;
+  align-items: flex-start;
+`
 export default EditNameSection
