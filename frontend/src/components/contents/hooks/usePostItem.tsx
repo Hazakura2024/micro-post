@@ -1,9 +1,8 @@
-import { useState } from "react";
 import { deletePost } from "../../../api/Post";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../../../utils/extractErrorMessage";
 import { useAuthStore } from "../../../store/useAuthStore";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const usePostItem = () => {
     const userInfo = useAuthStore((state) => state.userInfo);
@@ -22,21 +21,26 @@ export const usePostItem = () => {
         return dateObj.toLocaleString();
     };
 
-    const [isDeleting, setIsDeleting] = useState(false);
-    const onClickDelete = async (postId: number) => {
-        if (isDeleting) return;
-        setIsDeleting(true);
-        try {
-            await deletePost(postId);
+    const deletePostMutation = useMutation({
+
+        mutationFn: (postId: number) => deletePost(postId),
+        onSuccess: () => {
             toast.success("削除しました");
-        } catch (error) {
+            queryClient.invalidateQueries({ queryKey: ["post"] })
+        },
+        onError: (error) => {
             const msg = extractErrorMessage(error, "削除に失敗しました。");
             toast.error(msg);
-        } finally {
-            queryClient.invalidateQueries({ queryKey: ["post"] })
-            setIsDeleting(false);
         }
+
+    })
+
+    const onClickDelete = async (postId: number) => {
+        if (deletePostMutation.isPending) return;
+        deletePostMutation.mutate(postId);
     };
+
+    const isDeleting = deletePostMutation.isPending;
 
     return {
         getDateString,

@@ -2,36 +2,39 @@ import { useState } from "react";
 import { createPost } from "../../../api/Post";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../../../utils/extractErrorMessage";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useCreatePostSection = () => {
     const [msg, setMsg] = useState("");
-
-    const [isPosting, setIsPosting] = useState(false);
 
     const MAX_MESSAGE_LENGTH = 140;
 
     const queryClient = useQueryClient();
 
-    const onSendClick = async () => {
-        if (isPosting) return;
-        setIsPosting(true);
-        try {
-            const res = await createPost(msg);
-            if (res.success) {
-                toast.success("投稿しました！");
-            }
+    // NOTE: 投稿処理をuseMutationに任せる
+    const createPostMutation = useMutation({
 
-            // (学習メモ): ここに到達するということは、成功したということ
+        // 実行するAPI関数
+        mutationFn: (msg: string) => createPost(msg),
+
+        // 成功時
+        onSuccess: () => {
+            toast.success("投稿しました！");
             setMsg("");
-            // (学習メモ): createPost 成功 → setMsg → getPostList の順番が保証されている
-        } catch (error: unknown) {
+            queryClient.invalidateQueries({ queryKey: ["post"] })
+        },
+
+        // 失敗時
+        onError: (error: unknown) => {
             const msg = extractErrorMessage(error, "投稿に失敗しました。");
             toast.error(msg);
-        } finally {
-            queryClient.invalidateQueries({ queryKey: ["post"] })
-            setIsPosting(false);
         }
+    })
+
+    const onSendClick = async () => {
+        if (createPostMutation.isPending) return;
+        // mutationを実行、.mutate
+        createPostMutation.mutate(msg);
     };
 
     const onChangeMessage = (message: string) => {
@@ -43,7 +46,7 @@ export const useCreatePostSection = () => {
     const canSubmitMessage =
         msg.length <= MAX_MESSAGE_LENGTH
         && trimmedMessage !== ""
-        && !isPosting;
+        && !createPostMutation.isPending;
 
     return {
         msg,
