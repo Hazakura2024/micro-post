@@ -10,8 +10,8 @@ const EditNameSection = () => {
         isEditingName,
         displayName,
         onClickEdit,
-        errors,
-        isSubmitting
+        isSubmitting,
+        isDisabledButton
     } = useEditNameSection();
 
     return (
@@ -21,12 +21,12 @@ const EditNameSection = () => {
                     <SInput
                         type="text"
                         placeholder="名前を編集..."
+                        disabled={isSubmitting}
                         {...register("name")}
                     />
                     <SSubmitButton
                         type='submit'
-                        disabled={isSubmitting}>変更</SSubmitButton>
-                    {errors.name && <div>{errors.name.message}</div>}
+                        disabled={isDisabledButton}>変更</SSubmitButton>
                 </SForm>
                 : <SName>{displayName}さん</SName>}
             <SIconButton onClick={onClickEdit} >

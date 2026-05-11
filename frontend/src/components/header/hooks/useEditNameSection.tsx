@@ -54,10 +54,11 @@ export const useEditNameSection = () => {
     const {
         register, //inputとの紐づけ用
         handleSubmit, // 送信ボタンが押されたときの処理をまとめる
-        formState: { errors, isSubmitting: isFromSubmitting },
+        formState: { isSubmitting: isFromSubmitting, isValid },
         reset,
     } = useForm<EditNameSchema>({
         resolver: zodResolver(editNameSchema),
+        mode: "onChange",
         defaultValues: { name: "" }
     })
 
@@ -83,7 +84,7 @@ export const useEditNameSection = () => {
         isEditingName,
         displayName,
         onClickEdit,
-        errors,
         isSubmitting: isFromSubmitting || editNameMutation.isPending,
+        isDisabledButton: isFromSubmitting || editNameMutation.isPending || !isValid,
     };
 }
