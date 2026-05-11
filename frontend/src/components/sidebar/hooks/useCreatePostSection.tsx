@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isValid } from "zod/v3";
 
 export const useCreatePostSection = () => {
 
@@ -22,10 +23,11 @@ export const useCreatePostSection = () => {
     const {
         register,
         handleSubmit,
-        formState: { isSubmitting: isFormSubmitting },
+        formState: { isSubmitting: isFormSubmitting, isValid },
         reset,
     } = useForm<CreatePostSchema>({
         resolver: zodResolver(createPostSchema),
+        mode: "onChange",
         defaultValues: { message: "" }
     })
 
@@ -59,5 +61,6 @@ export const useCreatePostSection = () => {
         register,
         handleSubmit: handleSubmit(onSubmit),
         isFormSubmitting: isFormSubmitting || createPostMutation.isPending,
+        isDisabledButton: isFormSubmitting || !isValid,
     }
 }

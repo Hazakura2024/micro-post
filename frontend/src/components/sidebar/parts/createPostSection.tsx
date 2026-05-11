@@ -7,6 +7,7 @@ export const CreatePostSection = () => {
         register,
         handleSubmit,
         isFormSubmitting,
+        isDisabledButton,
     } = useCreatePostSection()
 
     return (
@@ -14,11 +15,12 @@ export const CreatePostSection = () => {
             <SForm onSubmit={handleSubmit}>
                 <SSideBarTextArea
                     rows={4}
+                    disabled={isFormSubmitting}
                     {...register("message")}
                 ></SSideBarTextArea>
                 <SSideBarButton
                     type='submit'
-                    disabled={isFormSubmitting}
+                    disabled={isDisabledButton}
                 >
                     送信
                 </SSideBarButton>
