@@ -46,7 +46,7 @@ const SignIn = () => {
               {/* rootがあればそれを、なければ最初に見つかったフィールドエラーの
         messageを表示する 
       */}
-              {errors.root?.message || (Object.values(errors)[0] as any)?.message}
+              {errors.root?.message || (Object.values(errors)[0])?.message}
             </SErrorMessage>
           )}
         </SSignInRow>

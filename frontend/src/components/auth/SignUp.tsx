@@ -4,15 +4,10 @@ import { useSignUp } from "./hooks/useSignUp";
 const SignUp = () => {
 
   const {
-    userId,
-    setUserId,
-    mail,
-    setMail,
-    pass,
-    setPass,
-    errorMessage,
+    register,
+    handleSubmit,
+    errors,
     isSubmitting,
-    onSignClick,
   } = useSignUp()
 
   return (
@@ -20,57 +15,55 @@ const SignUp = () => {
       <SSignUpRow>
         <h3>新規登録</h3>
       </SSignUpRow>
-      <SSignUpRow>
-        <SSignUpLabel>
-          <label htmlFor="id">ユーザー名</label>
-        </SSignUpLabel>
-        <SSignUpInput>
-          <input
-            id="id"
-            value={userId}
-            type="text"
-            onChange={(evt) => setUserId(evt.target.value)}
-          />
-        </SSignUpInput>
-      </SSignUpRow>
-      <SSignUpRow>
-        <SSignUpLabel>
-          <label htmlFor="id">メールアドレス</label>
-        </SSignUpLabel>
-        <SSignUpInput>
-          <input
-            id="id"
-            value={mail}
-            type="email"
-            onChange={(evt) => setMail(evt.target.value)}
-          />
-        </SSignUpInput>
-      </SSignUpRow>
-      <SSignUpRow>
-        <SSignUpLabel>
-          <label htmlFor="password">Password</label>
-        </SSignUpLabel>
-        <SSignUpInput>
-          <input
-            id="password"
-            value={pass}
-            type="password"
-            onChange={(evt) => setPass(evt.target.value)}
-          />
-        </SSignUpInput>
-      </SSignUpRow>
-      <SSignUpRow>
-        {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
-      </SSignUpRow>
-      <SSignUpRow>
-        <SSignUpButton
-          disabled={isSubmitting}
-          type="button"
-          onClick={onSignClick}
-        >
-          SignUp
-        </SSignUpButton>
-      </SSignUpRow>
+      <SForm onSubmit={handleSubmit}>
+        <SSignUpRow>
+          <SSignUpLabel>
+            <label htmlFor="id">ユーザー名</label>
+          </SSignUpLabel>
+          <SSignUpInput>
+            <input
+              id="id"
+              type="text"
+              {...register("userName")}
+            />
+          </SSignUpInput>
+        </SSignUpRow>
+        <SSignUpRow>
+          <SSignUpLabel>
+            <label htmlFor="id">メールアドレス</label>
+          </SSignUpLabel>
+          <SSignUpInput>
+            <input
+              id="id"
+              type="email"
+              {...register("email")}
+            />
+          </SSignUpInput>
+        </SSignUpRow>
+        <SSignUpRow>
+          <SSignUpLabel>
+            <label htmlFor="password">Password</label>
+          </SSignUpLabel>
+          <SSignUpInput>
+            <input
+              id="password"
+              type="password"
+              {...register("password")}
+            />
+          </SSignUpInput>
+        </SSignUpRow>
+        <SSignUpRow>
+          {errors.root?.message || <SErrorMessage>{(Object.values(errors)[0])?.message}</SErrorMessage>}
+        </SSignUpRow>
+        <SSignUpRow>
+          <SSignUpButton
+            disabled={isSubmitting}
+            type="submit"
+          >
+            SignUp
+          </SSignUpButton>
+        </SSignUpRow>
+      </SForm>
     </SSignUpFrame>
   );
 };
@@ -123,3 +116,5 @@ const SSignUpButton = styled.button`
 const SErrorMessage = styled.div`
   color: red;
 `;
+const SForm = styled.form`
+`

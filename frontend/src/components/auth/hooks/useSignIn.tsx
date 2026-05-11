@@ -17,7 +17,7 @@ export const useSignIn = () => {
         register,
         handleSubmit,
         setError, // 手動でエラーセットできる関数
-        formState: { errors, isSubmitting: isFormSubmitting, isValid },
+        formState: { errors, isSubmitting: isFormSubmitting },
     } = useForm<SignInSchema>({
         resolver: zodResolver(signInSchema),
         mode: "onChange",
@@ -27,7 +27,7 @@ export const useSignIn = () => {
         }
     })
 
-    const singInMutation = useMutation({
+    const signInMutation = useMutation({
         mutationFn: (data: {
             userName: string,
             password: string
@@ -52,15 +52,14 @@ export const useSignIn = () => {
         password: string
     }) => {
 
-        singInMutation.mutate(data)
+        signInMutation.mutate(data)
     };
 
     return {
         register,
         handleSubmit: handleSubmit(onSubmit, showFromErrorToast),
         errors,
-        isSubmitting: isFormSubmitting || singInMutation.isPending,
-        isValid,
+        isSubmitting: isFormSubmitting || signInMutation.isPending,
     }
 
 }

@@ -1,4 +1,4 @@
-import z, { email, minLength } from "zod";
+import z from "zod";
 
 export const authBaseSchema = z.object({
     userName: z.string().min(1, "ユーザー名を入力してください"),
@@ -14,4 +14,4 @@ export const signUpSchema = authBaseSchema.extend({
         .min(1, "メールアドレスを入力してください")
         .email("メールアドレスの形式が正しくありません")
 })
-export type SingUpSchema = z.infer<typeof signUpSchema>
+export type SignUpSchema = z.infer<typeof signUpSchema>
