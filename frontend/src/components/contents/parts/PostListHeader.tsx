@@ -1,23 +1,22 @@
+import type { UseFormRegister } from "react-hook-form";
 import styled from "styled-components";
 
 export const PostListHeader = ({
   isLoading,
   onClickReload,
-  localSearchWord,
-  onChangeSearchWord,
-  localSearchName,
-  onChangeSearchName,
-  onClickSearch,
   onClickClear,
+  register,
+  handleSubmit,
 }: {
   isLoading: boolean,
   onClickReload: () => void,
-  localSearchWord: string,
-  onChangeSearchWord: (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => void,
-  localSearchName: string,
-  onChangeSearchName: (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => void,
-  onClickSearch: () => void,
   onClickClear: () => void,
+  register: UseFormRegister<{
+    searchWord?: string | undefined;
+    searchName?: string | undefined;
+  }>,
+  handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>,
+
 }) => {
 
   return (
@@ -26,9 +25,11 @@ export const PostListHeader = ({
       <SReloadButton disabled={isLoading} onClick={onClickReload}>
         更新
       </SReloadButton>
-      <SInputSearch type="text" value={localSearchWord} onChange={(e) => onChangeSearchWord(e)} placeholder="内容を検索" />
-      <SInputSearch type="text" value={localSearchName} onChange={(e) => onChangeSearchName(e)} placeholder="ユーザーの投稿を検索" />
-      <SMiniButton onClick={onClickSearch}>検索</SMiniButton>
+      <SForm onSubmit={handleSubmit}>
+        <SInputSearch type="text" {...register("searchWord")} placeholder="内容を検索" />
+        <SInputSearch type="text" {...register("searchName")} placeholder="ユーザーの投稿を検索" />
+        <SMiniButton type="submit" >検索</SMiniButton>
+      </SForm>
       <SMiniButton onClick={onClickClear}>クリア</SMiniButton>
     </SHeader>
   )
@@ -79,3 +80,7 @@ const SMiniButton = styled.button`
     cursor: not-allowed;
   }
 `;
+const SForm = styled.form`
+  display: flex;
+  align-items: center;
+`
