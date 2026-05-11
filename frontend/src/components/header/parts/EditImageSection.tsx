@@ -14,6 +14,7 @@ const EditImageSection = () => {
         userName,
         onClickEditImage,
         onChangeInputImage,
+        isDisabledButton
     } = useEditImageSection()
 
     return (
@@ -22,7 +23,7 @@ const EditImageSection = () => {
                 ? <SEditSection>
                     <SInput type="file" accept="image/png, image/jpg " onChange={e => onChangeInputImage(e)} />
                     {previewUrl ? <SImage src={previewUrl} alt="選択中の画像プレビュー" /> : <div></div>}
-                    <SSubmitButton onClick={onClickSubmitImage} disabled={isSubmittingImage}>送信</SSubmitButton>
+                    <SSubmitButton onClick={onClickSubmitImage} disabled={isSubmittingImage || isDisabledButton}>送信</SSubmitButton>
                 </SEditSection>
                 : (iconPath
                     ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${iconPath}`} />

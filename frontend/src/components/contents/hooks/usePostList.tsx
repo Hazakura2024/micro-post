@@ -1,8 +1,10 @@
-import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { PostType } from "../../../types/Post";
 import { getList } from "../../../api/Post";
 import { useQuery } from "@tanstack/react-query";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export const usePostList = () => {
 
@@ -11,8 +13,22 @@ export const usePostList = () => {
     const searchName = searchParams.get("name") ?? "";
     const searchWord = searchParams.get("word") ?? "";
 
-    const [localSearchWord, setLocalSearchWord] = useState(searchWord);
-    const [localSearchName, setLocalSearchName] = useState(searchName);
+    const searchSchema = z.object({
+        searchWord: z.string().optional(),
+        searchName: z.string().optional()
+    })
+    type SearchSchema = z.infer<typeof searchSchema>;
+
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+    } = useForm<SearchSchema>({
+        resolver: zodResolver(searchSchema),
+        defaultValues: { searchWord: "", searchName: "" }
+    })
+
 
     const {
         data: postList = [], // data: のところに成功した戻り値が自動で入る
@@ -42,8 +58,7 @@ export const usePostList = () => {
 
     const onClickClear = () => {
         setSearchParams({});
-        setLocalSearchName("")
-        setLocalSearchWord("")
+        reset()
     }
 
     const onClickNext = () => {
@@ -62,18 +77,11 @@ export const usePostList = () => {
         setSearchParams(nextParams)
     }
 
-    const onChangeSearchWord = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
-        setLocalSearchWord(e.target.value)
-    }
-    const onChangeSearchName = (e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
-        setLocalSearchName(e.target.value)
-    }
-
-    const onClickSearch = () => {
+    const onSubmit = (data: SearchSchema) => {
         const params: Record<string, string> = {};
         params.page = "1";
-        if (localSearchName.trim()) params.name = localSearchName.trim();
-        if (localSearchWord.trim()) params.word = localSearchWord.trim();
+        if (data.searchName.trim()) params.name = data.searchName.trim();
+        if (data.searchWord.trim()) params.word = data.searchWord.trim();
         setSearchParams(params);
     }
 
@@ -82,16 +90,13 @@ export const usePostList = () => {
     return {
         isLoading,
         onClickReload,
-        localSearchWord,
-        onChangeSearchWord,
-        localSearchName,
-        onChangeSearchName,
-        onClickSearch,
         onClickClear,
         onClickBack,
         isDisableBackButton,
         isDisableNextButton,
         onClickNext,
         postList,
+        register,
+        handleSubmit: handleSubmit(onSubmit),
     }
 }

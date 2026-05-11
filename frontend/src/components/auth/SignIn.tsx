@@ -4,60 +4,61 @@ import { useSignIn } from "./hooks/useSignIn";
 const SignIn = () => {
 
   const {
-    userId,
-    setUserId,
-    pass,
-    setPass,
-    errorMessage,
+    register,
+    handleSubmit,
+    errors,
     isSubmitting,
-    onSignClick,
   } = useSignIn()
 
   return (
     <SSignInFrame>
-      <SSignInRow>
-        <h3>ログイン</h3>
-      </SSignInRow>
-      <SSignInRow>
-        <SSignInLabel>
-          <label htmlFor="id">ID</label>
-        </SSignInLabel>
-        <SSignInInput>
-          <input
-            id="id"
-            value={userId}
-            type="text"
-            onChange={(evt) => setUserId(evt.target.value)}
-          />
-        </SSignInInput>
-      </SSignInRow>
-      <SSignInRow>
-        <SSignInLabel>
-          <label htmlFor="password">Password</label>
-        </SSignInLabel>
-        <SSignInInput>
-          <input
-            id="password"
-            value={pass}
-            type="password"
-            onChange={(evt) => setPass(evt.target.value)}
-          />
-        </SSignInInput>
-      </SSignInRow>
-      <SSignInRow>
-        {errorMessage && (
-          <SErrorMessage>ログインできませんでした</SErrorMessage>
-        )}
-      </SSignInRow>
-      <SSignInRow>
-        <SSignInButton
-          disabled={isSubmitting}
-          type="button"
-          onClick={onSignClick}
-        >
-          Login
-        </SSignInButton>
-      </SSignInRow>
+      <SForm onSubmit={handleSubmit}>
+        <SSignInRow>
+          <h3>ログイン</h3>
+        </SSignInRow>
+        <SSignInRow>
+          <SSignInLabel>
+            <label htmlFor="userName">ユーザー名</label>
+          </SSignInLabel>
+          <SSignInInput>
+            <input
+              id="userName"
+              type="text"
+              {...register("userName")}
+            />
+          </SSignInInput>
+        </SSignInRow>
+        <SSignInRow>
+          <SSignInLabel>
+            <label htmlFor="password">Password</label>
+          </SSignInLabel>
+          <SSignInInput>
+            <input
+              id="password"
+              type="password"
+              {...register("password")}
+            />
+          </SSignInInput>
+        </SSignInRow>
+        <SSignInRow>
+          {Object.values(errors).length > 0 && (
+            <SErrorMessage>
+              {/* rootがあればそれを、なければ最初に見つかったフィールドエラーの
+        messageを表示する 
+      */}
+              {errors.root?.message || (Object.values(errors)[0])?.message}
+            </SErrorMessage>
+          )}
+        </SSignInRow>
+        <SSignInRow>
+          <SSignInButton
+            disabled={isSubmitting}
+            type="submit"
+          >
+            Login
+          </SSignInButton>
+        </SSignInRow>
+      </SForm>
     </SSignInFrame>
   );
 };
@@ -110,3 +111,5 @@ const SSignInButton = styled.button`
 const SErrorMessage = styled.div`
   color: red;
 `;
+const SForm = styled.form`
+`

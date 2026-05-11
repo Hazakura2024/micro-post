@@ -11,17 +11,14 @@ const Contents = () => {
   const {
     isLoading,
     onClickReload,
-    localSearchWord,
-    onChangeSearchWord,
-    localSearchName,
-    onChangeSearchName,
-    onClickSearch,
     onClickClear,
     onClickBack,
     isDisableBackButton,
     isDisableNextButton,
     onClickNext,
     postList,
+    register,
+    handleSubmit,
   } = usePostList()
 
   return (
@@ -29,12 +26,9 @@ const Contents = () => {
       <PostListHeader {...{
         isLoading,
         onClickReload,
-        localSearchWord,
-        onChangeSearchWord,
-        localSearchName,
-        onChangeSearchName,
-        onClickSearch,
         onClickClear,
+        register,
+        handleSubmit,
       }} />
       <PostListBody {...{
         isLoading,

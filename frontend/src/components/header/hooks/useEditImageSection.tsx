@@ -75,6 +75,8 @@ export const useEditImageSection = () => {
     const iconPath = userInfo.icon_path;
     const userName = userInfo.name;
 
+    const isDisabledButton = !selectedFile;
+
     return {
         isEditingImage,
         previewUrl,
@@ -83,7 +85,8 @@ export const useEditImageSection = () => {
         iconPath,
         userName,
         onClickEditImage,
-        onChangeInputImage
+        onChangeInputImage,
+        isDisabledButton
     }
 
 }

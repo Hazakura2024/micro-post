@@ -1,73 +1,70 @@
-import { useState } from "react";
 import { signIn } from "../../../api/Auth";
 import { createUser } from "../../../api/User";
 import { toast } from "react-toastify";
-import { useAuthError } from "./useAuthError";
 import { useAuthSuccessFlow } from "./useAuthSuccessFlow";
+import { useMutation } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signUpSchema, type SignUpSchema } from "../schema/authSchema";
+import { handleAuthError } from "../../../utils/handleAuthError";
+import { showFromErrorToast } from "../../../utils/showFormErrorToast";
 
 export const useSignUp = () => {
 
-    const [userId, setUserId] = useState("");
-    const [mail, setMail] = useState("");
-    const [pass, setPass] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const { handleAuthError } = useAuthError(setErrorMessage)
+    const {
+        register,
+        handleSubmit,
+        setError, // 手動でエラーセットできる関数
+        formState: { errors, isSubmitting: isFormSubmitting },
+    } = useForm<SignUpSchema>({
+        resolver: zodResolver(signUpSchema),
+        mode: "onChange",
+        defaultValues: {
+            userName: "",
+            email: "",
+            password: ""
+        }
+    })
     const { handleAuthSuccess } = useAuthSuccessFlow()
 
-    const onSignClick = async () => {
+    const signUpMutation = useMutation({
+        mutationFn: async (data: {
+            userName: string,
+            email: string,
+            password: string
+        }) => {
+            await createUser(data.userName, data.email, data.password)
+            const ret = await signIn(data.userName, data.password);
+            return ret;
+        },
 
-        // (学習メモ): .trim()は空白や改行文字を取り除いたものを返す
-        if (!userId.trim() || !pass.trim() || !mail.trim()) {
-            toast.error("すべてのフィールドを入力してください");
-            return;
-        }
-        // (学習メモ): /^...$/正規表現
-        // (学習メモ): 正規表現.test(文字列) この文字列から検索
-        // (学習メモ): [^...]  ...の否定
-        // (学習メモ): [^\s@]+\s(空白)か@以外の文字1文字以上
-        // (学習メモ): @  @が入る
-        // (学習メモ): \..が入る
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) {
-            toast.error("正しいメールアドレスを入力してください");
-            return;
-        }
-        if (pass.length < 6) {
-            toast.error("パスワードは6文字以上です");
-            return;
-        }
-
-        setIsSubmitting(true);
-        try {
-            setErrorMessage("");
-            await createUser(userId, mail, pass);
-
-            // MEMO: ユーザー作成後、そのままログイン
-            const ret = await signIn(userId, pass);
-
+        onSuccess: (ret) => {
             if (!ret?.token) {
+
                 toast.error("ログインに失敗しました");
                 return;
             }
-            handleAuthSuccess(ret.token);
+            handleAuthSuccess(ret.token)
+        },
+        onError: (error) => {
+            const errorMessage = handleAuthError(error, "ログインできませんでした。")
+            setError("root", { type: "server", message: errorMessage });
 
-        } catch (error: unknown) {
-            await handleAuthError(error, "登録に失敗しました。")
-        } finally {
-            await setIsSubmitting(false);
         }
+    })
+
+    const onSubmit = async (data: {
+        userName: string,
+        email: string,
+        password: string
+    }) => {
+        signUpMutation.mutate(data)
     };
 
     return {
-        userId,
-        setUserId,
-        mail,
-        setMail,
-        pass,
-        setPass,
-        errorMessage,
-        isSubmitting,
-        onSignClick,
+        register,
+        handleSubmit: handleSubmit(onSubmit, showFromErrorToast),
+        errors,
+        isSubmitting: isFormSubmitting || signUpMutation.isPending,
     }
 }

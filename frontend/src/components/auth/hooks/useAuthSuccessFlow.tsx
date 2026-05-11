@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../store/useAuthStore';
+import { toast } from 'react-toastify';
 
 export const useAuthSuccessFlow = () => {
 
@@ -16,6 +17,7 @@ export const useAuthSuccessFlow = () => {
         setUserInfo({ token: token })
         await saveInfoWithName();
         navigate("/main");
+        toast.success("ログインに成功しました！")
     },
         [navigate, saveInfoWithName, setUserInfo]
     )

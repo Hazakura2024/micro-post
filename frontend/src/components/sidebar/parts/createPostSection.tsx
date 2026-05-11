@@ -4,25 +4,27 @@ import styled from 'styled-components';
 export const CreatePostSection = () => {
 
     const {
-        msg,
-        onChangeMessage,
-        onSendClick,
-        canSubmitMessage
+        register,
+        handleSubmit,
+        isFormSubmitting,
+        isDisabledButton,
     } = useCreatePostSection()
 
     return (
         <SSideBarRow>
-            <SSideBarTextArea
-                rows={4}
-                value={msg}
-                onChange={(e) => onChangeMessage(e.target.value)}
-            ></SSideBarTextArea>
-            <SSideBarButton
-                disabled={!canSubmitMessage}
-                onClick={onSendClick}
-            >
-                送信
-            </SSideBarButton>
+            <SForm onSubmit={handleSubmit}>
+                <SSideBarTextArea
+                    rows={4}
+                    disabled={isFormSubmitting}
+                    {...register("message")}
+                ></SSideBarTextArea>
+                <SSideBarButton
+                    type='submit'
+                    disabled={isDisabledButton}
+                >
+                    送信
+                </SSideBarButton>
+            </SForm>
         </SSideBarRow>
     )
 }
@@ -52,3 +54,9 @@ const SSideBarButton = styled.button`
     cursor: not-allowed;
   }
 `;
+
+const SForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
