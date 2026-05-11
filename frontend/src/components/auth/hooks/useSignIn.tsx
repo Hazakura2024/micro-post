@@ -2,11 +2,12 @@ import { signIn } from "../../../api/Auth";
 import { toast } from "react-toastify";
 import { useAuthSuccessFlow } from "./useAuthSuccessFlow";
 import { useMutation } from "@tanstack/react-query";
-import { useForm, type FieldErrors } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { signInSchema, type SignInSchema } from "../schema/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { AuthResponse } from "../../../types/Auth";
 import { handleAuthError } from "../../../utils/handleAuthError";
+import { showFromErrorToast } from "../../../utils/showFormErrorToast";
 
 export const useSignIn = () => {
 
@@ -54,16 +55,9 @@ export const useSignIn = () => {
         singInMutation.mutate(data)
     };
 
-    const onInvalid = (validationErrors: FieldErrors<SignInSchema>) => {
-        const firstError = Object.values(validationErrors)[0];
-        if (firstError?.message) {
-            toast.error(firstError.message as string)
-        }
-    }
-
     return {
         register,
-        handleSubmit: handleSubmit(onSubmit, onInvalid),
+        handleSubmit: handleSubmit(onSubmit, showFromErrorToast),
         errors,
         isSubmitting: isFormSubmitting || singInMutation.isPending,
         isValid,
