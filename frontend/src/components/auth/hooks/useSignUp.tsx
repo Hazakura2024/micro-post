@@ -4,6 +4,7 @@ import { createUser } from "../../../api/User";
 import { toast } from "react-toastify";
 import { useAuthError } from "./useAuthError";
 import { useAuthSuccessFlow } from "./useAuthSuccessFlow";
+import { useMutation } from "@tanstack/react-query";
 
 export const useSignUp = () => {
 
@@ -39,6 +40,7 @@ export const useSignUp = () => {
         }
 
         setIsSubmitting(true);
+
         try {
             setErrorMessage("");
             await createUser(userId, mail, pass);

@@ -1,55 +1,72 @@
-import { useState } from "react";
 import { signIn } from "../../../api/Auth";
 import { toast } from "react-toastify";
-import { useAuthError } from "./useAuthError";
 import { useAuthSuccessFlow } from "./useAuthSuccessFlow";
-import z from "zod";
+import { useMutation } from "@tanstack/react-query";
+import { useForm, type FieldErrors } from "react-hook-form";
+import { signInSchema, type SignInSchema } from "../schema/authSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { AuthResponse } from "../../../types/Auth";
+import { handleAuthError } from "../../../utils/handleAuthError";
 
 export const useSignIn = () => {
 
-
-    const [userId, setUserId] = useState("");
-    const [pass, setPass] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const { handleAuthError } = useAuthError(setErrorMessage);
     const { handleAuthSuccess } = useAuthSuccessFlow()
 
-    const onSignClick = async () => {
-        if (!userId.trim() || !pass.trim()) {
-            toast.error("すべてのフィールドを入力してください");
-            return;
+    const {
+        register,
+        handleSubmit,
+        setError, // 手動でエラーセットできる関数
+        formState: { errors, isSubmitting: isFormSubmitting, isValid },
+    } = useForm<SignInSchema>({
+        resolver: zodResolver(signInSchema),
+        mode: "onChange",
+        defaultValues: {
+            userName: "",
+            password: ""
         }
-        if (pass.length < 6) {
-            toast.error("パスワードは6文字以上です");
-            return;
-        }
+    })
 
-        setIsSubmitting(true);
-        try {
-            setErrorMessage("");
-            const ret = await signIn(userId, pass);
+    const singInMutation = useMutation({
+        mutationFn: (data: {
+            userName: string,
+            password: string
+        }) => signIn(data.userName, data.password),
+
+        onSuccess: (ret: AuthResponse) => {
             if (!ret?.token) {
                 toast.error("ログインに失敗しました");
                 return;
             }
-            await handleAuthSuccess(ret.token)
-        } catch (error: unknown) {
-            await handleAuthError(error, "ログインできませんでした。")
-        } finally {
-            setIsSubmitting(false);
+            handleAuthSuccess(ret.token)
+        },
+
+        onError: (error: unknown) => {
+            const errorMessage = handleAuthError(error, "ログインできませんでした。")
+            setError("root", { type: "server", message: errorMessage });
         }
+    })
+
+    const onSubmit = async (data: {
+        userName: string,
+        password: string
+    }) => {
+
+        singInMutation.mutate(data)
     };
 
+    const onInvalid = (validationErrors: FieldErrors<SignInSchema>) => {
+        const firstError = Object.values(validationErrors)[0];
+        if (firstError?.message) {
+            toast.error(firstError.message as string)
+        }
+    }
+
     return {
-        userId,
-        setUserId,
-        pass,
-        setPass,
-        errorMessage,
-        isSubmitting,
-        onSignClick,
+        register,
+        handleSubmit: handleSubmit(onSubmit, onInvalid),
+        errors,
+        isSubmitting: isFormSubmitting || singInMutation.isPending,
+        isValid,
     }
 
 }
