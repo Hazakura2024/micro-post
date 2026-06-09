@@ -2,6 +2,8 @@
 
 MicroPost は、ユーザー認証付きで短文投稿・検索・ページング・削除ができる Web アプリです。
 
+![動作例](./docs/micropost.gif)
+
 ## 構成
 
 - frontend
