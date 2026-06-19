@@ -18,11 +18,11 @@ const SignUp = () => {
       <SForm onSubmit={handleSubmit}>
         <SSignUpRow>
           <SSignUpLabel>
-            <label htmlFor="id">ユーザー名</label>
+            <label htmlFor="username">ユーザー名</label>
           </SSignUpLabel>
           <SSignUpInput>
             <input
-              id="id"
+              id="userName"
               type="text"
               {...register("userName")}
             />
@@ -30,11 +30,11 @@ const SignUp = () => {
         </SSignUpRow>
         <SSignUpRow>
           <SSignUpLabel>
-            <label htmlFor="id">メールアドレス</label>
+            <label htmlFor="email">メールアドレス</label>
           </SSignUpLabel>
           <SSignUpInput>
             <input
-              id="id"
+              id="email"
               type="email"
               {...register("email")}
             />
