@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { uploadIcon } from '../../../api/User';
 import { toast } from 'react-toastify';
 import { extractErrorMessage } from '../../../utils/extractErrorMessage';
-import { useAuthStore } from '../../../store/useAuthStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useCurrentUser } from '../../../hooks/useCurrentUser';
 
 export const useEditImageSection = () => {
     const [isEditingImage, setIsEditingImage] = useState(false)
@@ -35,9 +35,8 @@ export const useEditImageSection = () => {
 
 
 
-    const userInfo = useAuthStore((state) => state.userInfo);
-    const setUserInfo = useAuthStore((state) => state.setUserInfo);
-
+    const { userInfo }  = useCurrentUser();
+  
     const queryClient = useQueryClient();
 
     const onClickEditImage = () => {
@@ -53,7 +52,7 @@ export const useEditImageSection = () => {
     const editImageMutation = useMutation({
         mutationFn: (selectedFile: File) => uploadIcon(selectedFile),
         onSuccess: (res) => {
-            setUserInfo({ icon_path: res.icon_path })
+            queryClient.invalidateQueries({ queryKey: ["currentUser"]})
             toast.success("アイコンの変更に成功しました！")
             queryClient.invalidateQueries({ queryKey: ["post"] })
             setSelectedFile(null)
@@ -72,8 +71,8 @@ export const useEditImageSection = () => {
 
     const isSubmittingImage = editImageMutation.isPending;
 
-    const iconPath = userInfo.icon_path;
-    const userName = userInfo.name;
+    const iconPath = userInfo!.icon_path;
+    const userName = userInfo!.name;
 
     const isDisabledButton = !selectedFile;
 
