@@ -2,9 +2,9 @@
 import type { AuthResponse } from "../types/Auth";
 import { apiClient } from "./axiosIntercepter";
 
-export const signIn = async (userId: string, pass: string): Promise<AuthResponse> => {
+export const signIn = async (user_id: string, pass: string): Promise<AuthResponse> => {
   const res = await apiClient.post<AuthResponse>('/auth', {
-    user_id: userId,
+    user_id: user_id,
     password: pass,
   });
   console.log("signIn")
