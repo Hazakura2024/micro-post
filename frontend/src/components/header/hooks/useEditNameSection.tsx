@@ -66,7 +66,7 @@ export const useEditNameSection = () => {
         editNameMutation.mutate(data.name);
     }
 
-    const displayName = userInfo!.name;
+    const displayName = userInfo?.name ?? "";
 
     return {
         register, //inputとの紐づけ用

@@ -71,8 +71,8 @@ export const useEditImageSection = () => {
 
     const isSubmittingImage = editImageMutation.isPending;
 
-    const iconPath = userInfo!.icon_path;
-    const userName = userInfo!.name;
+    const iconPath = userInfo?.icon_path ?? "";
+    const userName = userInfo?.name ?? "";
 
     const isDisabledButton = !selectedFile;
 
