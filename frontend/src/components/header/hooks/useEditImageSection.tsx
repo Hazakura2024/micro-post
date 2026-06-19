@@ -56,6 +56,7 @@ export const useEditImageSection = () => {
             toast.success("アイコンの変更に成功しました！")
             queryClient.invalidateQueries({ queryKey: ["post"] })
             setSelectedFile(null)
+            setIsEditingImage(false)
         },
         onError: (error) => {
             const msg = extractErrorMessage(error, "アイコンの変更に失敗しました")

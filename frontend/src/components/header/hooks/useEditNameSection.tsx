@@ -40,6 +40,7 @@ export const useEditNameSection = () => {
             toast.success("名前の変更に成功しました！")
             queryClient.invalidateQueries({ queryKey: ["post"] })
             reset()
+            setIsEditingName(false)
         },
 
         onError: (error: unknown) => {
