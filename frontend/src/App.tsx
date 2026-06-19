@@ -2,20 +2,13 @@ import "./App.css";
 import { ToastContainer } from "react-toastify";
 
 import AppRoute from "./components/AppRoute";
-import { useEffect, useRef } from "react";
-import { useAuthStore } from "./store/useAuthStore";
+import { useAuthInitialize } from "./hooks/useAuthInitialize";
 
 function App() {
-
-  const bootstrappedRef = useRef(false)
-  const initializedAuth = useAuthStore((state) => state.initializeAuth)
-
-  useEffect(() => {
-    if (bootstrappedRef.current) return;
-    bootstrappedRef.current = true;
-
-    void initializedAuth();
-  }, [initializedAuth])
+  const { isInitialized } = useAuthInitialize();
+  if (!isInitialized) {
+    return <div>認証情報を確認中</div>
+  }
 
   return (
     <div className="App">
