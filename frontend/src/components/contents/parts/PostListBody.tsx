@@ -16,9 +16,11 @@ export const PostListBody = ({ isLoading, postList }: { isLoading: boolean, post
 
 
 const SPostListBody = styled.div`
-
-  height: 100%;
-  overflow-y: scroll;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   overflow-x: hidden;
+  padding-right: 6px;
+  scrollbar-width: thin;
 `;
 

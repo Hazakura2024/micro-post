@@ -11,12 +11,13 @@ const LogoutButton = () => {
 }
 
 const SLogout = styled.button`
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.12);
   color: white;
-  border: none;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   cursor: pointer;
 `;
 

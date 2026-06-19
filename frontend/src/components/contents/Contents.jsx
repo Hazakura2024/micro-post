@@ -46,8 +46,16 @@ const Contents = () => {
 };
 
 const SPostList = styled.div`
-  padding-left: 10px;
-  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 72vh;
+  padding: 20px;
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(18px);
+  gap: 16px;
 `;
 
 export default Contents;

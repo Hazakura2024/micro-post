@@ -35,24 +35,24 @@ export const PostListFooter = (
 export default PostListFooter
 
 const SFooter = styled.div`
-  width: 100%;
-  height: 32px;
   display: flex;
-  flex-direction: row;
-  flex-direction: row;
+    justify-content: flex-end;
   align-items: center;
-  padding-left: 8px;
+    gap: 10px;
+    margin-top: auto;
 `;
 
 const SPageButton = styled.button`
-  background-color: #b8d200;
-  color: white;
-  border-color: #eeeeee;
-  border-radius: 4px;
-  color: #fafafa;
+    background: linear-gradient(135deg, #d7e65c, #b8d200);
+    color: #20310b;
+    border-radius: 16px;
+    padding: 12px 16px;
+    min-width: 84px;
+    font-weight: 700;
   cursor: pointer;
   &:disabled {
-    background-color: #d8e698;
+        background: #e8efba;
+        color: #73823e;
     cursor: not-allowed;
   }
 `;
