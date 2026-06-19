@@ -98,7 +98,7 @@
 - Method/Path: `PATCH /user/me`
 - 認証: Bearer 必須
 - Body (JSON)
-  - `name` (string, 必須, 最大50文字)
+  - `name` (string, 必須, 最大20文字)
 
 ### 3-4. アイコン更新
 
