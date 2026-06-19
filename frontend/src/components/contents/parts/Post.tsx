@@ -29,7 +29,7 @@ const Post = ({
           <SDate>{getDateString(post.created_at)}</SDate>
           <SName>{post.user_name}</SName>
           <SDeleteButton
-            hidden={userInfo.id !== post.user_id}
+            hidden={userInfo?.id !== post.user_id}
             disabled={isDeleting}
             onClick={() => onClickDelete(post.id)}
           >
