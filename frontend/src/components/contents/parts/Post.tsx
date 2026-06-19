@@ -21,7 +21,7 @@ const Post = ({
   return (
     <SPost>
       {post.user_icon
-        ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${post.user_icon}`} alt="" />
+        ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${post.user_icon}`} alt="ユーザーアイコン" />
         : <FaUserCircle size={40} color={stringToColor(post.user_name)} />}
 
       <SPostMain>
