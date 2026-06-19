@@ -21,7 +21,7 @@ const Post = ({
   return (
     <SPost>
       {post.user_icon
-        ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${post.user_icon}`} alt="" />
+        ? <SImage src={`${import.meta.env.VITE_STORAGE_URL}${post.user_icon}`} alt="ユーザーアイコン" />
         : <FaUserCircle size={40} color={stringToColor(post.user_name)} />}
 
       <SPostMain>
@@ -29,7 +29,7 @@ const Post = ({
           <SDate>{getDateString(post.created_at)}</SDate>
           <SName>{post.user_name}</SName>
           <SDeleteButton
-            hidden={userInfo.id !== post.user_id}
+            hidden={userInfo?.id !== post.user_id}
             disabled={isDeleting}
             onClick={() => onClickDelete(post.id)}
           >

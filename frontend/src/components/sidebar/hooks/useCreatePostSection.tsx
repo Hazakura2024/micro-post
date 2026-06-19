@@ -12,6 +12,7 @@ export const useCreatePostSection = () => {
 
     const createPostSchema = z.object({
         message: z.string()
+            .trim()
             .min(1, "メッセージを入力してください")
             .max(MAX_MESSAGE_LENGTH, `メッセージをは${MAX_MESSAGE_LENGTH}文字以内にしてください`)
     });

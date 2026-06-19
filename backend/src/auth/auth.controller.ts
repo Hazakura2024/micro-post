@@ -47,7 +47,7 @@ export class AuthController {
     });
 
     return {
-      userid: tokens.user_id,
+      user_id: tokens.user_id,
       token: tokens.access_token,
     };
   }

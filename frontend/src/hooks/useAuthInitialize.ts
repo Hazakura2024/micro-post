@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { apiClient } from "../api/axiosIntercepter";
 import { useAuthStore } from "../store/useAuthStore";
 
+let hasRunAuthInit = false;
+
 export const useAuthInitialize = () => {
     const [isInitialized, setIsInitialized] = useState(false);
 
@@ -10,6 +12,12 @@ export const useAuthInitialize = () => {
 
     useEffect(() => {
         const init = async () => {
+                if (hasRunAuthInit) {
+                  setIsInitialized(true);
+                  return;
+                }
+    hasRunAuthInit = true;
+
             try {
                 const res = await apiClient.post('/auth/refresh');
                 if (res.data.token) {

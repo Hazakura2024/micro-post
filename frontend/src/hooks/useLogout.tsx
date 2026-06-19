@@ -16,13 +16,13 @@ export const useLogout = () => {
 
             queryClient.clear();
 
-            navigate("/login");
+            navigate("/");
         },
 
         onError: () => {
             clearToken();
             queryClient.clear();
-            navigate("/login");
+            navigate("/");
         }    
     });
 

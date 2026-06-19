@@ -21,7 +21,7 @@ const EditImageSection = () => {
         <SEditSection>
             {isEditingImage
                 ? <SEditSection>
-                    <SInput type="file" accept="image/png, image/jpg " onChange={e => onChangeInputImage(e)} />
+                    <SInput type="file" accept="image/png, image/jpg, image/jpeg" onChange={e => onChangeInputImage(e)} />
                     {previewUrl ? <SImage src={previewUrl} alt="選択中の画像プレビュー" /> : <div></div>}
                     <SSubmitButton onClick={onClickSubmitImage} disabled={isSubmittingImage || isDisabledButton}>送信</SSubmitButton>
                 </SEditSection>
