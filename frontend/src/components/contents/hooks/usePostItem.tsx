@@ -1,11 +1,11 @@
 import { deletePost } from "../../../api/Post";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../../../utils/extractErrorMessage";
-import { useAuthStore } from "../../../store/useAuthStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCurrentUser } from "../../../hooks/useCurrentUser";
 
 export const usePostItem = () => {
-    const userInfo = useAuthStore((state) => state.userInfo);
+    const {userInfo} = useCurrentUser();
 
     const queryClient = useQueryClient()
 

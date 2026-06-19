@@ -8,18 +8,16 @@ export const useAuthSuccessFlow = () => {
     const navigate = useNavigate();
 
 
-    const setUserInfo = useAuthStore((state) => state.setUserInfo);
-    const saveInfoWithName = useAuthStore((state) => state.saveInfoWithName)
+    const setToken = useAuthStore((state) => state.setToken);
 
     const handleAuthSuccess = useCallback(async (token: string) => {
 
+        setToken(token);
 
-        setUserInfo({ token: token })
-        await saveInfoWithName();
         navigate("/main");
         toast.success("ログインに成功しました！")
     },
-        [navigate, saveInfoWithName, setUserInfo]
+        [navigate, setToken]
     )
 
     return { handleAuthSuccess }

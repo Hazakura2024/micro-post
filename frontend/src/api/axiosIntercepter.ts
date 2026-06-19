@@ -22,7 +22,7 @@ export const setupAxiosIntercepters = () => {
                 config.url === "/user/create";
             if (isPublic) return config;
 
-            const token = useAuthStore.getState().userInfo.token;
+            const token = useAuthStore.getState().token;
             if (!token) return config;
 
             const headers = axios.AxiosHeaders.from(config.headers)
@@ -64,7 +64,7 @@ export const setupAxiosIntercepters = () => {
                         .post<AuthResponse>("/auth/refresh")
                         .then((res) => {
                             const newToken = res.data.token;
-                            useAuthStore.getState().setUserInfo({ token: newToken });
+                            useAuthStore.getState().setToken(newToken);
                             return newToken;
                         })
                         .finally(() => {
@@ -80,12 +80,7 @@ export const setupAxiosIntercepters = () => {
 
                 return apiClient(originalRequest);
             } catch (error) {
-                useAuthStore.getState().setUserInfo({
-                    id: 0,
-                    name: "",
-                    icon_path: null,
-                    token: "",
-                })
+                useAuthStore.getState().clearToken();
                 return Promise.reject(error);
             }
         }

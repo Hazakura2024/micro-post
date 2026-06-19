@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import { useLogoutButton } from '../hooks/useLogoutButton';
+import { useLogoutButton } from '../hooks/useLogoutButton.tsx';
 
 const LogoutButton = () => {
 
-    const { onClickLogout } = useLogoutButton()
+    const { onClickLogout, isLoggingOut } = useLogoutButton()
 
     return (
-        <SLogout onClick={onClickLogout}>ログアウト</SLogout>
+        <SLogout disabled={isLoggingOut} onClick={onClickLogout}>ログアウト</SLogout>
     )
 }
 

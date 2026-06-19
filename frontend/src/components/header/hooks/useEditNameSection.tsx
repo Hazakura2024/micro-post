@@ -2,11 +2,11 @@ import { useState } from "react";
 import { editUser } from "../../../api/User";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "../../../utils/extractErrorMessage";
-import { useAuthStore } from "../../../store/useAuthStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useCurrentUser } from "../../../hooks/useCurrentUser";
 
 export const useEditNameSection = () => {
 
@@ -24,8 +24,7 @@ export const useEditNameSection = () => {
 
     const [isEditingName, setIsEditingName] = useState(false);
     const queryClient = useQueryClient();
-    const userInfo = useAuthStore((state) => state.userInfo);
-    const saveInfoWithName = useAuthStore((state) => state.saveInfoWithName)
+    const { userInfo } = useCurrentUser();
 
 
     const onClickEdit = () => {
@@ -37,7 +36,7 @@ export const useEditNameSection = () => {
         mutationFn: (trimmedName: string) => editUser(trimmedName),
 
         onSuccess: async () => {
-            await saveInfoWithName()
+            queryClient.invalidateQueries({  queryKey: ["currentUser"] })
             toast.success("名前の変更に成功しました！")
             queryClient.invalidateQueries({ queryKey: ["post"] })
             reset()
@@ -64,19 +63,10 @@ export const useEditNameSection = () => {
 
 
     const onSubmit = async (data: EditNameSchema) => {
-
-        // if (editNameMutation.isPending) return;
-        // if (!trimmedName) {
-        //     toast.error("名前を入力して下さい")
-        // }
-        // if (trimmedName.length > MAX_NAME_LENGTH) {
-        //     toast.error(`名前は${MAX_NAME_LENGTH}文字以下で入力してください`)
-        // }
-
         editNameMutation.mutate(data.name);
     }
 
-    const displayName = userInfo.name;
+    const displayName = userInfo?.name ?? "";
 
     return {
         register, //inputとの紐づけ用
